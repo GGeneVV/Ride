@@ -9,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RidePal.Data;
 using RidePal.Models;
+using RidePal.Services;
+using RidePal.Services.Contracts;
 
 namespace RidePal.Web
 {
@@ -24,7 +26,7 @@ namespace RidePal.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            
 
             services.AddDbContext<AppDbContext>(options =>
                  options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
@@ -44,8 +46,9 @@ namespace RidePal.Web
 
             //services.AddScoped<IDateTimeProvider, DateTimeProvider>();
 
+            services.AddScoped<IGenreService, GenreService>();
 
-            
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

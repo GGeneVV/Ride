@@ -1,11 +1,12 @@
 ﻿using Newtonsoft.Json;
+using RidePal.Models.Abstracts;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace RidePal.Models
 {
-    public class Album
+    public class Album : Entity
     {
         [Key]
         public Guid Id { get; set; }
@@ -30,9 +31,6 @@ namespace RidePal.Models
         public virtual Artist Artist { get; set; }
         public Guid ArtistId { get; set; }
 
-        public ICollection<Track> Tracks { get; set; } = new List<Track>();
-
-       
-
+        public virtual ICollection<Track> Tracks { get; set; } = new List<Track>();
     }
 }
