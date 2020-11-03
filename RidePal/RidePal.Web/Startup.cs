@@ -1,13 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using RidePal.Data;
+using RidePal.Models;
 
 namespace RidePal.Web
 {
@@ -23,7 +24,28 @@ namespace RidePal.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
+
+
+            services.AddDbContext<AppDbContext>(options =>
+                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddControllersWithViews()
+              .AddRazorRuntimeCompilation();
+
+            services.AddIdentity<User, Role>(option => option.SignIn.RequireConfirmedAccount = false)
+              .AddEntityFrameworkStores<AppDbContext>()
+               .AddDefaultTokenProviders();
+
+
+
+            services.AddAutoMapper(typeof(Startup));
+
+            services.AddRazorPages();
+
+            //services.AddScoped<IDateTimeProvider, DateTimeProvider>();
+
+
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,6 +73,8 @@ namespace RidePal.Web
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+                endpoints.MapRazorPages();
             });
         }
     }
