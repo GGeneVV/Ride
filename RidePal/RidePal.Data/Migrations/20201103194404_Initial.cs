@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace RidePal.Data.Migrations
 {
-    public partial class innitial : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,6 +12,9 @@ namespace RidePal.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
+                    CreatedOn = table.Column<DateTime>(nullable: true),
+                    ModifiedOn = table.Column<DateTime>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
                     DeezerId = table.Column<string>(nullable: false),
                     Name = table.Column<string>(nullable: false),
                     Picture = table.Column<string>(nullable: true),
@@ -73,6 +76,9 @@ namespace RidePal.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
+                    CreatedOn = table.Column<DateTime>(nullable: true),
+                    ModifiedOn = table.Column<DateTime>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
                     DeezerId = table.Column<string>(nullable: false),
                     Title = table.Column<string>(nullable: false),
                     Picture = table.Column<string>(nullable: true),
@@ -197,6 +203,58 @@ namespace RidePal.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Playlists",
+                columns: table => new
+                {
+                    UserId = table.Column<Guid>(nullable: false),
+                    CreatedOn = table.Column<DateTime>(nullable: true),
+                    ModifiedOn = table.Column<DateTime>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false),
+                    Title = table.Column<string>(nullable: true),
+                    Picture = table.Column<string>(nullable: true),
+                    Duration = table.Column<int>(nullable: false),
+                    Rank = table.Column<int>(nullable: false),
+                    Enabled = table.Column<bool>(nullable: false),
+                    IsArtistRepeated = table.Column<bool>(nullable: false),
+                    IsTopTracksEnabled = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Playlists", x => x.UserId);
+                    table.ForeignKey(
+                        name: "FK_Playlists_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Genres",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    CreatedOn = table.Column<DateTime>(nullable: true),
+                    ModifiedOn = table.Column<DateTime>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeezerId = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
+                    Picture = table.Column<string>(nullable: true),
+                    PlaylistUserId = table.Column<Guid>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Genres", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Genres_Playlists_PlaylistUserId",
+                        column: x => x.PlaylistUserId,
+                        principalTable: "Playlists",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Tracks",
                 columns: table => new
                 {
@@ -227,60 +285,35 @@ namespace RidePal.Data.Migrations
                         principalTable: "Artists",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Tracks_Genres_GenreId",
+                        column: x => x.GenreId,
+                        principalTable: "Genres",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Playlists",
+                name: "TrackPlaylists",
                 columns: table => new
                 {
-                    UserId = table.Column<Guid>(nullable: false),
                     TrackId = table.Column<Guid>(nullable: false),
-                    Id = table.Column<Guid>(nullable: false),
-                    Title = table.Column<string>(nullable: true),
-                    Picture = table.Column<string>(nullable: true),
-                    Duration = table.Column<int>(nullable: false),
-                    CreatedOn = table.Column<DateTime>(nullable: true),
-                    Rank = table.Column<int>(nullable: false),
-                    Enabled = table.Column<bool>(nullable: false),
-                    IsArtistRepeated = table.Column<bool>(nullable: false),
-                    IsTopTracksEnabled = table.Column<bool>(nullable: false)
+                    PlaylistId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Playlists", x => new { x.UserId, x.TrackId });
+                    table.PrimaryKey("PK_TrackPlaylists", x => new { x.TrackId, x.PlaylistId });
                     table.ForeignKey(
-                        name: "FK_Playlists_Tracks_TrackId",
+                        name: "FK_TrackPlaylists_Playlists_PlaylistId",
+                        column: x => x.PlaylistId,
+                        principalTable: "Playlists",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_TrackPlaylists_Tracks_TrackId",
                         column: x => x.TrackId,
                         principalTable: "Tracks",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Playlists_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Genres",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false),
-                    DeezerId = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(nullable: false),
-                    Picture = table.Column<string>(nullable: true),
-                    PlaylistTrackId = table.Column<Guid>(nullable: true),
-                    PlaylistUserId = table.Column<Guid>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Genres", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Genres_Playlists_PlaylistUserId_PlaylistTrackId",
-                        columns: x => new { x.PlaylistUserId, x.PlaylistTrackId },
-                        principalTable: "Playlists",
-                        principalColumns: new[] { "UserId", "TrackId" },
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -329,14 +362,14 @@ namespace RidePal.Data.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Genres_PlaylistUserId_PlaylistTrackId",
+                name: "IX_Genres_PlaylistUserId",
                 table: "Genres",
-                columns: new[] { "PlaylistUserId", "PlaylistTrackId" });
+                column: "PlaylistUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Playlists_TrackId",
-                table: "Playlists",
-                column: "TrackId");
+                name: "IX_TrackPlaylists_PlaylistId",
+                table: "TrackPlaylists",
+                column: "PlaylistId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tracks_AlbumId",
@@ -352,34 +385,10 @@ namespace RidePal.Data.Migrations
                 name: "IX_Tracks_GenreId",
                 table: "Tracks",
                 column: "GenreId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Tracks_Genres_GenreId",
-                table: "Tracks",
-                column: "GenreId",
-                principalTable: "Genres",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Albums_Artists_ArtistId",
-                table: "Albums");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Tracks_Artists_ArtistId",
-                table: "Tracks");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Playlists_AspNetUsers_UserId",
-                table: "Playlists");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Genres_Playlists_PlaylistUserId_PlaylistTrackId",
-                table: "Genres");
-
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -396,16 +405,10 @@ namespace RidePal.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "TrackPlaylists");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
-
-            migrationBuilder.DropTable(
-                name: "Artists");
-
-            migrationBuilder.DropTable(
-                name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
-                name: "Playlists");
 
             migrationBuilder.DropTable(
                 name: "Tracks");
@@ -415,6 +418,15 @@ namespace RidePal.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Genres");
+
+            migrationBuilder.DropTable(
+                name: "Artists");
+
+            migrationBuilder.DropTable(
+                name: "Playlists");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
         }
     }
 }

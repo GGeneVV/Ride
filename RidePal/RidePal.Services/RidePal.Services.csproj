@@ -20,4 +20,8 @@
     <PackageReference Include="MSTest.TestFramework" Version="2.1.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\RidePal.Data\RidePal.Data.csproj" />
+  </ItemGroup>
+
 </Project>

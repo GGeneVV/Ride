@@ -54,7 +54,7 @@ namespace RidePal.Models
         public Genre Genre { get; set; } 
         public Guid GenreId { get; set; }
 
-        public ICollection<Playlist> Playlists { get; set; } 
+        public virtual ICollection<TrackPlaylist> TrackPlaylists { get; set; } = new List<TrackPlaylist>();
 
     }
 }

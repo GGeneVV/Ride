@@ -11,19 +11,14 @@ namespace RidePal.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Playlist> playlist)
         {
-
-            playlist.HasKey(trackUser => new { trackUser.UserId, trackUser.TrackId });
-
             playlist
-                .HasOne(playlist => playlist.Track)
-                .WithMany(track => track.Playlists)
-                .HasForeignKey(playlist=>playlist.TrackId);
+                .HasKey(trackUser => trackUser.UserId);
 
             playlist
                 .HasOne(playlist => playlist.User)
                 .WithMany(user => user.Playlists)
                 .HasForeignKey(playlist => playlist.UserId);
- 
+
         }
     }
 

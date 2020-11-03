@@ -24,15 +24,19 @@ namespace RidePal.Data
 
         public DbSet<Playlist> Playlists { get; set; }
 
-        
+        public DbSet<TrackPlaylist> TrackPlaylists { get; set; }
+
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
+
             base.OnModelCreating(builder);
 
             builder.ApplyConfiguration(new ArtistConfig());
             builder.ApplyConfiguration(new GenreConfig());
             builder.ApplyConfiguration(new TrackConfig());
             builder.ApplyConfiguration(new PlaylistConfig());
+            builder.ApplyConfiguration(new TrackPlaylistConfig());
 
             var cascadeFKs = builder.Model.GetEntityTypes()
                 .SelectMany(t => t.GetForeignKeys())
