@@ -17,7 +17,6 @@ namespace RidePal.Data.Configurations
                 .HasMany(a => a.Tracks)
                 .WithOne(s => s.Artist)
                 .HasForeignKey(s => s.ArtistId);
-
         }
     }
 

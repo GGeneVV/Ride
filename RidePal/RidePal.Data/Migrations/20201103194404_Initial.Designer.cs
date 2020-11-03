@@ -10,8 +10,8 @@ using RidePal.Data;
 namespace RidePal.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20201103163720_innitial")]
-    partial class innitial
+    [Migration("20201103194404_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -131,9 +131,18 @@ namespace RidePal.Data.Migrations
                     b.Property<Guid>("ArtistId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("DeezerId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Picture")
                         .HasColumnType("nvarchar(max)");
@@ -159,9 +168,18 @@ namespace RidePal.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("DeezerId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -185,9 +203,18 @@ namespace RidePal.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("DeezerId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -196,15 +223,12 @@ namespace RidePal.Data.Migrations
                     b.Property<string>("Picture")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("PlaylistTrackId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid?>("PlaylistUserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PlaylistUserId", "PlaylistTrackId");
+                    b.HasIndex("PlaylistUserId");
 
                     b.ToTable("Genres");
                 });
@@ -212,9 +236,6 @@ namespace RidePal.Data.Migrations
             modelBuilder.Entity("RidePal.Models.Playlist", b =>
                 {
                     b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("TrackId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("CreatedOn")
@@ -232,8 +253,14 @@ namespace RidePal.Data.Migrations
                     b.Property<bool>("IsArtistRepeated")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsTopTracksEnabled")
                         .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Picture")
                         .HasColumnType("nvarchar(max)");
@@ -244,9 +271,7 @@ namespace RidePal.Data.Migrations
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("UserId", "TrackId");
-
-                    b.HasIndex("TrackId");
+                    b.HasKey("UserId");
 
                     b.ToTable("Playlists");
                 });
@@ -328,6 +353,21 @@ namespace RidePal.Data.Migrations
                     b.HasIndex("GenreId");
 
                     b.ToTable("Tracks");
+                });
+
+            modelBuilder.Entity("RidePal.Models.TrackPlaylist", b =>
+                {
+                    b.Property<Guid>("TrackId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PlaylistId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("TrackId", "PlaylistId");
+
+                    b.HasIndex("PlaylistId");
+
+                    b.ToTable("TrackPlaylists");
                 });
 
             modelBuilder.Entity("RidePal.Models.User", b =>
@@ -481,17 +521,11 @@ namespace RidePal.Data.Migrations
                 {
                     b.HasOne("RidePal.Models.Playlist", null)
                         .WithMany("Genres")
-                        .HasForeignKey("PlaylistUserId", "PlaylistTrackId");
+                        .HasForeignKey("PlaylistUserId");
                 });
 
             modelBuilder.Entity("RidePal.Models.Playlist", b =>
                 {
-                    b.HasOne("RidePal.Models.Track", "Track")
-                        .WithMany("Playlists")
-                        .HasForeignKey("TrackId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("RidePal.Models.User", "User")
                         .WithMany("Playlists")
                         .HasForeignKey("UserId")
@@ -516,6 +550,21 @@ namespace RidePal.Data.Migrations
                     b.HasOne("RidePal.Models.Genre", "Genre")
                         .WithMany("Tracks")
                         .HasForeignKey("GenreId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("RidePal.Models.TrackPlaylist", b =>
+                {
+                    b.HasOne("RidePal.Models.Playlist", "Playlist")
+                        .WithMany("TrackPlaylists")
+                        .HasForeignKey("PlaylistId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("RidePal.Models.Track", "Track")
+                        .WithMany("TrackPlaylists")
+                        .HasForeignKey("TrackId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

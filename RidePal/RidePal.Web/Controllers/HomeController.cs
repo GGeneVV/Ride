@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using RidePal.Services;
+using RidePal.Services.Contracts;
 using RidePal.Web.Models;
 
 namespace RidePal.Web.Controllers
@@ -13,16 +15,19 @@ namespace RidePal.Web.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IGenreService _genreService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IGenreService genreService)
         {
             _logger = logger;
+            _genreService = genreService;
             //_userManager = userManager;
             //_signInManager = signInManager;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            await _genreService.GetGenresAsync();
             return View();
         }
 
