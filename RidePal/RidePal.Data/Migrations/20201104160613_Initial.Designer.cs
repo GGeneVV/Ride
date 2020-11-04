@@ -10,7 +10,7 @@ using RidePal.Data;
 namespace RidePal.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20201104110814_Initial")]
+    [Migration("20201104160613_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -128,7 +128,8 @@ namespace RidePal.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ArtistId")
+                    b.Property<Guid?>("ArtistId")
+                        .IsRequired()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("CreatedOn")
@@ -230,7 +231,7 @@ namespace RidePal.Data.Migrations
 
             modelBuilder.Entity("RidePal.Models.Playlist", b =>
                 {
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid?>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("CreatedOn")
@@ -305,10 +306,12 @@ namespace RidePal.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("AlbumId")
+                    b.Property<Guid?>("AlbumId")
+                        .IsRequired()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ArtistId")
+                    b.Property<Guid?>("ArtistId")
+                        .IsRequired()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("DeezerId")
@@ -318,7 +321,7 @@ namespace RidePal.Data.Migrations
                     b.Property<int>("Duration")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("GenreId")
+                    b.Property<Guid?>("GenreId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Preview")
@@ -546,9 +549,7 @@ namespace RidePal.Data.Migrations
 
                     b.HasOne("RidePal.Models.Genre", "Genre")
                         .WithMany("Tracks")
-                        .HasForeignKey("GenreId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("GenreId");
                 });
 
             modelBuilder.Entity("RidePal.Models.TrackPlaylist", b =>

@@ -261,7 +261,7 @@ namespace RidePal.Data.Migrations
                     Preview = table.Column<string>(nullable: false),
                     AlbumId = table.Column<Guid>(nullable: false),
                     ArtistId = table.Column<Guid>(nullable: false),
-                    GenreId = table.Column<Guid>(nullable: false)
+                    GenreId = table.Column<Guid>(nullable: true)
                 },
                 constraints: table =>
                 {
