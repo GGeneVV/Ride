@@ -44,15 +44,15 @@ namespace RidePal.Models
         [JsonProperty("album")]
         public Album Album { get; set; }
         
-        public Guid AlbumId { get; set; } 
+        public Guid? AlbumId { get; set; } 
 
         [Required]
         [JsonProperty("artist")]
         public Artist Artist { get; set; }
-        public Guid ArtistId { get; set; }
+        public Guid? ArtistId { get; set; }
 
         public Genre Genre { get; set; } 
-        public Guid GenreId { get; set; }
+        public Guid? GenreId { get; set; }
 
         public virtual ICollection<TrackPlaylist> TrackPlaylists { get; set; } = new List<TrackPlaylist>();
 

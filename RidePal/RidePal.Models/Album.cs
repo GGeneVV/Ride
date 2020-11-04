@@ -29,7 +29,7 @@ namespace RidePal.Models
         [Required]
         [JsonProperty("artist")]
         public virtual Artist Artist { get; set; }
-        public Guid ArtistId { get; set; }
+        public Guid? ArtistId { get; set; }
 
         public virtual ICollection<Track> Tracks { get; set; } = new List<Track>();
     }

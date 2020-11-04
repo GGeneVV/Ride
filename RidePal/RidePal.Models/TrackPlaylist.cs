@@ -1,10 +1,11 @@
-﻿using System;
+﻿using RidePal.Models.Abstracts;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace RidePal.Models
 {
-    public class TrackPlaylist
+    public class TrackPlaylist : Entity
     {
         public Guid TrackId { get; set; }
         public Track Track { get; set; }
