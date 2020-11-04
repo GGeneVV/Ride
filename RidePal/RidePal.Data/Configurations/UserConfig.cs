@@ -5,14 +5,14 @@ using RidePal.Models;
 
 namespace RidePal.Data.Configurations
 {
-    
-        public class UserConfig : IEntityTypeConfiguration<User>
-        {
-            public void Configure(EntityTypeBuilder<User> builder)
-            {
 
-            }
+    public class UserConfig : IEntityTypeConfiguration<User>
+    {
+        public void Configure(EntityTypeBuilder<User> builder)
+        {
 
         }
-    
+
+    }
+
 }

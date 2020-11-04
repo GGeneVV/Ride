@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace RidePal.Models
 {
@@ -43,15 +41,15 @@ namespace RidePal.Models
         [Required]
         [JsonProperty("album")]
         public Album Album { get; set; }
-        
-        public Guid? AlbumId { get; set; } 
+
+        public Guid? AlbumId { get; set; }
 
         [Required]
         [JsonProperty("artist")]
         public Artist Artist { get; set; }
         public Guid? ArtistId { get; set; }
 
-        public Genre Genre { get; set; } 
+        public Genre Genre { get; set; }
         public Guid? GenreId { get; set; }
 
         public virtual ICollection<TrackPlaylist> TrackPlaylists { get; set; } = new List<TrackPlaylist>();

@@ -3,13 +3,12 @@ using RidePal.Models.Abstracts;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace RidePal.Models
 {
     public class Genre : Entity
     {
-  
+
         [Key]
         public Guid Id { get; set; }
 

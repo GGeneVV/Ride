@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using RidePal.Services;
 using RidePal.Services.Contracts;
 using RidePal.Web.Models;
+using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace RidePal.Web.Controllers
 {

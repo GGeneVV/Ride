@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace RidePal.Services
+﻿namespace RidePal.Services
 {
     public class UserService
     {

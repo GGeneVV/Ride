@@ -3,7 +3,6 @@ using RidePal.Models.Abstracts;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace RidePal.Models
 {
@@ -28,7 +27,7 @@ namespace RidePal.Models
         [JsonProperty("tracklist")]
         public string TrackListURL { get; set; }
 
-        public virtual ICollection<Track> Tracks { get; set; } = new List<Track>(); 
+        public virtual ICollection<Track> Tracks { get; set; } = new List<Track>();
 
         public virtual ICollection<Album> Albums { get; set; } = new List<Album>();
     }

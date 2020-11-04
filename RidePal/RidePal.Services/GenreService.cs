@@ -5,12 +5,7 @@ using RidePal.Data;
 using RidePal.Models;
 using RidePal.Models.DataSource;
 using RidePal.Services.Contracts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace RidePal.Services
@@ -76,13 +71,14 @@ namespace RidePal.Services
                 //var app = JObject.Parse(responseAsString)["genres"]["data"][0]["name"].ToString();//["data"]["name"];
                 //var AppId = JObject.Parse(result)["log"].SelectToken("$.Response[?(@.@type=='GetApplication')]")["AppId"].ToString();
 
-                var tracks = JObject.Parse(responseAsString)["tracks"]["data"]; //tracks as json
 
-                for (int i = 0; i < tracks.Count(); i++)
+                for (int i = 0; i < 50; i++)
                 {
-                    var trackAsObject = JsonConvert.DeserializeObject<Track>(tracks[i].ToString());
-                    var trackArtist = JsonConvert.DeserializeObject<Artist>(tracks[i]["artist"].ToString());
-                    var trackAlbum = JsonConvert.DeserializeObject<Album>(tracks[i]["album"].ToString());
+                    var track = JObject.Parse(responseAsString)["tracks"]["data"][i]; //tracks as json
+
+                    var trackAsObject = JsonConvert.DeserializeObject<Track>(track.ToString());
+                    var trackArtist = JsonConvert.DeserializeObject<Artist>(track["artist"].ToString());
+                    var trackAlbum = JsonConvert.DeserializeObject<Album>(track["album"].ToString());
 
                     await _appDbContext.Artists.AddAsync(trackArtist);
                     //await _appDbContext.SaveChangesAsync();

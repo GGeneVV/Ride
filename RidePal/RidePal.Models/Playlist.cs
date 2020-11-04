@@ -1,9 +1,7 @@
 ﻿using RidePal.Models.Abstracts;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace RidePal.Models
 {
@@ -23,7 +21,7 @@ namespace RidePal.Models
         public virtual User User { get; set; }
 
         public virtual ICollection<TrackPlaylist> TrackPlaylists { get; set; } = new List<TrackPlaylist>();
-        
+
 
     }
 }
