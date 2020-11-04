@@ -72,6 +72,23 @@ namespace RidePal.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Genres",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    CreatedOn = table.Column<DateTime>(nullable: true),
+                    ModifiedOn = table.Column<DateTime>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeezerId = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
+                    Picture = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Genres", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Albums",
                 columns: table => new
                 {
@@ -231,30 +248,6 @@ namespace RidePal.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Genres",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false),
-                    CreatedOn = table.Column<DateTime>(nullable: true),
-                    ModifiedOn = table.Column<DateTime>(nullable: true),
-                    IsDeleted = table.Column<bool>(nullable: false),
-                    DeezerId = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(nullable: false),
-                    Picture = table.Column<string>(nullable: true),
-                    PlaylistUserId = table.Column<Guid>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Genres", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Genres_Playlists_PlaylistUserId",
-                        column: x => x.PlaylistUserId,
-                        principalTable: "Playlists",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Tracks",
                 columns: table => new
                 {
@@ -298,7 +291,10 @@ namespace RidePal.Data.Migrations
                 columns: table => new
                 {
                     TrackId = table.Column<Guid>(nullable: false),
-                    PlaylistId = table.Column<Guid>(nullable: false)
+                    PlaylistId = table.Column<Guid>(nullable: false),
+                    CreatedOn = table.Column<DateTime>(nullable: true),
+                    ModifiedOn = table.Column<DateTime>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -362,11 +358,6 @@ namespace RidePal.Data.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Genres_PlaylistUserId",
-                table: "Genres",
-                column: "PlaylistUserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_TrackPlaylists_PlaylistId",
                 table: "TrackPlaylists",
                 column: "PlaylistId");
@@ -411,7 +402,13 @@ namespace RidePal.Data.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
+                name: "Playlists");
+
+            migrationBuilder.DropTable(
                 name: "Tracks");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "Albums");
@@ -421,12 +418,6 @@ namespace RidePal.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Artists");
-
-            migrationBuilder.DropTable(
-                name: "Playlists");
-
-            migrationBuilder.DropTable(
-                name: "AspNetUsers");
         }
     }
 }
