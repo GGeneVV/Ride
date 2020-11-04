@@ -5,12 +5,8 @@ using RidePal.Data;
 using RidePal.Models;
 using RidePal.Models.DataSource;
 using RidePal.Services.Contracts;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace RidePal.Services
@@ -26,80 +22,7 @@ namespace RidePal.Services
             _mapper = mapper;
         }
 
-        public async Task GetGenresAsync()
-        {
-            var client = new HttpClient();
 
-            using (var response = await client.GetAsync("https://api.deezer.com/genre"))
-            {
-                var responseAsString = await response.Content.ReadAsStringAsync();
-
-                var result = JsonConvert.DeserializeObject<DataGenre>(responseAsString);
-
-                for (int i = 1; i < 6; i++)
-                {
-                    await _appDbContext.Genres.AddAsync(result.Genres[i]);
-                }
-
-                await _appDbContext.SaveChangesAsync();
-            }
-        }
-
-        public async Task GetAlbumsAsync()
-        {
-            var client = new HttpClient();
-
-            using (var response = await client.GetAsync("https://api.deezer.com/album/302127"))
-            {
-                var responseAsString = await response.Content.ReadAsStringAsync();
-
-                var app = JObject.Parse(responseAsString)["genres"]["data"][0]["name"].ToString();//["data"]["name"];
-                //var AppId = JObject.Parse(result)["log"].SelectToken("$.Response[?(@.@type=='GetApplication')]")["AppId"].ToString();
-
-                //for (int i = 1; i < 6; i++)
-                //{
-                //    await _appDbContext.Genres.AddAsync(result.Genres[i]);
-                //}
-
-                //await _appDbContext.SaveChangesAsync();
-            }
-        }
-
-        public async Task GetTracksAsync()
-        {
-            var client = new HttpClient();
-
-            using (var response = await client.GetAsync("https://api.deezer.com/playlist/908622995"))
-            {
-                var responseAsString = await response.Content.ReadAsStringAsync();
-
-                //var app = JObject.Parse(responseAsString)["genres"]["data"][0]["name"].ToString();//["data"]["name"];
-                //var AppId = JObject.Parse(result)["log"].SelectToken("$.Response[?(@.@type=='GetApplication')]")["AppId"].ToString();
-
-                var tracks = JObject.Parse(responseAsString)["tracks"]["data"]; //tracks as json
-
-                for (int i = 0; i < tracks.Count(); i++)
-                {
-                    var trackAsObject = JsonConvert.DeserializeObject<Track>(tracks[i].ToString());
-                    var trackArtist = JsonConvert.DeserializeObject<Artist>(tracks[i]["artist"].ToString());
-                    var trackAlbum = JsonConvert.DeserializeObject<Album>(tracks[i]["album"].ToString());
-
-                    await _appDbContext.Artists.AddAsync(trackArtist);
-                    //await _appDbContext.SaveChangesAsync();
-                    trackAsObject.Artist = trackArtist;
-                    //trackAsObject.ArtistId = trackArtist.Id;
-
-                    trackAlbum.Artist = trackArtist;
-                    await _appDbContext.Albums.AddAsync(trackAlbum);
-                    //await _appDbContext.SaveChangesAsync();
-                    trackAsObject.Album = trackAlbum;
-                    //trackAsObject.AlbumId = trackAlbum.Id;
-
-                    await _appDbContext.Tracks.AddAsync(trackAsObject);
-                    await _appDbContext.SaveChangesAsync();
-                }
-            }
-        }
 
     }
 }

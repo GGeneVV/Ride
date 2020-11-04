@@ -27,9 +27,6 @@ namespace RidePal.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            //await _genreService.GetGenresAsync();
-            //await _genreService.GetAlbumsAsync();
-            await _genreService.GetTracksAsync();
             return View();
         }
 
