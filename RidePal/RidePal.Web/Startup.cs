@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RidePal.Data;
+using RidePal.Data.Seeder;
 using RidePal.Models;
 using RidePal.Services;
 using RidePal.Services.Contracts;
@@ -52,7 +53,7 @@ namespace RidePal.Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public async void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -79,6 +80,12 @@ namespace RidePal.Web
 
                 endpoints.MapRazorPages();
             });
+
+            using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+            var context = serviceScope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+            await context.SeedDbAsync();
+
         }
     }
 }

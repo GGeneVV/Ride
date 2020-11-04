@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using RidePal.Data.Configurations;
+using RidePal.Data.Seeder;
 using RidePal.Models;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RidePal.Data
 {
@@ -27,9 +29,8 @@ namespace RidePal.Data
         public DbSet<TrackPlaylist> TrackPlaylists { get; set; }
 
 
-        protected override void OnModelCreating(ModelBuilder builder)
+        protected override async void OnModelCreating(ModelBuilder builder)
         {
-
             base.OnModelCreating(builder);
 
             builder.ApplyConfiguration(new ArtistConfig());
@@ -48,7 +49,5 @@ namespace RidePal.Data
             }
 
         }
-
-
     }
 }
