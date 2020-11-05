@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using System;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace RidePal.Data.Migrations
 {
-    public partial class Innitial : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -252,6 +252,9 @@ namespace RidePal.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
+                    CreatedOn = table.Column<DateTime>(nullable: true),
+                    ModifiedOn = table.Column<DateTime>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
                     DeezerId = table.Column<string>(nullable: false),
                     Title = table.Column<string>(nullable: false),
                     SongURL = table.Column<string>(nullable: false),

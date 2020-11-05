@@ -312,6 +312,9 @@ namespace RidePal.Data.Migrations
                         .IsRequired()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("DeezerId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -321,6 +324,12 @@ namespace RidePal.Data.Migrations
 
                     b.Property<Guid?>("GenreId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Preview")
                         .IsRequired()

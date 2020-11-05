@@ -10,8 +10,8 @@ using RidePal.Data;
 namespace RidePal.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20201105113647_Innitial")]
-    partial class Innitial
+    [Migration("20201105170144_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -314,6 +314,9 @@ namespace RidePal.Data.Migrations
                         .IsRequired()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("DeezerId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -323,6 +326,12 @@ namespace RidePal.Data.Migrations
 
                     b.Property<Guid?>("GenreId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Preview")
                         .IsRequired()

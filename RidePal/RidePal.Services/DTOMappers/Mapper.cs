@@ -8,11 +8,17 @@ namespace RidePal.Services.DTOMappers
     {
         public Mapper()
         {
-
             CreateMap<Album, AlbumDTO>().ReverseMap();
+            
+            CreateMap<Artist, ArtistDTO>().ReverseMap();
+
             CreateMap<Genre, GenreDTO>().ReverseMap();
 
+            CreateMap<Playlist, PlaylistDTO>().ReverseMap();
 
+            CreateMap<Track, TrackDTO>().ReverseMap();
+
+            CreateMap<User, UserDTO>().ReverseMap();
         }
     }
 

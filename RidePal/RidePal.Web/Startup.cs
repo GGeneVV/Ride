@@ -2,6 +2,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -44,9 +45,17 @@ namespace RidePal.Web
 
             services.AddRazorPages();
 
-            //services.AddScoped<IDateTimeProvider, DateTimeProvider>();
+
+            services.AddScoped<IMapper, Mapper>();
+
+            services.AddScoped<IAlbumService, AlbumService>();
+
+            services.AddScoped<IArtistService, ArtistService>();
 
             services.AddScoped<IGenreService, GenreService>();
+
+            services.AddScoped<ITrackService, TrackService>();
+
 
 
         }
@@ -80,10 +89,10 @@ namespace RidePal.Web
                 endpoints.MapRazorPages();
             });
 
-            using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
-            var context = serviceScope.ServiceProvider.GetRequiredService<AppDbContext>();
-
-            await context.SeedDbAsync();
+            // TODO: Toggle seeder
+            //using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+            //var context = serviceScope.ServiceProvider.GetRequiredService<AppDbContext>();
+            //await context.SeedDbAsync();
 
         }
     }

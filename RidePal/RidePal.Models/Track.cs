@@ -1,11 +1,12 @@
 ﻿using Newtonsoft.Json;
+using RidePal.Models.Abstracts;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace RidePal.Models
 {
-    public class Track
+    public class Track : Entity
     {
 
         [Key]
