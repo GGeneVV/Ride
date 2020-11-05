@@ -3,7 +3,7 @@ using System;
 
 namespace RidePal.Data.Migrations
 {
-    public partial class Initial : Migration
+    public partial class Innitial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

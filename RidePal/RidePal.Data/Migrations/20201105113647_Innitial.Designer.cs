@@ -10,8 +10,8 @@ using RidePal.Data;
 namespace RidePal.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20201104165422_Third")]
-    partial class Third
+    [Migration("20201105113647_Innitial")]
+    partial class Innitial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

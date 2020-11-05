@@ -1,13 +1,9 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RidePal.Models;
 using RidePal.Models.DataSource;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace RidePal.Data.Seeder
@@ -24,7 +20,7 @@ namespace RidePal.Data.Seeder
 
                 var result = JsonConvert.DeserializeObject<DataGenre>(responseAsString);
 
-                for (int i = 1; i < 6; i++)
+                for (int i = 1; i < 22; i++)
                 {
                     var genre = result.Genres[i];
                     await _appDbContext.Genres.AddAsync(genre);

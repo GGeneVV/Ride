@@ -1,13 +1,10 @@
 ﻿using AutoMapper;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using RidePal.Data;
-using RidePal.Models;
-using RidePal.Models.DataSource;
 using RidePal.Services.Contracts;
+using RidePal.Services.DTOModels;
+using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
 
 namespace RidePal.Services
 {
@@ -23,6 +20,22 @@ namespace RidePal.Services
         }
 
 
+        public GenreDTO GetGenreByIdAsync(Guid genreId)
+        {
+            var genre = _appDbContext.Genres.Where(g => g.Id == genreId).FirstOrDefault(g => g.IsDeleted == false);
 
+            var genreDTO = _mapper.Map<GenreDTO>(genre);
+
+            return genreDTO;
+        }
+
+        public ICollection<GenreDTO> GetAllGenresAsync()
+        {
+            var genres = _appDbContext.Genres.Where(g => g.IsDeleted == false);
+
+            var genresDTO = genres.Select(g => _mapper.Map<GenreDTO>(g)).ToList();
+
+            return genresDTO;
+        }
     }
 }

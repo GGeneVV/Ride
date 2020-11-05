@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace RidePal.Services
+﻿namespace RidePal.Services
 {
     class DBSeederService
     {

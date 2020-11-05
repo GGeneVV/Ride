@@ -4,10 +4,11 @@ using System.Collections.Generic;
 
 namespace RidePal.Services.Contracts
 {
-    public interface IGenreService
+    public interface IAlbumService
     {
-        GenreDTO GetGenreByIdAsync(Guid genreId);
+        AlbumDTO GetAlbumByIdAsync(Guid albumId);
 
-        ICollection<GenreDTO> GetAllGenresAsync();
+        ICollection<AlbumDTO> GetAllAlbumsAsync();
+
     }
 }

@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using RidePal.Data.Configurations;
-using RidePal.Data.Seeder;
 using RidePal.Models;
 using System;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace RidePal.Data
 {
