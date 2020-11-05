@@ -1,13 +1,9 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RidePal.Models;
 using RidePal.Models.DataSource;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace RidePal.Data.Seeder
@@ -36,8 +32,15 @@ namespace RidePal.Data.Seeder
 
                         var playlistTracks = JObject.Parse(responseSecondAsString)["data"];
 
-                        for (int t = 0; t < playlistTracks.Count(); t++)
+                        var counter = 0;
+
+                    for (int t = 0; t < playlistTracks.Count(); t++)
                         {
+                            if (counter >= 1500)
+                            {
+                                break;
+                            }
+
                             var tracklistURL = playlistTracks[t]["tracklist"].ToString();
 
                             using (var responseThird = await client.GetAsync($"{tracklistURL}&limit=100"))
@@ -49,6 +52,12 @@ namespace RidePal.Data.Seeder
 
                                 for (int j = 0; j < tracks.Count(); j++)
                                 {
+                                    counter++;
+                                    if (counter >= 1500)
+                                    {
+                                        break;
+                                    }
+
                                     var trackAsObject = JsonConvert.DeserializeObject<Track>(tracks[j].ToString());
                                     var trackArtist = JsonConvert.DeserializeObject<Artist>(tracks[j]["artist"].ToString());
                                     var trackAlbum = JsonConvert.DeserializeObject<Album>(tracks[j]["album"].ToString());

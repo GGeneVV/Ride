@@ -9,7 +9,7 @@ namespace RidePal.Services.DTOMappers
         public Mapper()
         {
             CreateMap<Album, AlbumDTO>().ReverseMap();
-            
+
             CreateMap<Artist, ArtistDTO>().ReverseMap();
 
             CreateMap<Genre, GenreDTO>().ReverseMap();
