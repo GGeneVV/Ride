@@ -11,5 +11,6 @@ namespace RidePal.Services.DTOModels
         public string LastName { get; set; }
         public string Image { get; set; }
         public ICollection<PlaylistDTO> Playlists { get; set; } = new List<PlaylistDTO>();
+
     }
 }

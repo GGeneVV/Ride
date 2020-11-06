@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RidePal.Models;
+using System;
 using System.Collections.Generic;
 
 namespace RidePal.Services.DTOModels
@@ -17,6 +18,7 @@ namespace RidePal.Services.DTOModels
         public Guid? UserId { get; set; }
         public UserDTO User { get; set; }
 
-        public ICollection<TrackDTO> Tracks { get; set; } = new List<TrackDTO>();
+        //public ICollection<TrackDTO> Tracks { get; set; } = new List<TrackDTO>();
+        public virtual ICollection<TrackPlaylist> TrackPlaylists { get; set; } = new List<TrackPlaylist>();
     }
 }
