@@ -53,6 +53,8 @@ namespace RidePal.Web
 
             services.AddScoped<IGenreService, GenreService>();
 
+            services.AddScoped<IPlaylistService, PlaylistService>();
+
             services.AddScoped<ITrackService, TrackService>();
 
 
@@ -89,9 +91,9 @@ namespace RidePal.Web
             });
 
             // TODO: Toggle seeder
-           using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
-            var context = serviceScope.ServiceProvider.GetRequiredService<AppDbContext>();
-            await context.SeedDbAsync();
+            //using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+            //var context = serviceScope.ServiceProvider.GetRequiredService<AppDbContext>();
+            //await context.SeedDbAsync();
 
         }
     }
