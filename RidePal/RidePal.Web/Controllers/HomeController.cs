@@ -11,17 +11,20 @@ namespace RidePal.Web.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IGenreService _genreService;
+        private readonly IPlaylistService _playlistService;
 
-        public HomeController(ILogger<HomeController> logger, IGenreService genreService)
+        public HomeController(ILogger<HomeController> logger, IGenreService genreService, IPlaylistService playlistService)
         {
             _logger = logger;
             _genreService = genreService;
+            _playlistService = playlistService;
             //_userManager = userManager;
             //_signInManager = signInManager;
         }
 
         public async Task<IActionResult> Index()
         {
+            var playlist = await _playlistService.GeneratePlaylist(7850, pop: true);
             return View();
         }
 

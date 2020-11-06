@@ -34,12 +34,9 @@ namespace RidePal.Data.Seeder
 
                         var counter = 0;
 
-                    for (int t = 0; t < playlistTracks.Count(); t++)
+                        for (int t = 0; t < playlistTracks.Count(); t++)
                         {
-                            if (counter >= 1500)
-                            {
-                                break;
-                            }
+                            if (counter >= 1500) { break; }
 
                             var tracklistURL = playlistTracks[t]["tracklist"].ToString();
 
@@ -53,10 +50,7 @@ namespace RidePal.Data.Seeder
                                 for (int j = 0; j < tracks.Count(); j++)
                                 {
                                     counter++;
-                                    if (counter >= 1500)
-                                    {
-                                        break;
-                                    }
+                                    if (counter >= 1500) { break; }
 
                                     var trackAsObject = JsonConvert.DeserializeObject<Track>(tracks[j].ToString());
                                     var trackArtist = JsonConvert.DeserializeObject<Artist>(tracks[j]["artist"].ToString());
