@@ -5,6 +5,7 @@ using System.Text;
 
 namespace RidePal.Services.DTOModels
 {
+    //TODO: we don't need this
     public class TrackPlaylistDTO
     {
         public Guid TrackId { get; set; }
