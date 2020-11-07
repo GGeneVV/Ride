@@ -23,7 +23,7 @@ namespace RidePal.Services
             _mapper = mapper;
         }
 
-        public IQueryable<Track> TracksByConfig(PlaylistConfig playlistConfig)
+        public IQueryable<Track> RandomTracksByConfig(PlaylistConfig playlistConfig)
         {
             var genreNames = playlistConfig.GenreConfigs
                 .Where(g => g.IsChecked == true)
@@ -33,7 +33,8 @@ namespace RidePal.Services
                 .AsNoTracking()
                 .Where(t => t.IsDeleted == false)
                 .Include(t => t.Genre)
-                .Where(t => genreNames.Contains(t.Genre.Name));
+                .Where(t => genreNames.Contains(t.Genre.Name))
+                .OrderBy(t => Guid.NewGuid());
 
             return tracks;
         }
@@ -57,7 +58,7 @@ namespace RidePal.Services
             };
 
             List<TrackPlaylist> trackPlaylist = new List<TrackPlaylist>();
-            IQueryable<Track> orderedTracks = TracksByConfig(playlistConfig);
+            IQueryable<Track> orderedTracks = RandomTracksByConfig(playlistConfig);
 
             foreach (var genre in genres)
             {
@@ -89,7 +90,6 @@ namespace RidePal.Services
                     if (genreDuration + track.Duration > durationPerGenre + avgMinPerGenre) 
                         break;
 
-                    //tracks.Add(track);
                     totalDuration += track.Duration;
                     genreDuration += track.Duration;
                     trackPlaylist.Add(new TrackPlaylist()
@@ -101,16 +101,10 @@ namespace RidePal.Services
                     count++;
                 }
             }
-
-            if (playlistConfig.UseTopTracks == true)
+            if (playlistConfig.UseTopTracks)
             {
                 trackPlaylist = trackPlaylist.OrderBy(t => t.Track.Rank).ToList();
             }
-            else
-            {
-                trackPlaylist = trackPlaylist.OrderBy(t => Guid.NewGuid()).ToList();
-            }
-
             playlist.Duration = totalDuration;
             playlist.TrackPlaylists = trackPlaylist;
             return playlist;

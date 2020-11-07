@@ -30,7 +30,7 @@ namespace RidePal.Web.Controllers
             //Test purpose
             var playlistConfig = new PlaylistConfig()
             {
-                //UseTopTracks = true,
+                UseTopTracks = true,
                 IsAdvanced = true,
                 GenreConfigs = new List<PlaylistGenreConfig>()
                 {
