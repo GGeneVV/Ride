@@ -8,6 +8,7 @@ namespace RidePal.Services.Configurations
     {
         public bool UseTopTracks { get; set; }
         public bool AllowTracksFromSameArtist { get; set; }
+        public bool IsAdvanced { get; set; }
         public ICollection<PlaylistGenreConfig> GenreConfigs { get; set; } = new List<PlaylistGenreConfig>();
     }
 }
