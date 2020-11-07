@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using RidePal.Services.Configurations;
 using RidePal.Services.Contracts;
 using RidePal.Web.Models;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace RidePal.Web.Controllers
@@ -24,7 +27,33 @@ namespace RidePal.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var playlist = await _playlistService.GeneratePlaylist(7850, pop: true);
+            //Test purpose
+            var playlistConfig = new PlaylistConfig()
+            {
+                UseTopTracks = true,
+                IsAdvanced = true,
+                GenreConfigs = new List<PlaylistGenreConfig>()
+                {
+                    new PlaylistGenreConfig()
+                    {
+                        IsChecked = true,
+                        Name = "Pop",
+                        Percentage = 80
+                        
+                    },
+                    new PlaylistGenreConfig()
+                    {
+                        IsChecked = true,
+                        Name = "Rock",
+                        Percentage = 20
+                    },
+                }
+            };
+            var playlist = await _playlistService.GeneratePlaylist(7850, playlistConfig);
+            //Test purpose--------------
+            int pop = playlist.TrackPlaylists.Select(x => x.Track.Genre).Where(x => x.Name == "Pop").Count();
+            int rock = playlist.TrackPlaylists.Select(x => x.Track.Genre).Where(x => x.Name == "Rock").Count();
+            //--------------------------
             return View();
         }
 
