@@ -8,6 +8,7 @@ using System.Text;
 
 namespace RidePal.Services.Services
 {
+    //TODO: we don't need this
     public class TrackPlaylistService
     {
         private readonly AppDbContext _appDbContext;
@@ -20,7 +21,7 @@ namespace RidePal.Services.Services
         }
         public TrackPlaylistDTO GetTrackPlaylistByIdAsync(Guid trackPlaylistId)
         {
-            
+            return null;
         }
     }
 }
