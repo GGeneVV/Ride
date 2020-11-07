@@ -75,11 +75,15 @@ namespace RidePal.Web
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
+
             app.UseStaticFiles();
 
             app.UseRouting();
 
             app.UseAuthorization();
+
+          
+
 
             app.UseEndpoints(endpoints =>
             {
@@ -91,9 +95,22 @@ namespace RidePal.Web
             });
 
             // TODO: Toggle seeder
-            //using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
-            //var context = serviceScope.ServiceProvider.GetRequiredService<AppDbContext>();
-            //await context.SeedDbAsync();
+            using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+            var context = serviceScope.ServiceProvider.GetRequiredService<AppDbContext>();
+            await context.SeedDbAsync();
+
+            using var serviceScopeRole = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+            var contextThird = serviceScopeRole.ServiceProvider.GetRequiredService<AppDbContext>();
+            contextThird.SeedRoles();
+
+     
+
+            using var serviceScopeAdmin = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+            var contextSecond = serviceScopeAdmin.ServiceProvider.GetRequiredService<AppDbContext>();
+            contextSecond.SeedUsersRoleAdmin();
+
+
+
 
         }
     }
