@@ -26,8 +26,6 @@ namespace RidePal.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
-
             services.AddDbContext<AppDbContext>(options =>
                  options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
@@ -38,14 +36,16 @@ namespace RidePal.Web
               .AddEntityFrameworkStores<AppDbContext>()
                .AddDefaultTokenProviders();
 
-
-
             services.AddAutoMapper(typeof(Startup));
-
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new RidePal.Services.DTOMappers.Mapper());
+            });
+            IMapper mapper = mapperConfig.CreateMapper();
+            services.AddSingleton(mapper);
             services.AddRazorPages();
 
-
-            services.AddScoped<IMapper, Mapper>();
+            
 
             services.AddScoped<IAlbumService, AlbumService>();
 
@@ -56,8 +56,6 @@ namespace RidePal.Web
             services.AddScoped<IPlaylistService, PlaylistService>();
 
             services.AddScoped<ITrackService, TrackService>();
-
-
 
         }
 
@@ -82,8 +80,6 @@ namespace RidePal.Web
 
             app.UseAuthorization();
 
-          
-
 
             app.UseEndpoints(endpoints =>
             {
@@ -96,23 +92,9 @@ namespace RidePal.Web
 
             
             // TODO: Toggle seeder
-            using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
-            var context = serviceScope.ServiceProvider.GetRequiredService<AppDbContext>();
+            //using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+            //var context = serviceScope.ServiceProvider.GetRequiredService<AppDbContext>();
             //await context.SeedDbAsync();
-            //context.SeedRoles();
-
-            //using var serviceScopeRole = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
-            //var contextThird = serviceScopeRole.ServiceProvider.GetRequiredService<AppDbContext>();
-            //contextThird.SeedRoles();
-
-     
-
-            //using var serviceScopeAdmin = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
-            //var contextSecond = serviceScopeAdmin.ServiceProvider.GetRequiredService<AppDbContext>();
-            //contextSecond.SeedUsersRoleAdmin();
-
-
-
 
         }
     }

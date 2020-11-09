@@ -24,8 +24,8 @@ namespace RidePal.Services
             _mapper = mapper;
             _userManager = userManager;
         }
-
-        public IQueryable<Track> RandomTracksByConfig(PlaylistConfig playlistConfig)
+        
+        public IQueryable<TrackDTO> RandomTracksByConfig(PlaylistConfig playlistConfig)
         {
             var genreNames = playlistConfig.GenreConfigs
                 .Where(g => g.IsChecked == true)
@@ -34,14 +34,15 @@ namespace RidePal.Services
             var tracks = _appDbContext.Tracks
                 .AsNoTracking()
                 .Where(t => t.IsDeleted == false)
-                .Include(t => t.Genre)
+                .Include(t => t.Genre)                        //t =>_mapper.Map<GenreDTO>(t.Genre)
                 .Where(t => genreNames.Contains(t.Genre.Name))
+                .Select(t => _mapper.Map<TrackDTO>(t))
                 .OrderBy(t => Guid.NewGuid());
 
             return tracks;
         }
 
-        public async Task<Playlist> GeneratePlaylist(int travelDuration, PlaylistConfig playlistConfig)
+        public async Task<PlaylistDTO> GeneratePlaylist(int travelDuration, PlaylistConfig playlistConfig)
         {
             int totalDuration = 0;
 
@@ -60,16 +61,17 @@ namespace RidePal.Services
             };
 
             List<TrackPlaylist> trackPlaylist = new List<TrackPlaylist>();
-            IQueryable<Track> orderedTracks = RandomTracksByConfig(playlistConfig);
+            IQueryable<TrackDTO> orderedTracks = RandomTracksByConfig(playlistConfig);
 
             foreach (var genre in genres)
             {
                 int durationPerGenre = 0;
                 int genreDuration = 0;
 
-                var genreTracks = await orderedTracks
-                    .Where(x => x.Genre.Name == genre.Name)
-                    .ToListAsync();
+                var genreTracks = orderedTracks
+                    .AsEnumerable()
+                    .Where(x => x.Genre.Name.Equals(genre.Name))
+                    .ToList();
 
                 if (genre.Percentage <= 0 && playlistConfig.IsAdvanced == false)
                 {
@@ -98,7 +100,7 @@ namespace RidePal.Services
                     {
                         CreatedOn = DateTime.Now,
                         Playlist = playlist,
-                        Track = track,
+                        Track = _mapper.Map<Track>(track),
                     });
                     count++;
                 }
@@ -109,7 +111,9 @@ namespace RidePal.Services
             }
             playlist.Duration = totalDuration;
             playlist.TrackPlaylists = trackPlaylist;
-            return playlist;
+            var playlistDTO = _mapper.Map<PlaylistDTO>(playlist);
+            
+            return playlistDTO;
         }
 
         public IQueryable<PlaylistDTO> GetUserPlaylists(User user)

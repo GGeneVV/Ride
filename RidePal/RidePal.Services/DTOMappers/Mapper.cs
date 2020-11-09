@@ -16,7 +16,7 @@ namespace RidePal.Services.DTOMappers
 
             CreateMap<Playlist, PlaylistDTO>().ReverseMap();
 
-            CreateMap<Track, TrackDTO>().ReverseMap();
+            CreateMap<Track, TrackDTO>().ForMember(g => g.Genre, opt => opt.MapFrom(s => s.Genre)).ReverseMap();
 
             CreateMap<User, UserDTO>().ReverseMap();
         }
