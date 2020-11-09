@@ -94,20 +94,22 @@ namespace RidePal.Web
                 endpoints.MapRazorPages();
             });
 
+            
             // TODO: Toggle seeder
             using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
             var context = serviceScope.ServiceProvider.GetRequiredService<AppDbContext>();
-            await context.SeedDbAsync();
+            //await context.SeedDbAsync();
+            //context.SeedRoles();
 
-            using var serviceScopeRole = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
-            var contextThird = serviceScopeRole.ServiceProvider.GetRequiredService<AppDbContext>();
-            contextThird.SeedRoles();
+            //using var serviceScopeRole = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+            //var contextThird = serviceScopeRole.ServiceProvider.GetRequiredService<AppDbContext>();
+            //contextThird.SeedRoles();
 
      
 
-            using var serviceScopeAdmin = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
-            var contextSecond = serviceScopeAdmin.ServiceProvider.GetRequiredService<AppDbContext>();
-            contextSecond.SeedUsersRoleAdmin();
+            //using var serviceScopeAdmin = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+            //var contextSecond = serviceScopeAdmin.ServiceProvider.GetRequiredService<AppDbContext>();
+            //contextSecond.SeedUsersRoleAdmin();
 
 
 

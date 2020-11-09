@@ -13,5 +13,11 @@ namespace RidePal.Services.Contracts
     {
         IQueryable<Track> RandomTracksByConfig(PlaylistConfig playlistConfig);
         Task<Playlist> GeneratePlaylist(int travelDuration, PlaylistConfig playlistConfig);
+
+        IQueryable<PlaylistDTO> GetUserPlaylists(User user);
+
+        Task<PlaylistDTO> GetPlaylist(Guid id);
+        public IQueryable<PlaylistDTO> GetAllPlaylists();
+
     }
 }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RidePal.Data;
 
 namespace RidePal.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201109092003_lalala")]
+    partial class lalala
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -99,13 +101,6 @@ namespace RidePal.Data.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles");
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = new Guid("dbaf3f8c-f7b9-4a43-a377-cefd0697dba6"),
-                            RoleId = new Guid("c8c26c3e-28d1-4933-9f53-531973020bcb")
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
@@ -307,15 +302,15 @@ namespace RidePal.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("c8c26c3e-28d1-4933-9f53-531973020bcb"),
-                            ConcurrencyStamp = "b29ed945-acf4-459b-8d6b-458283463a36",
+                            Id = new Guid("51446abf-cde4-4569-885c-0932e45d2adc"),
+                            ConcurrencyStamp = "09737377-72d7-458c-a2c1-8a2a4eaae011",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = new Guid("15751626-c238-479b-9628-b8b503b587c1"),
-                            ConcurrencyStamp = "fa4c4741-98fb-4679-a5cc-c766e1ca1d21",
+                            Id = new Guid("c9c2dbd4-4c9d-42c5-a8c3-f6b1611901c7"),
+                            ConcurrencyStamp = "86daaccb-8104-4862-b74e-2ffaf89bde47",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -492,31 +487,6 @@ namespace RidePal.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("dbaf3f8c-f7b9-4a43-a377-cefd0697dba6"),
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "cbda5bad-35a6-4c9f-993f-b8355ad6d6d4",
-                            CreatedOn = new DateTime(2020, 11, 9, 9, 49, 50, 775, DateTimeKind.Utc).AddTicks(8939),
-                            Email = "gigenev@gmail.com",
-                            EmailConfirmed = true,
-                            FirstName = "Gencho",
-                            Image = "~/images/Profile.jpg",
-                            IsAdmin = true,
-                            IsBanned = false,
-                            IsDeleted = false,
-                            LastName = "Genev",
-                            LockoutEnabled = false,
-                            NormalizedEmail = "GIGENEV@GMAIL.COM",
-                            NormalizedUserName = "GIGENEV@ADMIN.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEMR10PbLQ2Hltgj0Vc92eMERlePpiFgNlUq6yvLyfQQ0xNYos4n0ADx9RXOorqVKlA==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "7cd48c9a-893d-40f6-9369-a7071268c35a",
-                            TwoFactorEnabled = false,
-                            UserName = "gigenev@gmail.com"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -524,7 +494,7 @@ namespace RidePal.Data.Migrations
                     b.HasOne("RidePal.Models.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -533,7 +503,7 @@ namespace RidePal.Data.Migrations
                     b.HasOne("RidePal.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -542,7 +512,7 @@ namespace RidePal.Data.Migrations
                     b.HasOne("RidePal.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -551,13 +521,13 @@ namespace RidePal.Data.Migrations
                     b.HasOne("RidePal.Models.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("RidePal.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -566,7 +536,7 @@ namespace RidePal.Data.Migrations
                     b.HasOne("RidePal.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 

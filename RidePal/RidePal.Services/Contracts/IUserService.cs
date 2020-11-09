@@ -1,4 +1,6 @@
-﻿using RidePal.Services.DTOModels;
+﻿using Microsoft.AspNetCore.Identity;
+using RidePal.Models;
+using RidePal.Services.DTOModels;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,9 +10,7 @@ namespace RidePal.Services.Contracts
 {
     public interface IUserService
     {
-        Task<PlaylistDTO> GetPlaylist(Guid id);
-        Task<ICollection<PlaylistDTO>> GetPlaylists();
-        Task<PlaylistDTO> EditPlaylist(Guid id);
-        Task<PlaylistDTO> RemovePlaylist(Guid id);
+        
+       
     }
 }
