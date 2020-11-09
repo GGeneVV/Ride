@@ -11,6 +11,8 @@ using RidePal.Data.Seeder;
 using RidePal.Models;
 using RidePal.Services;
 using RidePal.Services.Contracts;
+using RidePal.Services.DTOMappers;
+using RidePal.Web.VMMappers;
 
 namespace RidePal.Web
 {
@@ -37,15 +39,18 @@ namespace RidePal.Web
                .AddDefaultTokenProviders();
 
             services.AddAutoMapper(typeof(Startup));
+
             var mapperConfig = new MapperConfiguration(mc =>
             {
-                mc.AddProfile(new RidePal.Services.DTOMappers.Mapper());
+                mc.AddProfile(new DTOMapperProflie());
+                mc.AddProfile(new VMMapperProfile());
             });
-            IMapper mapper = mapperConfig.CreateMapper();
-            services.AddSingleton(mapper);
-            services.AddRazorPages();
 
-            
+            IMapper mapper = mapperConfig.CreateMapper();
+
+            services.AddSingleton(mapper);
+
+            services.AddRazorPages();
 
             services.AddScoped<IAlbumService, AlbumService>();
 
