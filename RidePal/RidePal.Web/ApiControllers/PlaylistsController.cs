@@ -1,13 +1,17 @@
-﻿using System;
+﻿
+using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using RidePal.Services;
+using RidePal.Services.Configurations;
+using RidePal.Services.Contracts;
+using RidePal.Services.DTOModels;
+using RidePal.Web.Models;
+using RidePal.Web.Models.EditVM;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using RidePal.Data;
-using RidePal.Models;
 
 namespace RidePal.Web
 {
@@ -16,61 +20,57 @@ namespace RidePal.Web
     [ApiController]
     public class PlaylistsController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly IPlaylistService _playlistService;
+        private readonly IMapper _mapper;
 
-        public PlaylistsController(AppDbContext context)
+        public PlaylistsController(IPlaylistService playlistService, IMapper mapper)
         {
-            _context = context;
+            _playlistService = playlistService;
+            _mapper = mapper;
         }
 
         // GET: api/Playlists
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Playlist>>> GetPlaylists()
+        public IActionResult GetAllPlaylists()
         {
-            return await _context.Playlists.ToListAsync();
+            var playlists = _playlistService.GetAllPlaylists();
+            return Ok(playlists);
         }
 
         // GET: api/Playlists/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Playlist>> GetPlaylist(Guid? id)
+        public async Task<ActionResult<PlaylistDTO>> GetPlaylist(Guid? id)
         {
-            var playlist = await _context.Playlists.FindAsync(id);
-
-            if (playlist == null)
+            PlaylistDTO playlist;
+            try
+            {
+                playlist = await _playlistService.GetPlaylist(id);
+            }
+            catch (Exception)
             {
                 return NotFound();
             }
 
-            return playlist;
+            return Ok(playlist);
         }
 
         // PUT: api/Playlists/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPlaylist(Guid? id, Playlist playlist)
+        public async Task<IActionResult> PutPlaylist(Guid? id, EditPlaylistVM updatedPlaylist)
         {
-            if (id != playlist.UserId)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(playlist).State = EntityState.Modified;
-
+            PlaylistDTO playlist;
             try
             {
-                await _context.SaveChangesAsync();
+                if (updatedPlaylist == null) { throw new ArgumentNullException(); }
+
+                var updatedDTO = _mapper.Map<PlaylistDTO>(updatedPlaylist);
+                playlist = await _playlistService.EditPlaylist(id, updatedDTO);
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception)
             {
-                if (!PlaylistExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound();
             }
 
             return NoContent();
@@ -80,47 +80,35 @@ namespace RidePal.Web
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Playlist>> PostPlaylist(Playlist playlist)
+        public async Task<ActionResult<PlaylistDTO>> PostPlaylist(int travelDuration, PlaylistConfig playlistConfig)
         {
-            _context.Playlists.Add(playlist);
+            PlaylistDTO playlistDTO;
             try
             {
-                await _context.SaveChangesAsync();
+                playlistDTO = await _playlistService.GeneratePlaylist(travelDuration, playlistConfig);
             }
-            catch (DbUpdateException)
+            catch (Exception)
             {
-                if (PlaylistExists(playlist.UserId))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
+                return BadRequest();
             }
 
-            return CreatedAtAction("GetPlaylist", new { id = playlist.UserId }, playlist);
+            return Created("PostPlaylist", playlistDTO);
         }
 
         // DELETE: api/Playlists/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Playlist>> DeletePlaylist(Guid? id)
+        public async Task<ActionResult> DeletePlaylist(Guid? id)
         {
-            var playlist = await _context.Playlists.FindAsync(id);
-            if (playlist == null)
+            try
+            {
+                await _playlistService.DeletePlaylist(id);
+            }
+            catch (Exception)
             {
                 return NotFound();
             }
-
-            _context.Playlists.Remove(playlist);
-            await _context.SaveChangesAsync();
-
-            return playlist;
+            return NoContent();
         }
 
-        private bool PlaylistExists(Guid? id)
-        {
-            return _context.Playlists.Any(e => e.UserId == id);
-        }
     }
 }

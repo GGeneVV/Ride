@@ -1,10 +1,11 @@
-﻿using RidePal.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace RidePal.Services.DTOModels
+namespace RidePal.Web.Models
 {
-    public class TrackDTO
+    public class TrackVM
     {
         public Guid Id { get; set; }
         public string DeezerId { get; set; }
@@ -14,12 +15,11 @@ namespace RidePal.Services.DTOModels
         public int Rank { get; set; }
         public DateTime ReleaseDate { get; set; }
         public string Preview { get; set; }
-        public Album Album { get; set; }
+        public AlbumVM Album { get; set; }
         public Guid? AlbumId { get; set; }
-        public Artist Artist { get; set; }
+        public ArtistVM Artist { get; set; }
         public Guid? ArtistId { get; set; }
-        public GenreDTO Genre { get; set; }
+        public GenreVM Genre { get; set; }
         public Guid? GenreId { get; set; }
-
     }
 }

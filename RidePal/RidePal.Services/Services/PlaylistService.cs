@@ -44,6 +44,7 @@ namespace RidePal.Services
 
         public async Task<PlaylistDTO> GeneratePlaylist(int travelDuration, PlaylistConfig playlistConfig)
         {
+            if (travelDuration <= 0 || playlistConfig == null) { throw new ArgumentNullException(); }
             int totalDuration = 0;
 
             var genres = playlistConfig.GenreConfigs
@@ -123,20 +124,23 @@ namespace RidePal.Services
                 throw new ArgumentNullException();
             }
 
-            var playlist = _appDbContext.Playlists.Where(p => p.UserId == user.Id && p.IsDeleted == false)
+            var playlist = _appDbContext.Playlists
+                .Where(p => p.UserId == user.Id && p.IsDeleted == false)
                 .Select(p => _mapper.Map<PlaylistDTO>(p));
-
 
             return playlist;
         }
 
-        public async Task<PlaylistDTO> GetPlaylist(Guid id)
+        public async Task<PlaylistDTO> GetPlaylist(Guid? id)
         {
-            if (id == null)
-            {
-                throw new ArgumentNullException();
-            }
-            var playlist = await _appDbContext.Playlists.FirstOrDefaultAsync(p => p.Id == id);
+            if (id == null) { throw new ArgumentNullException(); }
+
+            var playlist = await _appDbContext.Playlists
+                .Where(p => p.IsDeleted == false)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (playlist == null) { throw new ArgumentNullException(); }
+
             var dto = _mapper.Map<PlaylistDTO>(playlist);
 
             return dto;
@@ -144,12 +148,40 @@ namespace RidePal.Services
 
         public IQueryable<PlaylistDTO> GetAllPlaylists()
         {
-            var playlist = _appDbContext.Playlists.Where(p => p.IsDeleted == false)
-               .Select(p => _mapper.Map<PlaylistDTO>(p));
-
+            var playlist = _appDbContext.Playlists
+                .Where(p => p.IsDeleted == false)
+                .Select(p => _mapper.Map<PlaylistDTO>(p));
 
             return playlist;
         }
 
+        public async Task DeletePlaylist(Guid? id)
+        {
+            if (id == null) { throw new ArgumentNullException(); }
+
+            var playlist = await _appDbContext.Playlists
+                .Where(p => p.IsDeleted == false)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (playlist == null) { throw new ArgumentNullException(); }
+
+            playlist.IsDeleted = true;
+            await _appDbContext.SaveChangesAsync();
+        }
+
+        public async Task<PlaylistDTO> EditPlaylist(Guid? id, PlaylistDTO updatedPlaylist)
+        {
+            if (id == null || updatedPlaylist == null) { throw new ArgumentNullException(); }
+
+            var playlist = await _appDbContext.Playlists
+                .Where(p => p.IsDeleted == false)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (playlist == null) { throw new ArgumentNullException(); }
+
+            playlist.Title = updatedPlaylist.Title;
+            await _appDbContext.SaveChangesAsync();
+            return _mapper.Map<PlaylistDTO>(playlist);
+        }
     }
 }

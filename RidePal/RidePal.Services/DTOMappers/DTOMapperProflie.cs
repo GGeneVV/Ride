@@ -4,9 +4,9 @@ using RidePal.Services.DTOModels;
 
 namespace RidePal.Services.DTOMappers
 {
-    public class Mapper : Profile
+    public class DTOMapperProflie : Profile
     {
-        public Mapper()
+        public DTOMapperProflie()
         {
             CreateMap<Album, AlbumDTO>().ReverseMap();
 
