@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using RidePal.Models;
-using System;
 
 namespace RidePal.Data.Configurations
 {
@@ -11,7 +9,7 @@ namespace RidePal.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-           
+
         }
 
     }

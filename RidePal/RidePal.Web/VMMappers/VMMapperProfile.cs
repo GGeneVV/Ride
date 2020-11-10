@@ -2,10 +2,6 @@
 using RidePal.Services.DTOModels;
 using RidePal.Web.Models;
 using RidePal.Web.Models.EditVM;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace RidePal.Web.VMMappers
 {

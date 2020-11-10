@@ -7,7 +7,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RidePal.Data;
-using RidePal.Data.Seeder;
 using RidePal.Models;
 using RidePal.Services;
 using RidePal.Services.Contracts;
@@ -34,9 +33,22 @@ namespace RidePal.Web
             services.AddControllersWithViews()
               .AddRazorRuntimeCompilation();
 
-            services.AddIdentity<User, Role>(option => option.SignIn.RequireConfirmedAccount = false)
-              .AddEntityFrameworkStores<AppDbContext>()
-               .AddDefaultTokenProviders();
+            services.AddIdentity<User, Role>(option =>
+            {
+                option.SignIn.RequireConfirmedAccount = false;
+                option.Password.RequiredLength = 4;
+                option.Password.RequireLowercase = false;
+                option.Password.RequireUppercase = false;
+                option.Password.RequireNonAlphanumeric = false;
+                option.Password.RequireDigit = false;
+            })
+            .AddEntityFrameworkStores<AppDbContext>()
+            .AddDefaultTokenProviders();
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.Cookie.Name = "Identity.Cookie";
+            });
 
             services.AddAutoMapper(typeof(Startup));
 
@@ -62,6 +74,8 @@ namespace RidePal.Web
 
             services.AddScoped<ITrackService, TrackService>();
 
+            services.AddScoped<IUserService, UserService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -83,6 +97,7 @@ namespace RidePal.Web
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
 
@@ -95,7 +110,7 @@ namespace RidePal.Web
                 endpoints.MapRazorPages();
             });
 
-            
+
             // TODO: Toggle seeder
             //using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
             //var context = serviceScope.ServiceProvider.GetRequiredService<AppDbContext>();

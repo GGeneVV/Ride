@@ -5,7 +5,6 @@ using RidePal.Services.Contracts;
 using RidePal.Web.Models;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace RidePal.Web.Controllers
@@ -39,7 +38,7 @@ namespace RidePal.Web.Controllers
                         IsChecked = true,
                         Name = "Pop",
                         Percentage = 80
-                        
+
                     },
                     new PlaylistGenreConfig()
                     {
@@ -51,8 +50,8 @@ namespace RidePal.Web.Controllers
             };
             var playlist = await _playlistService.GeneratePlaylist(7850, playlistConfig);
             //Test purpose--------------
-            int pop = playlist.TrackPlaylists.Select(x => x.Track.Genre).Where(x => x.Name == "Pop").Count();
-            int rock = playlist.TrackPlaylists.Select(x => x.Track.Genre).Where(x => x.Name == "Rock").Count();
+            //int pop = playlist.TrackPlaylists.Select(x => x.Track.Genre).Where(x => x.Name == "Pop").Count();
+            //int rock = playlist.TrackPlaylists.Select(x => x.Track.Genre).Where(x => x.Name == "Rock").Count();
             //--------------------------
             return View();
         }
