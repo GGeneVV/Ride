@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace RidePal.Services.Configurations
 {
@@ -7,6 +8,8 @@ namespace RidePal.Services.Configurations
         public bool UseTopTracks { get; set; }
         public bool AllowTracksFromSameArtist { get; set; }
         public bool IsAdvanced { get; set; }
-        public ICollection<PlaylistGenreConfig> GenreConfigs { get; set; } = new List<PlaylistGenreConfig>();
+
+        //[BindProperty]
+        public IList<PlaylistGenreConfig> GenreConfigs { get; set; } = new List<PlaylistGenreConfig>();
     }
 }
