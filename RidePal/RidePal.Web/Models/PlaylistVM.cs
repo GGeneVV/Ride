@@ -1,10 +1,9 @@
-﻿using RidePal.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-namespace RidePal.Services.DTOModels
+namespace RidePal.Web.Models
 {
-    public class PlaylistDTO
+    public class PlaylistVM
     {
         public Guid Id { get; set; }
         public string Title { get; set; }
@@ -16,8 +15,8 @@ namespace RidePal.Services.DTOModels
         public bool IsTopTracksEnabled { get; set; }
 
         public Guid? UserId { get; set; }
-        public UserDTO User { get; set; }
+        public UserVM User { get; set; }
 
-        public virtual ICollection<TrackPlaylist> TrackPlaylists { get; set; } = new List<TrackPlaylist>();
+        public virtual ICollection<TrackPlaylistVM> TrackPlaylists { get; set; } = new List<TrackPlaylistVM>();
     }
 }

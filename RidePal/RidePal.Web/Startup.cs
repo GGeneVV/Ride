@@ -7,10 +7,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RidePal.Data;
-using RidePal.Data.Seeder;
 using RidePal.Models;
 using RidePal.Services;
 using RidePal.Services.Contracts;
+using RidePal.Services.DTOMappers;
+using RidePal.Web.VMMappers;
 
 namespace RidePal.Web
 {
@@ -32,20 +33,36 @@ namespace RidePal.Web
             services.AddControllersWithViews()
               .AddRazorRuntimeCompilation();
 
-            services.AddIdentity<User, Role>(option => option.SignIn.RequireConfirmedAccount = false)
-              .AddEntityFrameworkStores<AppDbContext>()
-               .AddDefaultTokenProviders();
+            services.AddIdentity<User, Role>(option =>
+            {
+                option.SignIn.RequireConfirmedAccount = false;
+                option.Password.RequiredLength = 4;
+                option.Password.RequireLowercase = false;
+                option.Password.RequireUppercase = false;
+                option.Password.RequireNonAlphanumeric = false;
+                option.Password.RequireDigit = false;
+            })
+            .AddEntityFrameworkStores<AppDbContext>()
+            .AddDefaultTokenProviders();
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.Cookie.Name = "Identity.Cookie";
+            });
 
             services.AddAutoMapper(typeof(Startup));
+
             var mapperConfig = new MapperConfiguration(mc =>
             {
-                mc.AddProfile(new RidePal.Services.DTOMappers.Mapper());
+                mc.AddProfile(new DTOMapperProflie());
+                mc.AddProfile(new VMMapperProfile());
             });
-            IMapper mapper = mapperConfig.CreateMapper();
-            services.AddSingleton(mapper);
-            services.AddRazorPages();
 
-            
+            IMapper mapper = mapperConfig.CreateMapper();
+
+            services.AddSingleton(mapper);
+
+            services.AddRazorPages();
 
             services.AddScoped<IAlbumService, AlbumService>();
 
@@ -56,6 +73,8 @@ namespace RidePal.Web
             services.AddScoped<IPlaylistService, PlaylistService>();
 
             services.AddScoped<ITrackService, TrackService>();
+
+            services.AddScoped<IUserService, UserService>();
 
         }
 
@@ -78,6 +97,7 @@ namespace RidePal.Web
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
 
@@ -90,7 +110,7 @@ namespace RidePal.Web
                 endpoints.MapRazorPages();
             });
 
-            
+
             // TODO: Toggle seeder
             //using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
             //var context = serviceScope.ServiceProvider.GetRequiredService<AppDbContext>();

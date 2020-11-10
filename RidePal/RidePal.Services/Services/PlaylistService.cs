@@ -24,8 +24,8 @@ namespace RidePal.Services
             _mapper = mapper;
             _userManager = userManager;
         }
-        
-        public IQueryable<TrackDTO> RandomTracksByConfig(PlaylistConfig playlistConfig)
+
+        public IQueryable<TrackDTO> RandomTracksByGenreConfig(PlaylistConfig playlistConfig, string genreName)
         {
             var genreNames = playlistConfig.GenreConfigs
                 .Where(g => g.IsChecked == true)
@@ -34,8 +34,8 @@ namespace RidePal.Services
             var tracks = _appDbContext.Tracks
                 .AsNoTracking()
                 .Where(t => t.IsDeleted == false)
-                .Include(t => t.Genre)                        //t =>_mapper.Map<GenreDTO>(t.Genre)
-                .Where(t => genreNames.Contains(t.Genre.Name))
+                .Include(t => t.Genre)
+                .Where(t => genreNames.Contains(t.Genre.Name) && t.Genre.Name.Equals(genreName))
                 .Select(t => _mapper.Map<TrackDTO>(t))
                 .OrderBy(t => Guid.NewGuid());
 
@@ -44,6 +44,7 @@ namespace RidePal.Services
 
         public async Task<PlaylistDTO> GeneratePlaylist(int travelDuration, PlaylistConfig playlistConfig)
         {
+            if (travelDuration <= 0 || playlistConfig == null) { throw new ArgumentNullException(); }
             int totalDuration = 0;
 
             var genres = playlistConfig.GenreConfigs
@@ -51,7 +52,6 @@ namespace RidePal.Services
 
             int genresCount = genres.Count();
             int avgMinPerGenre = 300 / genresCount; // Get Average additional minute per genre ( 5min MAX )
-
 
             //Initialize playlist
             var playlist = new Playlist()
@@ -61,17 +61,12 @@ namespace RidePal.Services
             };
 
             List<TrackPlaylist> trackPlaylist = new List<TrackPlaylist>();
-            IQueryable<TrackDTO> orderedTracks = RandomTracksByConfig(playlistConfig);
 
             foreach (var genre in genres)
             {
                 int durationPerGenre = 0;
                 int genreDuration = 0;
-
-                var genreTracks = orderedTracks
-                    .AsEnumerable()
-                    .Where(x => x.Genre.Name.Equals(genre.Name))
-                    .ToList();
+                var genreTracks = RandomTracksByGenreConfig(playlistConfig, genre.Name);
 
                 if (genre.Percentage <= 0 && playlistConfig.IsAdvanced == false)
                 {
@@ -86,13 +81,12 @@ namespace RidePal.Services
                 int count = 0;
                 while (true)
                 {
-                    if (count >= genreTracks.Count) { break; }
+                    if (count >= genreTracks.Count()) { break; }
 
-                    var track = genreTracks[count];
+                    var track = await genreTracks.Skip(count).FirstOrDefaultAsync();//Gets Element at index 
 
                     //Break if next track will surpass Max duation per genre
-                    if (genreDuration + track.Duration > durationPerGenre + avgMinPerGenre)
-                        break;
+                    if (genreDuration + track.Duration > durationPerGenre + avgMinPerGenre) { break; }
 
                     totalDuration += track.Duration;
                     genreDuration += track.Duration;
@@ -112,31 +106,31 @@ namespace RidePal.Services
             playlist.Duration = totalDuration;
             playlist.TrackPlaylists = trackPlaylist;
             var playlistDTO = _mapper.Map<PlaylistDTO>(playlist);
-            
+
             return playlistDTO;
         }
 
         public IQueryable<PlaylistDTO> GetUserPlaylists(User user)
         {
-            if (user == null)
-            {
-                throw new ArgumentNullException();
-            }
+            if (user == null) { throw new ArgumentNullException(); }
 
-            var playlist = _appDbContext.Playlists.Where(p => p.UserId == user.Id && p.IsDeleted == false)
+            var playlist = _appDbContext.Playlists
+                .Where(p => p.UserId == user.Id && p.IsDeleted == false)
                 .Select(p => _mapper.Map<PlaylistDTO>(p));
-
 
             return playlist;
         }
 
-        public async Task<PlaylistDTO> GetPlaylist(Guid id)
+        public async Task<PlaylistDTO> GetPlaylist(Guid? id)
         {
-            if (id == null)
-            {
-                throw new ArgumentNullException();
-            }
-            var playlist = await _appDbContext.Playlists.FirstOrDefaultAsync(p => p.Id == id);
+            if (id == null) { throw new ArgumentNullException(); }
+
+            var playlist = await _appDbContext.Playlists
+                .Where(p => p.IsDeleted == false)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (playlist == null) { throw new ArgumentNullException(); }
+
             var dto = _mapper.Map<PlaylistDTO>(playlist);
 
             return dto;
@@ -144,12 +138,40 @@ namespace RidePal.Services
 
         public IQueryable<PlaylistDTO> GetAllPlaylists()
         {
-            var playlist = _appDbContext.Playlists.Where(p => p.IsDeleted == false)
-               .Select(p => _mapper.Map<PlaylistDTO>(p));
-
+            var playlist = _appDbContext.Playlists
+                .Where(p => p.IsDeleted == false)
+                .Select(p => _mapper.Map<PlaylistDTO>(p));
 
             return playlist;
         }
 
+        public async Task DeletePlaylist(Guid? id)
+        {
+            if (id == null) { throw new ArgumentNullException(); }
+
+            var playlist = await _appDbContext.Playlists
+                .Where(p => p.IsDeleted == false)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (playlist == null) { throw new ArgumentNullException(); }
+
+            playlist.IsDeleted = true;
+            await _appDbContext.SaveChangesAsync();
+        }
+
+        public async Task<PlaylistDTO> EditPlaylist(Guid? id, PlaylistDTO updatedPlaylist)
+        {
+            if (id == null || updatedPlaylist == null) { throw new ArgumentNullException(); }
+
+            var playlist = await _appDbContext.Playlists
+                .Where(p => p.IsDeleted == false)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (playlist == null) { throw new ArgumentNullException(); }
+
+            playlist.Title = updatedPlaylist.Title;
+            await _appDbContext.SaveChangesAsync();
+            return _mapper.Map<PlaylistDTO>(playlist);
+        }
     }
 }
