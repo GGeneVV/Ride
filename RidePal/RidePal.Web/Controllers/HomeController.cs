@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using RidePal.Data;
 using RidePal.Services.Configurations;
 using RidePal.Services.Contracts;
 using RidePal.Web.Models;
@@ -29,27 +30,26 @@ namespace RidePal.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
+            var genres = await _genreService.GetAllGenresAsync();
+            var genreConfigs = new List<PlaylistGenreConfig>();
+
+            foreach (var genre in genres)
+            {
+
+                var cnfg = new PlaylistGenreConfig()
+                {
+                    IsChecked = true,
+                    Name = genre.Name,
+                    //Percentage = 
+                };
+                genreConfigs.Add(cnfg);
+            }
             //Test purpose
             var playlistConfig = new PlaylistConfig()
             {
                 UseTopTracks = true,
                 IsAdvanced = true,
-                GenreConfigs = new List<PlaylistGenreConfig>()
-                {
-                    new PlaylistGenreConfig()
-                    {
-                        IsChecked = true,
-                        Name = "Pop",
-                        Percentage = 80
-
-                    },
-                    new PlaylistGenreConfig()
-                    {
-                        IsChecked = true,
-                        Name = "Rock",
-                        Percentage = 20
-                    },
-                }
+                GenreConfigs = genreConfigs
             };
 
             var model = new HomeIndexVM()

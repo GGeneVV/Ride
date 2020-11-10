@@ -1,6 +1,7 @@
 ﻿using RidePal.Services.DTOModels;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace RidePal.Services.Contracts
 {
@@ -8,6 +9,6 @@ namespace RidePal.Services.Contracts
     {
         GenreDTO GetGenreByIdAsync(Guid genreId);
 
-        ICollection<GenreDTO> GetAllGenresAsync();
+        Task<IReadOnlyCollection<GenreDTO>> GetAllGenresAsync();
     }
 }

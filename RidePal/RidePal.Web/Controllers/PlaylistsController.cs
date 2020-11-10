@@ -10,6 +10,7 @@ using RidePal.Data;
 using RidePal.Models;
 using RidePal.Services.Configurations;
 using RidePal.Services.Contracts;
+using RidePal.Web.Models;
 
 namespace RidePal.Web.Controllers
 {
@@ -81,14 +82,9 @@ namespace RidePal.Web.Controllers
         public async Task<IActionResult> GeneratePlaylist(int travelDuration, PlaylistConfig playlistConfig)
         {
             var playlistDTO = await _playlistService.GeneratePlaylist(travelDuration, playlistConfig);
-            //if (ModelState.IsValid)
-            //{
-            //    _context.Add(playlist);
-            //    await _context.SaveChangesAsync();
-            //    return RedirectToAction(nameof(Index));
-            //}
-            //ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", playlist.UserId);
-            return RedirectToAction("Index", "Home");
+            var playlistVM = _mapper.Map<PlaylistVM>(playlistDTO);
+
+            return PartialView("_PlaylistPartial", playlistVM);
         }
 
         // GET: Playlists/Edit/5

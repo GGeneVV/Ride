@@ -7,9 +7,9 @@ namespace RidePal.Services.DTOModels
     public class TrackPlaylistDTO
     {
         public Guid TrackId { get; set; }
-        public Track Track { get; set; }
+        public TrackDTO Track { get; set; }
 
         public Guid PlaylistId { get; set; }
-        public Playlist Playlist { get; set; }
+        public PlaylistDTO Playlist { get; set; }
     }
 }

@@ -18,6 +18,6 @@ namespace RidePal.Services.DTOModels
         public Guid? UserId { get; set; }
         public UserDTO User { get; set; }
 
-        public virtual ICollection<TrackPlaylist> TrackPlaylists { get; set; } = new List<TrackPlaylist>();
+        public virtual ICollection<TrackPlaylistDTO> TrackPlaylists { get; set; } = new List<TrackPlaylistDTO>();
     }
 }
