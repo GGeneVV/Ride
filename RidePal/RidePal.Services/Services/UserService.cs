@@ -22,11 +22,13 @@ namespace RidePal.Services
 
         }
 
-        public Task<UserDTO> EditUser(Guid userId)
+        public Task<PlaylistDTO> EditPlaylist(Guid userId, Guid playlistId)
         {
             try
             {
-               
+                var playlist = _db.Playlists.Where(p => p.UserId == userId).FirstOrDefault(u => u.Id == playlistId);
+                var dto = _mapper.Map<PlaylistService>(playlist);
+                //changing the title or associated genre??
                 return null;
             }
             catch (Exception)
@@ -36,17 +38,24 @@ namespace RidePal.Services
             }
         }
 
-        public Task DeleteUser(Guid userId)
+        public Task<PlaylistDTO> EditPlaylist(Guid id)
         {
-            try
-            {
-                return null;
-            }
-            catch (Exception)
-            {
+            throw new NotImplementedException();
+        }
 
-                throw;
-            }
+        public Task<PlaylistDTO> GetPlaylist(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ICollection<PlaylistDTO>> GetPlaylists()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<PlaylistDTO> RemovePlaylist(Guid id)
+        {
+            throw new NotImplementedException();
         }
     }
 }
