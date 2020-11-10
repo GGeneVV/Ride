@@ -1,6 +1,5 @@
 ﻿using RidePal.Models;
 using System;
-using System.Collections.Generic;
 
 namespace RidePal.Services.DTOModels
 {

@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using RidePal.Data.Configurations;
 using RidePal.Data.Seeder;
@@ -31,14 +30,14 @@ namespace RidePal.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-             UserSeeder.SeedRoles(builder);
+            UserSeeder.SeedRoles(builder);
 
             builder.ApplyConfiguration(new ArtistConfig());
             builder.ApplyConfiguration(new GenreConfig());
             builder.ApplyConfiguration(new TrackConfig());
             builder.ApplyConfiguration(new PlaylistConfig());
             builder.ApplyConfiguration(new TrackPlaylistConfig());
-            
+
             var cascadeFKs = builder.Model.GetEntityTypes()
                 .SelectMany(t => t.GetForeignKeys())
                 .Where(fk => !fk.IsOwnership && fk.DeleteBehavior == DeleteBehavior.Cascade);
@@ -52,7 +51,7 @@ namespace RidePal.Data
             base.OnModelCreating(builder);
         }
 
-        
-        
+
+
     }
 }

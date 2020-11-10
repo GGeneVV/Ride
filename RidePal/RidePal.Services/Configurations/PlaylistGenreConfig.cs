@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Text;
-
-namespace RidePal.Services.Configurations
+﻿namespace RidePal.Services.Configurations
 {
     public class PlaylistGenreConfig
     {

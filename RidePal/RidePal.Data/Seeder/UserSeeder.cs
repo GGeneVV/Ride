@@ -2,8 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using RidePal.Models;
 using System;
-using System.Linq;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace RidePal.Data.Seeder
 {

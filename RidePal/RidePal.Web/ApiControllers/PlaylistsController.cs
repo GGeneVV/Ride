@@ -1,21 +1,16 @@
 ﻿
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using RidePal.Services;
 using RidePal.Services.Configurations;
 using RidePal.Services.Contracts;
 using RidePal.Services.DTOModels;
-using RidePal.Web.Models;
 using RidePal.Web.Models.EditVM;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace RidePal.Web
 {
-    
+
     [Route("api/[controller]")]
     [ApiController]
     public class PlaylistsController : ControllerBase

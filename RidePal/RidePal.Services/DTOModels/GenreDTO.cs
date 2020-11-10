@@ -1,5 +1,4 @@
-﻿using RidePal.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace RidePal.Services.DTOModels
@@ -12,7 +11,7 @@ namespace RidePal.Services.DTOModels
         public string Picture { get; set; }
 
         public ICollection<TrackDTO> Tracks { get; set; }
-            
+
 
     }
 }
