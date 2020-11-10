@@ -1,4 +1,5 @@
-﻿@{
+﻿@model HomeIndexVM
+@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -6,3 +7,39 @@
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
+<div>
+    <form id="form-generate" asp-controller="Playlists" asp-action="GeneratePlaylist" method="post">
+        <div class="form-group">
+            <label>UseTopTracks</label>
+            <input asp-for="PlaylistConfig.UseTopTracks" type="checkbox" class="form-control" />
+        </div>
+        <div class="form-group">
+            @for (var i = 0; i < Model.PlaylistConfig.GenreConfigs.Count; i++)
+            {
+
+                @Html.HiddenFor(m => Model.PlaylistConfig.GenreConfigs[i].Percentage)
+                @Html.HiddenFor(m => Model.PlaylistConfig.GenreConfigs[i].Name)
+                @Html.CheckBoxFor(m => Model.PlaylistConfig.GenreConfigs[i].IsChecked)
+            }
+        </div>
+        from<input id="from" type="text" name="from">
+        to<input id="to" type="text" name="to">
+        <input id="travelDur" name="travelDuration" />
+        @*<button type="button" onclick="Distance()">click me</button>*@
+        <button type="button" onclick="shuffle()">submit</button>
+    </form>
+</div>
+<script>
+    function shuffle() {
+        var from = $('#from').val();
+        var to = $('#to').val();
+        var duration;
+        $.get(`https://dev.virtualearth.net/REST/V1/Routes/Driving?wp.0=${from}&wp.1=${to}&avoid=minimizeTolls&key=Ao0FujyUA1avU6phfkgErqA_GnmNs26KUgvWt6v_HKDXM3wEpZKzn_8j2-LToLbM`).done(function (data) {
+            console.log(data);
+            duration = data.resourceSets[0].resources[0].travelDuration;
+            console.log(duration);
+            $('#travelDur').val(duration);
+            $('#form-generate').submit();
+        });
+    }
+</script>
