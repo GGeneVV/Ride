@@ -16,13 +16,11 @@ namespace RidePal.Services
     {
         private readonly AppDbContext _appDbContext;
         private readonly IMapper _mapper;
-        private readonly UserManager<User> _userManager;
 
         public PlaylistService(AppDbContext appDbContext, IMapper mapper, UserManager<User> userManager)
         {
             _appDbContext = appDbContext;
             _mapper = mapper;
-            _userManager = userManager;
         }
 
         public IQueryable<TrackDTO> RandomTracksByGenreConfig(PlaylistConfig playlistConfig, string genreName)
@@ -44,7 +42,7 @@ namespace RidePal.Services
 
         public async Task<PlaylistDTO> GeneratePlaylist(int travelDuration, PlaylistConfig playlistConfig)
         {
-            if (travelDuration <= 0 || playlistConfig == null) { throw new ArgumentNullException(); }
+            //if (travelDuration <= 0 || playlistConfig == null) { throw new ArgumentNullException(); }
             int totalDuration = 0;
 
             var genres = playlistConfig.GenreConfigs
@@ -102,6 +100,10 @@ namespace RidePal.Services
             if (playlistConfig.UseTopTracks)
             {
                 trackPlaylist = trackPlaylist.OrderBy(t => t.Track.Rank).ToList();
+            }
+            else
+            {
+                trackPlaylist = trackPlaylist.OrderByDescending(t => t.Track.Rank).ToList();
             }
             playlist.Duration = totalDuration;
             playlist.TrackPlaylists = trackPlaylist;

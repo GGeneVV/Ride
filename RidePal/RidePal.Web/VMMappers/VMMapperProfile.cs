@@ -2,6 +2,7 @@
 using RidePal.Services.DTOModels;
 using RidePal.Web.Models;
 using RidePal.Web.Models.EditVM;
+using System.Linq;
 
 namespace RidePal.Web.VMMappers
 {
@@ -10,7 +11,7 @@ namespace RidePal.Web.VMMappers
         public VMMapperProfile()
         {
             CreateMap<EditPlaylistVM, PlaylistDTO>().ReverseMap();
-            CreateMap<PlaylistVM, PlaylistDTO>().ReverseMap();
+            CreateMap<PlaylistDTO, PlaylistVM>().ReverseMap();
 
         }
     }
