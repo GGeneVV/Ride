@@ -13,11 +13,11 @@ namespace RidePal.Services.DTOModels
         public int Rank { get; set; }
         public DateTime ReleaseDate { get; set; }
         public string Preview { get; set; }
-        public Album Album { get; set; }
+        public virtual AlbumDTO Album { get; set; }
         public Guid? AlbumId { get; set; }
-        public Artist Artist { get; set; }
+        public virtual ArtistDTO Artist { get; set; }
         public Guid? ArtistId { get; set; }
-        public GenreDTO Genre { get; set; }
+        public virtual GenreDTO Genre { get; set; }
         public Guid? GenreId { get; set; }
 
     }

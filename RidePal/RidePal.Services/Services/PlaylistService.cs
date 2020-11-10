@@ -23,32 +23,39 @@ namespace RidePal.Services
             _mapper = mapper;
         }
 
-        public IQueryable<TrackDTO> RandomTracksByGenreConfig(PlaylistConfig playlistConfig, string genreName)
+        public async Task<IReadOnlyCollection<TrackDTO>> RandomTracksByGenreConfig(PlaylistConfig playlistConfig, string genreName)
         {
             var genreNames = playlistConfig.GenreConfigs
                 .Where(g => g.IsChecked == true)
                 .Select(g => g.Name);
 
-            var tracks = _appDbContext.Tracks
+            var tracks = await _appDbContext.Tracks
                 .AsNoTracking()
                 .Where(t => t.IsDeleted == false)
-                .Include(t => t.Genre)
+                .Include(a => a.Album)
+                .Include(a => a.Artist)
+                .Include(g => g.Genre)
                 .Where(t => genreNames.Contains(t.Genre.Name) && t.Genre.Name.Equals(genreName))
                 .Select(t => _mapper.Map<TrackDTO>(t))
-                .OrderBy(t => Guid.NewGuid());
+                .OrderBy(t => Guid.NewGuid())
+                .ToListAsync();
 
             return tracks;
         }
 
         public async Task<PlaylistDTO> GeneratePlaylist(int travelDuration, PlaylistConfig playlistConfig)
         {
-            //if (travelDuration <= 0 || playlistConfig == null) { throw new ArgumentNullException(); }
+            if (travelDuration <= 0 || playlistConfig == null) { throw new ArgumentNullException(); }
             int totalDuration = 0;
 
             var genres = playlistConfig.GenreConfigs
                 .Where(x => x.IsChecked == true); // Get only checked genres
 
             int genresCount = genres.Count();
+            if (genresCount <= 0)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
             int avgMinPerGenre = 300 / genresCount; // Get Average additional minute per genre ( 5min MAX )
 
             //Initialize playlist
@@ -64,7 +71,7 @@ namespace RidePal.Services
             {
                 int durationPerGenre = 0;
                 int genreDuration = 0;
-                var genreTracks = RandomTracksByGenreConfig(playlistConfig, genre.Name);
+                var genreTracks = await RandomTracksByGenreConfig(playlistConfig, genre.Name);
 
                 if (genre.Percentage <= 0 && playlistConfig.IsAdvanced == false)
                 {
@@ -81,7 +88,11 @@ namespace RidePal.Services
                 {
                     if (count >= genreTracks.Count()) { break; }
 
-                    var track = await genreTracks.Skip(count).FirstOrDefaultAsync();//Gets Element at index 
+                    //Gets Element at index 
+                    var track = genreTracks.ElementAt(count);
+                    //var track = genreTracks
+                    //    .Skip(count)
+                    //    .FirstOrDefault();
 
                     //Break if next track will surpass Max duation per genre
                     if (genreDuration + track.Duration > durationPerGenre + avgMinPerGenre) { break; }
