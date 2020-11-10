@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using RidePal.Data;
 using RidePal.Services.Contracts;
 using RidePal.Services.DTOModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RidePal.Services
 {
@@ -29,13 +31,14 @@ namespace RidePal.Services
             return genreDTO;
         }
 
-        public ICollection<GenreDTO> GetAllGenresAsync()
+        public async Task<IReadOnlyCollection<GenreDTO>> GetAllGenresAsync()
         {
-            var genres = _appDbContext.Genres.Where(g => g.IsDeleted == false);
+            var genres = await _appDbContext.Genres
+                .Where(g => g.IsDeleted == false)
+                .Select(g => _mapper.Map<GenreDTO>(g))
+                .ToListAsync();
 
-            var genresDTO = genres.Select(g => _mapper.Map<GenreDTO>(g)).ToList();
-
-            return genresDTO;
+            return genres;
         }
     }
 }
