@@ -1,6 +1,6 @@
 ﻿using RidePal.Models;
-using RidePal.Services.Configurations;
 using RidePal.Services.DTOModels;
+using RidePal.Services.DTOModels.Configurations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +10,8 @@ namespace RidePal.Services.Contracts
 {
     public interface IPlaylistService
     {
-        Task<IReadOnlyCollection<TrackDTO>> RandomTracksByGenreConfig(PlaylistConfig playlistConfig, string genreName);
-        Task<PlaylistDTO> GeneratePlaylist(int travelDuration, PlaylistConfig playlistConfig);
+        Task<IReadOnlyCollection<TrackDTO>> RandomTracksByGenreConfig(PlaylistConfigDTO playlistConfigDTO, string genreName);
+        Task<PlaylistDTO> GeneratePlaylist(int travelDuration, PlaylistConfigDTO playlistConfigDTO);
         IQueryable<PlaylistDTO> GetUserPlaylists(User user);
         Task<PlaylistDTO> GetPlaylist(Guid? id);
         IQueryable<PlaylistDTO> GetAllPlaylists();

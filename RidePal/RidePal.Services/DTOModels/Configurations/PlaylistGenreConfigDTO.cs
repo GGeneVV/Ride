@@ -1,6 +1,6 @@
-﻿namespace RidePal.Services.Configurations
+﻿namespace RidePal.Services.DTOModels.Configurations
 {
-    public class PlaylistGenreConfig
+    public class PlaylistGenreConfigDTO
     {
         public string Name { get; set; }
         public bool IsChecked { get; set; }

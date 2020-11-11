@@ -14,12 +14,22 @@
             <input asp-for="PlaylistConfig.UseTopTracks" type="checkbox" class="form-control" />
         </div>
         <div class="form-group">
+            <label>Allow Tracks From Same Artist</label>
+            <input asp-for="PlaylistConfig.AllowTracksFromSameArtist" type="checkbox" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label>Is Advanced</label>
+            <input asp-for="PlaylistConfig.IsAdvanced" type="checkbox" class="form-control" />
+        </div>
+        <div class="form-group">
             @for (var i = 0; i < Model.PlaylistConfig.GenreConfigs.Count; i++)
             {
-
-                @Html.HiddenFor(m => Model.PlaylistConfig.GenreConfigs[i].Percentage)
-                @Html.TextBoxFor(m => Model.PlaylistConfig.GenreConfigs[i].Name)
+                @*<label for="GenreName">  @Html.TextBoxFor(m => Model.PlaylistConfig.GenreConfigs[i].Name)</label>*@
+                @Html.DisplayFor(m => Model.PlaylistConfig.GenreConfigs[i].Name)
+                @Html.HiddenFor(m => Model.PlaylistConfig.GenreConfigs[i].Name)
+                @Html.TextBoxFor(m => Model.PlaylistConfig.GenreConfigs[i].Percentage)
                 @Html.CheckBoxFor(m => Model.PlaylistConfig.GenreConfigs[i].IsChecked)
+
             }
         </div>
         from<input id="from" type="text" name="from">

@@ -1,12 +1,14 @@
 ﻿
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using RidePal.Services.Configurations;
+using RidePal.Services.DTOModels.Configurations;
 using RidePal.Services.Contracts;
 using RidePal.Services.DTOModels;
+using RidePal.Services.DTOModels.Configurations;
 using RidePal.Web.Models.EditVM;
 using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace RidePal.Web
 {
@@ -75,12 +77,12 @@ namespace RidePal.Web
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<PlaylistDTO>> PostPlaylist(int travelDuration, PlaylistConfig playlistConfig)
+        public async Task<ActionResult<PlaylistDTO>> PostPlaylist(int travelDuration, PlaylistConfigDTO playlistConfigDTO)
         {
             PlaylistDTO playlistDTO;
             try
             {
-                playlistDTO = await _playlistService.GeneratePlaylist(travelDuration, playlistConfig);
+                playlistDTO = await _playlistService.GeneratePlaylist(travelDuration, playlistConfigDTO);
             }
             catch (Exception)
             {
