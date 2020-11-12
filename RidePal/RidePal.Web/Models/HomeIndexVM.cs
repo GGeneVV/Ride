@@ -1,4 +1,4 @@
-﻿using RidePal.Services.Configurations;
+﻿using RidePal.Services.DTOModels.Configurations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +8,6 @@ namespace RidePal.Web.Models
 {
     public class HomeIndexVM
     {
-        public PlaylistConfig PlaylistConfig { get; set; }
+        public PlaylistConfigVM PlaylistConfig { get; set; }
     }
 }

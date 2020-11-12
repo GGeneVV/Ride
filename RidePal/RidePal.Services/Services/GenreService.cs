@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using RidePal.Data;
 using RidePal.Services.Contracts;
 using RidePal.Services.DTOModels;
+using RidePal.Services.Extensions;
+using RidePal.Services.Pagination;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,14 +33,52 @@ namespace RidePal.Services
             return genreDTO;
         }
 
-        public async Task<IReadOnlyCollection<GenreDTO>> GetAllGenresAsync()
+        public PaginatedList<GenreDTO> GetAllGenresAsync(
+            int? pageNumber=1,
+            string sortOrder="",
+            string currentFilter="",
+            string searchString="")
         {
-            var genres = await _appDbContext.Genres
-                .Where(g => g.IsDeleted == false)
-                .Select(g => _mapper.Map<GenreDTO>(g))
-                .ToListAsync();
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
 
-            return genres;
+
+            currentFilter = searchString;
+
+            var genres=  _appDbContext.Genres
+                .Where(g => g.IsDeleted == false)
+                .WhereIf(!String.IsNullOrEmpty(searchString), s => s.Name.Contains(searchString))
+                .Select(g => _mapper.Map<GenreDTO>(g));
+            
+                
+
+            switch (sortOrder)
+            {
+                case "tracks_desc":
+                    genres = genres.OrderByDescending(b => b.Tracks.Count);
+                    break;
+                case "Name":
+                    genres = genres.OrderBy(b => b.Name);
+                    break;
+                case "Name_decs":
+                    genres = genres.OrderByDescending(s => s.Name);
+                    break;
+                default:
+                    genres = genres.OrderBy(s => s.Tracks.Count);
+                    break;
+            }
+
+            int pageSize = 10;
+
+            return PaginatedList<GenreDTO>.Create(genres.AsQueryable(), pageNumber ?? 1, pageSize);
+
+        
         }
     }
 }

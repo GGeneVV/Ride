@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using RidePal.Data;
 using RidePal.Models;
-using RidePal.Services.Configurations;
+using RidePal.Services.DTOModels.Configurations;
 using RidePal.Services.Contracts;
 using RidePal.Services.DTOModels;
 using System;
@@ -23,9 +23,9 @@ namespace RidePal.Services
             _mapper = mapper;
         }
 
-        public async Task<IReadOnlyCollection<TrackDTO>> RandomTracksByGenreConfig(PlaylistConfig playlistConfig, string genreName)
+        public async Task<IReadOnlyCollection<TrackDTO>> RandomTracksByGenreConfig(PlaylistConfigDTO playlistConfigDTO, string genreName)
         {
-            var genreNames = playlistConfig.GenreConfigs
+            var genreNames = playlistConfigDTO.GenreConfigs
                 .Where(g => g.IsChecked == true)
                 .Select(g => g.Name);
 
@@ -43,12 +43,13 @@ namespace RidePal.Services
             return tracks;
         }
 
-        public async Task<PlaylistDTO> GeneratePlaylist(int travelDuration, PlaylistConfig playlistConfig)
+        public async Task<PlaylistDTO> GeneratePlaylist(int travelDuration, PlaylistConfigDTO playlistConfigDTO)
         {
-            if (travelDuration <= 0 || playlistConfig == null) { throw new ArgumentNullException(); }
+
+            if (travelDuration <= 0 || playlistConfigDTO == null) { throw new ArgumentNullException(); }
             int totalDuration = 0;
 
-            var genres = playlistConfig.GenreConfigs
+            var genres = playlistConfigDTO.GenreConfigs
                 .Where(x => x.IsChecked == true); // Get only checked genres
 
             int genresCount = genres.Count();
@@ -71,9 +72,9 @@ namespace RidePal.Services
             {
                 int durationPerGenre = 0;
                 int genreDuration = 0;
-                var genreTracks = await RandomTracksByGenreConfig(playlistConfig, genre.Name);
+                var genreTracks = await RandomTracksByGenreConfig(playlistConfigDTO, genre.Name);
 
-                if (genre.Percentage <= 0 && playlistConfig.IsAdvanced == false)
+                if (genre.Percentage <= 0 && playlistConfigDTO.IsAdvanced == false)
                 {
                     double genrePercent = 100 / genresCount;
                     durationPerGenre = (int)Math.Floor(travelDuration * genrePercent) / 100;
@@ -108,7 +109,7 @@ namespace RidePal.Services
                     count++;
                 }
             }
-            if (playlistConfig.UseTopTracks)
+            if (playlistConfigDTO.UseTopTracks)
             {
                 trackPlaylist = trackPlaylist.OrderBy(t => t.Track.Rank).ToList();
             }

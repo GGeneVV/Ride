@@ -1,6 +1,6 @@
-﻿namespace RidePal.Services.Configurations
+﻿namespace RidePal.Web.Models
 {
-    public class PlaylistGenreConfig
+    public class GenreConfigVM
     {
         public string Name { get; set; }
         public bool IsChecked { get; set; }

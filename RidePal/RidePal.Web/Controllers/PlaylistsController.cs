@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RidePal.Data;
 using RidePal.Models;
-using RidePal.Services.Configurations;
+using RidePal.Services.DTOModels.Configurations;
 using RidePal.Services.Contracts;
 using RidePal.Web.Models;
 
@@ -79,9 +79,10 @@ namespace RidePal.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> GeneratePlaylist(int travelDuration, PlaylistConfig playlistConfig)
+        public async Task<IActionResult> GeneratePlaylist(int travelDuration, PlaylistConfigVM playlistConfig)
         {
-            var playlistDTO = await _playlistService.GeneratePlaylist(travelDuration, playlistConfig);
+            var dto = _mapper.Map<PlaylistConfigDTO>(playlistConfig);
+            var playlistDTO = await _playlistService.GeneratePlaylist(travelDuration, dto);
             var playlistVM = _mapper.Map<PlaylistVM>(playlistDTO);
 
             return PartialView("_PlaylistPartial", playlistVM);

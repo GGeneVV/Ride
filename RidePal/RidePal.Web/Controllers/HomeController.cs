@@ -1,12 +1,15 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.Extensions.Logging;
 using RidePal.Data;
-using RidePal.Services.Configurations;
+using RidePal.Services.DTOModels.Configurations;
 using RidePal.Services.Contracts;
+using RidePal.Services.Extensions;
 using RidePal.Web.Models;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace RidePal.Web.Controllers
@@ -24,31 +27,22 @@ namespace RidePal.Web.Controllers
             _genreService = genreService;
             _playlistService = playlistService;
             _mapper = mapper;
-            //_userManager = userManager;
-            //_signInManager = signInManager;
+           
         }
-
-        public async Task<IActionResult> Index()
+        
+        
+        public async Task<IActionResult> Index([Bind("UseTopTracks,AllowTracksFromSameArtist,IsAdvanced")] PlaylistConfigVM playlistConfigVM,
+            [Bind("IsChecked,Percentage")] GenreConfigVM genreVM)
         {
-            var genres = await _genreService.GetAllGenresAsync();
-            var genreConfigs = new List<PlaylistGenreConfig>();
 
-            foreach (var genre in genres)
-            {
-
-                var cnfg = new PlaylistGenreConfig()
-                {
-                    IsChecked = true,
-                    Name = genre.Name,
-                    //Percentage = 
-                };
-                genreConfigs.Add(cnfg);
-            }
+            var genres = _genreService.GetAllGenresAsync();
+            var genreConfigs = genres.Select(g=>_mapper.Map<GenreConfigVM>(g)).ToList();
+            
             //Test purpose
-            var playlistConfig = new PlaylistConfig()
+            var playlistConfig = new PlaylistConfigVM()
             {
-                UseTopTracks = true,
-                IsAdvanced = true,
+                UseTopTracks = playlistConfigVM.UseTopTracks,
+                IsAdvanced = playlistConfigVM.IsAdvanced,
                 GenreConfigs = genreConfigs
             };
 
@@ -56,6 +50,7 @@ namespace RidePal.Web.Controllers
             {
                 PlaylistConfig = playlistConfig
             };
+
             //var playlist = await _playlistService.GeneratePlaylist(2850, playlistConfig);
             //var playlistVM = _mapper.Map<PlaylistVM>(playlist);
             //Test purpose--------------
