@@ -1,10 +1,4 @@
-﻿using RidePal.Services.DTOModels.Configurations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace RidePal.Web.Models
+﻿namespace RidePal.Web.Models
 {
     public class HomeIndexVM
     {

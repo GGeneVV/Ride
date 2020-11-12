@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using RidePal.Data.Configurations;
 using RidePal.Models;
 using RidePal.Services.DTOModels;
 
@@ -14,7 +13,7 @@ namespace RidePal.Services.DTOMappers
             CreateMap<Artist, ArtistDTO>().ReverseMap();
 
             CreateMap<Genre, GenreDTO>().ReverseMap();
-            
+
 
             CreateMap<Playlist, PlaylistDTO>().ReverseMap();
 

@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
-using RidePal.Data.Configurations;
-using RidePal.Services.DTOModels.Configurations;
 using RidePal.Services.DTOModels;
+using RidePal.Services.DTOModels.Configurations;
 using RidePal.Web.Models;
 using RidePal.Web.Models.EditVM;
-using System.Linq;
 
 namespace RidePal.Web.VMMappers
 {
@@ -17,7 +15,7 @@ namespace RidePal.Web.VMMappers
             CreateMap<PlaylistDTO, PlaylistVM>().ReverseMap();
 
             CreateMap<PlaylistConfigVM, PlaylistConfigDTO>()
-                .ForMember(g=> g.AllowTracksFromSameArtist, opt => opt.MapFrom(s => s.AllowTracksFromSameArtist))
+                .ForMember(g => g.AllowTracksFromSameArtist, opt => opt.MapFrom(s => s.AllowTracksFromSameArtist))
                 .ForMember(g => g.IsAdvanced, opt => opt.MapFrom(s => s.IsAdvanced))
                 .ForMember(g => g.UseTopTracks, opt => opt.MapFrom(s => s.UseTopTracks))
                 .ForMember(g => g.GenreConfigs, opt => opt.MapFrom(s => s.GenreConfigs))

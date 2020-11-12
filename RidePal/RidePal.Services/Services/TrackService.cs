@@ -3,8 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using RidePal.Data;
 using RidePal.Services.Contracts;
 using RidePal.Services.DTOModels;
+using RidePal.Services.Extensions;
+using RidePal.Services.Pagination;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -21,15 +22,64 @@ namespace RidePal.Services
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<TrackDTO>> GetAllTracksAsync(int? page = 1, int? pagesize = 10)
+        public PaginatedList<TrackDTO> GetAllTracksAsync(
+            int? pageNumber = 1,
+            string sortOrder = "",
+            string currentFilter = "",
+            string searchString = "")
         {
-            var tracks = await _appDbContext.Tracks
-                .Include(track => track.TrackPlaylists)
-                .Where(track => track.IsDeleted == false)
-                .Select(track => _mapper.Map<TrackDTO>(track))
-                .ToListAsync();
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
 
-            return tracks;
+
+            currentFilter = searchString;
+
+            var tracks = _appDbContext.Tracks
+                .Include(t => t.TrackPlaylists)
+                .Where(t => t.IsDeleted == false)
+                .WhereIf(!String.IsNullOrEmpty(searchString), s => s.Title.Contains(searchString))
+                .Select(t => _mapper.Map<TrackDTO>(t));
+
+            //t => _mapper.Map<TrackDTO>(t, t => _mapper.Map<TrackPlaylistDTO>(t))
+
+            switch (sortOrder)
+            {
+                case "tracks_desc":
+                    tracks = tracks.OrderByDescending(b => b.Rank);
+                    break;
+                case "Title":
+                    tracks = tracks.OrderBy(b => b.Title);
+                    break;
+                case "Title_decs":
+                    tracks = tracks.OrderByDescending(s => s.Title);
+                    break;
+                case "Artist":
+                    tracks = tracks.OrderBy(b => b.Artist);
+                    break;
+                case "Artist_decs":
+                    tracks = tracks.OrderByDescending(s => s.Artist);
+                    break;
+                case "Duration":
+                    tracks = tracks.OrderBy(b => b.Duration);
+                    break;
+                case "Duration_decs":
+                    tracks = tracks.OrderByDescending(s => s.Duration);
+                    break;
+                default:
+                    tracks = tracks.OrderBy(s => s.Rank);
+                    break;
+            }
+
+            int pageSize = 10;
+
+
+            return PaginatedList<TrackDTO>.Create(tracks.AsQueryable(), pageNumber ?? 1, pageSize);
 
         }
 
@@ -47,9 +97,9 @@ namespace RidePal.Services
             if (track == null)
                 throw new ArgumentNullException();
 
-            var artistDTO = _mapper.Map<TrackDTO>(track);
+            var trackDTO = _mapper.Map<TrackDTO>(track);
 
-            return artistDTO;
+            return trackDTO;
         }
     }
 }

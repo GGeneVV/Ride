@@ -2,8 +2,9 @@
 using RidePal.Data;
 using RidePal.Services.Contracts;
 using RidePal.Services.DTOModels;
+using RidePal.Services.Extensions;
+using RidePal.Services.Pagination;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace RidePal.Services
@@ -28,13 +29,49 @@ namespace RidePal.Services
             return albumDTO;
         }
 
-        public ICollection<AlbumDTO> GetAllAlbumsAsync()
+        public PaginatedList<AlbumDTO> GetAllAlbumsAsync(
+             int? pageNumber = 1,
+            string sortOrder = "",
+            string currentFilter = "",
+            string searchString = "")
         {
-            var albums = _appDbContext.Albums.Where(a => a.IsDeleted == false);
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
 
-            var albumsDTO = albums.Select(a => _mapper.Map<AlbumDTO>(a)).ToList();
 
-            return albumsDTO;
+            currentFilter = searchString;
+
+            var albums = _appDbContext.Albums
+                .Where(a => a.IsDeleted == false)
+                .WhereIf(!String.IsNullOrEmpty(searchString), a => a.Title.Contains(searchString))
+                .Select(a => _mapper.Map<AlbumDTO>(a));
+
+            switch (sortOrder)
+            {
+                case "title_desc":
+                    albums = albums.OrderByDescending(a => a.Title);
+                    break;
+                case "NameOfArtist":
+                    albums = albums.OrderBy(a => a.Artist.Name);
+                    break;
+                case "NameOfArtist_decs":
+                    albums = albums.OrderByDescending(a => a.Artist.Name);
+                    break;
+                default:
+                    albums = albums.OrderBy(a => a.Title);
+                    break;
+            }
+
+            int pageSize = 10;
+
+            return PaginatedList<AlbumDTO>.Create(albums.AsQueryable(), pageNumber ?? 1, pageSize);
+
         }
     }
 }

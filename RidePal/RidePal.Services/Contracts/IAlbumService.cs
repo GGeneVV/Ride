@@ -1,6 +1,6 @@
 ﻿using RidePal.Services.DTOModels;
+using RidePal.Services.Pagination;
 using System;
-using System.Collections.Generic;
 
 namespace RidePal.Services.Contracts
 {
@@ -8,7 +8,11 @@ namespace RidePal.Services.Contracts
     {
         AlbumDTO GetAlbumByIdAsync(Guid albumId);
 
-        ICollection<AlbumDTO> GetAllAlbumsAsync();
+        PaginatedList<AlbumDTO> GetAllAlbumsAsync(
+            int? pageNumber = 1,
+            string sortOrder = "",
+            string currentFilter = "",
+            string searchString = "");
 
     }
 }

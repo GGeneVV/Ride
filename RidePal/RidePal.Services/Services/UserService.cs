@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using RidePal.Data;
 using RidePal.Services.Contracts;
 using RidePal.Services.DTOModels;
+using RidePal.Services.Extensions;
+using RidePal.Services.Pagination;
+using RidePal.Services.Wrappers.Contracts;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace RidePal.Services
 {
@@ -13,49 +15,73 @@ namespace RidePal.Services
     {
         private readonly AppDbContext _db;
         private readonly IMapper _mapper;
+        private readonly IUserManagerWrapper _userManagerWrapper;
 
 
-        public UserService(AppDbContext db, IMapper mapper)
+        public UserService(AppDbContext db, IMapper mapper, IUserManagerWrapper userManagerWrapper)
         {
             _db = db;
             _mapper = mapper;
-
+            _userManagerWrapper = userManagerWrapper;
         }
 
-        public Task<PlaylistDTO> EditPlaylist(Guid userId, Guid playlistId)
+        public Guid GetUserIdByNameAsync(string name)
         {
             try
             {
-                var playlist = _db.Playlists.Where(p => p.UserId == userId).FirstOrDefault(u => u.Id == playlistId);
-                var dto = _mapper.Map<PlaylistService>(playlist);
-                //changing the title or associated genre??
-                return null;
+                var id = _userManagerWrapper.FindIdByNameAsync(name);
+                return id;
             }
             catch (Exception)
             {
 
-                throw;
+                throw new NotImplementedException();
             }
         }
 
-        public Task<PlaylistDTO> EditPlaylist(Guid id)
+        public PaginatedList<UserDTO> GetAllUsersAsync(int? pageNumber = 1,
+            string sortOrder = "",
+            string currentFilter = "",
+            string searchString = "")
         {
-            throw new NotImplementedException();
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+
+            currentFilter = searchString;
+
+            var users = _db.Users
+                .Where(t => t.IsDeleted == false)
+                .Include(p => _mapper.Map<PlaylistDTO>(p))
+                .WhereIf(!String.IsNullOrEmpty(searchString), s => s.UserName.Contains(searchString))
+                .Select(t => _mapper.Map<UserDTO>(t));
+
+            switch (sortOrder)
+            {
+                case "Name_desc":
+                    users = users.OrderByDescending(b => b.UserName);
+                    break;
+                case "PlaylistsCount":
+                    users = users.OrderBy(b => b.Playlists.Count);
+                    break;
+                case "PlaylistsCount_decs":
+                    users = users.OrderByDescending(s => s.Playlists.Count);
+                    break;
+                default:
+                    users = users.OrderBy(s => s.UserName);
+                    break;
+            }
+
+            int pageSize = 10;
+
+            return PaginatedList<UserDTO>.Create(users.AsQueryable(), pageNumber ?? 1, pageSize);
         }
 
-        public Task<PlaylistDTO> GetPlaylist(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ICollection<PlaylistDTO>> GetPlaylists()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<PlaylistDTO> RemovePlaylist(Guid id)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

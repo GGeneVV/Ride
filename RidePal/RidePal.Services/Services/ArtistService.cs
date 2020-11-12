@@ -3,8 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using RidePal.Data;
 using RidePal.Services.Contracts;
 using RidePal.Services.DTOModels;
+using RidePal.Services.Extensions;
+using RidePal.Services.Pagination;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -21,16 +22,52 @@ namespace RidePal.Services
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<ArtistDTO>> GetAllArtistsAsync(int? page = 1, int? pagesize = 10)
+        public PaginatedList<ArtistDTO> GetAllArtistsAsync(
+            int? pageNumber = 1,
+            string sortOrder = "",
+            string currentFilter = "",
+            string searchString = "")
         {
-            var artists = await _appDbContext.Artists
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+
+            currentFilter = searchString;
+
+            var artists = _appDbContext.Artists
                 .Include(artist => artist.Albums)
                 .Include(artist => artist.Tracks)
-                .Where(artist => artist.IsDeleted == false)
-                .Select(artist => _mapper.Map<ArtistDTO>(artist))
-                .ToListAsync();
+                .Where(g => g.IsDeleted == false)
+                .WhereIf(!String.IsNullOrEmpty(searchString), s => s.Name.Contains(searchString))
+                .Select(g => _mapper.Map<ArtistDTO>(g));
 
-            return artists;
+
+
+            switch (sortOrder)
+            {
+                case "ArtistsByAlbumsCount_desc":
+                    artists = artists.OrderByDescending(b => b.Albums.Count);
+                    break;
+                case "Name":
+                    artists = artists.OrderBy(b => b.Name);
+                    break;
+                case "Name_decs":
+                    artists = artists.OrderByDescending(s => s.Name);
+                    break;
+                default:
+                    artists = artists.OrderBy(s => s.Albums.Count);
+                    break;
+            }
+
+            int pageSize = 10;
+
+            return PaginatedList<ArtistDTO>.Create(artists.AsQueryable(), pageNumber ?? 1, pageSize);
 
         }
 
