@@ -1,14 +1,11 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using RidePal.Data;
 using RidePal.Services.Contracts;
 using RidePal.Services.DTOModels;
 using RidePal.Services.Extensions;
 using RidePal.Services.Pagination;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace RidePal.Services
 {
@@ -34,10 +31,10 @@ namespace RidePal.Services
         }
 
         public PaginatedList<GenreDTO> GetAllGenresAsync(
-            int? pageNumber=1,
-            string sortOrder="",
-            string currentFilter="",
-            string searchString="")
+            int? pageNumber = 1,
+            string sortOrder = "",
+            string currentFilter = "",
+            string searchString = "")
         {
             if (searchString != null)
             {
@@ -51,12 +48,12 @@ namespace RidePal.Services
 
             currentFilter = searchString;
 
-            var genres=  _appDbContext.Genres
+            var genres = _appDbContext.Genres
                 .Where(g => g.IsDeleted == false)
                 .WhereIf(!String.IsNullOrEmpty(searchString), s => s.Name.Contains(searchString))
                 .Select(g => _mapper.Map<GenreDTO>(g));
-            
-                
+
+
 
             switch (sortOrder)
             {
@@ -78,7 +75,7 @@ namespace RidePal.Services
 
             return PaginatedList<GenreDTO>.Create(genres.AsQueryable(), pageNumber ?? 1, pageSize);
 
-        
+
         }
     }
 }

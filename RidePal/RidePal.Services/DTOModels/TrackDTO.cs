@@ -1,5 +1,4 @@
-﻿using RidePal.Models;
-using System;
+﻿using System;
 
 namespace RidePal.Services.DTOModels
 {

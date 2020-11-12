@@ -1,14 +1,12 @@
 ﻿
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using RidePal.Services.DTOModels.Configurations;
 using RidePal.Services.Contracts;
 using RidePal.Services.DTOModels;
 using RidePal.Services.DTOModels.Configurations;
 using RidePal.Web.Models.EditVM;
 using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 
 namespace RidePal.Web
 {

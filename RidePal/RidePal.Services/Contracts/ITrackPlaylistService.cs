@@ -1,6 +1,6 @@
 ﻿using RidePal.Services.DTOModels;
+using RidePal.Services.Pagination;
 using System;
-using System.Collections.Generic;
 
 namespace RidePal.Services.Contracts
 {
@@ -8,6 +8,6 @@ namespace RidePal.Services.Contracts
     {
         TrackPlaylistDTO GetTrackPlaylistByIdAsync(Guid trackPlaylistId);
 
-        ICollection<TrackPlaylistDTO> GetAllTrackPlaylistsAsync();
+        PaginatedList<TrackPlaylistDTO> GetAllTrackPlaylistsAsync();
     }
 }

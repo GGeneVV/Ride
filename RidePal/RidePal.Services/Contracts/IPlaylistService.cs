@@ -1,9 +1,8 @@
-﻿using RidePal.Models;
-using RidePal.Services.DTOModels;
+﻿using RidePal.Services.DTOModels;
 using RidePal.Services.DTOModels.Configurations;
+using RidePal.Services.Pagination;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace RidePal.Services.Contracts
@@ -12,9 +11,17 @@ namespace RidePal.Services.Contracts
     {
         Task<IReadOnlyCollection<TrackDTO>> RandomTracksByGenreConfig(PlaylistConfigDTO playlistConfigDTO, string genreName);
         Task<PlaylistDTO> GeneratePlaylist(int travelDuration, PlaylistConfigDTO playlistConfigDTO);
-        IQueryable<PlaylistDTO> GetUserPlaylists(User user);
+        PaginatedList<PlaylistDTO> GetUserPlaylists(
+            UserDTO userDTO,
+            int? pageNumber = 1,
+            string sortOrder = "",
+            string currentFilter = "",
+            string searchString = "");
         Task<PlaylistDTO> GetPlaylist(Guid? id);
-        IQueryable<PlaylistDTO> GetAllPlaylists();
+        PaginatedList<PlaylistDTO> GetAllPlaylists(int? pageNumber = 1,
+            string sortOrder = "",
+            string currentFilter = "",
+            string searchString = "");
         Task DeletePlaylist(Guid? id);
         Task<PlaylistDTO> EditPlaylist(Guid? id, PlaylistDTO updatedPlaylist);
 

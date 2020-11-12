@@ -10,6 +10,10 @@
 <div>
     <form id="form-generate" asp-controller="Playlists" asp-action="GeneratePlaylist" method="post">
         <div class="form-group">
+            <label>Playlist Name</label>
+            <input asp-for="PlaylistConfig.Title" type="text" class="form-control" />
+        </div>
+        <div class="form-group">
             <label>UseTopTracks</label>
             <input asp-for="PlaylistConfig.UseTopTracks" type="checkbox" class="form-control" />
         </div>

@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RidePal.Data;
 using RidePal.Models;
-using RidePal.Services.DTOModels.Configurations;
 using RidePal.Services.Contracts;
+using RidePal.Services.DTOModels.Configurations;
 using RidePal.Web.Models;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace RidePal.Web.Controllers
 {

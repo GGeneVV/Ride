@@ -1,6 +1,6 @@
 ﻿using RidePal.Services.DTOModels;
+using RidePal.Services.Pagination;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace RidePal.Services.Contracts
@@ -8,6 +8,9 @@ namespace RidePal.Services.Contracts
     public interface ITrackService
     {
         Task<TrackDTO> GetTrackAsync(Guid id);
-        Task<IEnumerable<TrackDTO>> GetAllTracksAsync(int? page = 1, int? pagesize = 10);
+        PaginatedList<TrackDTO> GetAllTracksAsync(int? pageNumber = 1,
+            string sortOrder = "",
+            string currentFilter = "",
+            string searchString = "");
     }
 }

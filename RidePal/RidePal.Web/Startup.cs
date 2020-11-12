@@ -11,6 +11,8 @@ using RidePal.Models;
 using RidePal.Services;
 using RidePal.Services.Contracts;
 using RidePal.Services.DTOMappers;
+using RidePal.Services.Wrappers;
+using RidePal.Services.Wrappers.Contracts;
 using RidePal.Web.VMMappers;
 
 namespace RidePal.Web
@@ -75,6 +77,8 @@ namespace RidePal.Web
             services.AddScoped<ITrackService, TrackService>();
 
             services.AddScoped<IUserService, UserService>();
+
+            services.AddScoped<IUserManagerWrapper, UserManagerWrapper>();
 
         }
 
