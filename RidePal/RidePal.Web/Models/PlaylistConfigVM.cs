@@ -12,6 +12,6 @@ namespace RidePal.Web.Models
         public bool IsAdvanced { get; set; }
 
         //[BindProperty]
-        public IList<GenreVM> GenreConfigs { get; set; } 
+        public IList<GenreConfigVM> GenreConfigs { get; set; } = new List<GenreConfigVM>();
     }
 }

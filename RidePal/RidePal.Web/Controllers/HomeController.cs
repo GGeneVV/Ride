@@ -27,22 +27,16 @@ namespace RidePal.Web.Controllers
             _genreService = genreService;
             _playlistService = playlistService;
             _mapper = mapper;
-            //_userManager = userManager;
-            //_signInManager = signInManager;
+           
         }
-        //[HttpGet]
-        //public IActionResult Index()
-        //{
-
-        //    return  RedirectToAction(nameof(Index));
-        //}
+        
         
         public async Task<IActionResult> Index([Bind("UseTopTracks,AllowTracksFromSameArtist,IsAdvanced")] PlaylistConfigVM playlistConfigVM,
-            [Bind("IsChecked,Percentage")] GenreVM genreVM)
+            [Bind("IsChecked,Percentage")] GenreConfigVM genreVM)
         {
-            
-        var genres = await _genreService.GetAllGenresAsync();
-            var genreConfigs = genres.Select(g=>_mapper.Map<GenreVM>(g)).ToList();
+
+            var genres = _genreService.GetAllGenresAsync();
+            var genreConfigs = genres.Select(g=>_mapper.Map<GenreConfigVM>(g)).ToList();
             
             //Test purpose
             var playlistConfig = new PlaylistConfigVM()
