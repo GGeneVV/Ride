@@ -14,6 +14,12 @@ using RidePal.Services.DTOMappers;
 using RidePal.Services.Wrappers;
 using RidePal.Services.Wrappers.Contracts;
 using RidePal.Web.VMMappers;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using RidePal.Services.Helpers;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using RidePal.Data.Seeder;
 
 namespace RidePal.Web
 {
@@ -35,6 +41,31 @@ namespace RidePal.Web
             services.AddControllersWithViews()
               .AddRazorRuntimeCompilation();
 
+            var appSettingsSection = this.Configuration.GetSection("AppSettings");
+            services.Configure<AppSettings>(appSettingsSection);
+
+            // configure jwt authentication
+            var appSettings = appSettingsSection.Get<AppSettings>();
+            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
+
+            services.AddAuthentication(config =>
+            {
+                config.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                config.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                .AddJwtBearer(config =>
+                {
+                    config.RequireHttpsMetadata = false;
+                    config.SaveToken = true;
+                    config.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(key),
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
+                });
+
             services.AddIdentity<User, Role>(option =>
             {
                 option.SignIn.RequireConfirmedAccount = false;
@@ -46,6 +77,7 @@ namespace RidePal.Web
             })
             .AddEntityFrameworkStores<AppDbContext>()
             .AddDefaultTokenProviders();
+
 
             services.ConfigureApplicationCookie(options =>
             {
@@ -104,7 +136,6 @@ namespace RidePal.Web
             app.UseAuthentication();
             app.UseAuthorization();
 
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
@@ -116,9 +147,9 @@ namespace RidePal.Web
 
 
             // TODO: Toggle seeder
-            //using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
-            //var context = serviceScope.ServiceProvider.GetRequiredService<AppDbContext>();
-            //await context.SeedDbAsync();
+            using var servicescope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+            var context = servicescope.ServiceProvider.GetRequiredService<AppDbContext>();
+            await context.SeedDbAsync();
 
         }
     }

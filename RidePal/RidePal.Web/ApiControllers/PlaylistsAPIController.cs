@@ -13,12 +13,12 @@ namespace RidePal.Web
 
     [Route("api/[controller]")]
     [ApiController]
-    public class PlaylistsController : ControllerBase
+    public class PlaylistsAPIController : ControllerBase
     {
         private readonly IPlaylistService _playlistService;
         private readonly IMapper _mapper;
 
-        public PlaylistsController(IPlaylistService playlistService, IMapper mapper)
+        public PlaylistsAPIController(IPlaylistService playlistService, IMapper mapper)
         {
             _playlistService = playlistService;
             _mapper = mapper;

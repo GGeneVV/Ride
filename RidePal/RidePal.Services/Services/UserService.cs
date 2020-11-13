@@ -1,13 +1,21 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using RidePal.Data;
+using RidePal.Models;
 using RidePal.Services.Contracts;
 using RidePal.Services.DTOModels;
 using RidePal.Services.Extensions;
+using RidePal.Services.Helpers;
 using RidePal.Services.Pagination;
 using RidePal.Services.Wrappers.Contracts;
 using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 
 namespace RidePal.Services
 {
@@ -16,15 +24,67 @@ namespace RidePal.Services
         private readonly AppDbContext _db;
         private readonly IMapper _mapper;
         private readonly IUserManagerWrapper _userManagerWrapper;
+        private readonly AppSettings _appSettings;
+        private readonly IPasswordHasher<User> _passwordHasher;
 
-
-        public UserService(AppDbContext db, IMapper mapper, IUserManagerWrapper userManagerWrapper)
+        public UserService(AppDbContext db, IMapper mapper, 
+            IUserManagerWrapper userManagerWrapper , IOptions<AppSettings> appSettings, IPasswordHasher<User> passwordHasher)
         {
             _db = db;
             _mapper = mapper;
             _userManagerWrapper = userManagerWrapper;
+            _appSettings = appSettings.Value;
+            _passwordHasher = passwordHasher;
         }
 
+        public string Authenticate(string username, string password)
+        {
+            var user = _db.Users.SingleOrDefault(x => x.UserName == username);
+
+            // return null if user not found
+            if (user == null)
+                return null;
+
+            var passwordCheck = new PasswordHasher<User>().VerifyHashedPassword(user, user.PasswordHash, password);
+
+
+
+            if (passwordCheck.ToString() != "Success")
+            {
+                return null;
+            }
+
+            // authentication successful so generate jwt token
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.Name, user.Id.ToString())
+                }),
+                Expires = DateTime.UtcNow.AddDays(7),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var userToken = _db.UserTokens.SingleOrDefault(x => x.UserId == user.Id);
+
+            if (userToken == null)
+            {
+                userToken = _db.UserTokens.Add(new IdentityUserToken<Guid>
+                {
+                    LoginProvider = "JWT-Custom",
+                    UserId = user.Id,
+                    Name = "API-token"
+                }).Entity;
+            }
+
+            userToken.Value = tokenHandler.WriteToken(token);
+
+            _db.SaveChanges();
+
+            return userToken.Value;
+        }
         public Guid GetUserIdByNameAsync(string name)
         {
             try
