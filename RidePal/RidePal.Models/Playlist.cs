@@ -18,9 +18,9 @@ namespace RidePal.Models
         public bool IsTopTracksEnabled { get; set; }
 
         public Guid? UserId { get; set; }
-        public virtual User User { get; set; }
+        public User User { get; set; }
 
-        public virtual ICollection<TrackPlaylist> TrackPlaylists { get; set; } = new List<TrackPlaylist>();
+        public ICollection<TrackPlaylist> TrackPlaylists { get; set; } = new List<TrackPlaylist>();
 
 
     }

@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using RidePal.Models;
 using RidePal.Models.DataSource;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -14,11 +15,17 @@ namespace RidePal.Data.Seeder
         {
             var client = new HttpClient();
 
+            var artists = new HashSet<Artist>();
+            var artistDeezerId = new HashSet<string>();
+            var albums = new HashSet<Album>();
+            var albumDeezerId = new HashSet<string>();
+
             using (var response = await client.GetAsync("https://api.deezer.com/genre"))
             {
                 var responseAsString = await response.Content.ReadAsStringAsync();
 
                 var result = JsonConvert.DeserializeObject<DataGenre>(responseAsString);
+
 
                 for (int i = 1; i < 6; i++) //result.Genres.Count()
                 {
@@ -56,12 +63,28 @@ namespace RidePal.Data.Seeder
                                     var trackArtist = JsonConvert.DeserializeObject<Artist>(tracks[j]["artist"].ToString());
                                     var trackAlbum = JsonConvert.DeserializeObject<Album>(tracks[j]["album"].ToString());
 
-                                    await _appDbContext.Artists.AddAsync(trackArtist);
-                                    trackAsObject.Artist = trackArtist;
+                                    if (artistDeezerId.Add(trackArtist.DeezerId))
+                                    {
+                                        artists.Add(trackArtist);
+                                        trackAsObject.Artist = trackArtist;
+                                        trackAlbum.Artist = trackArtist;
+                                    }
+                                    else
+                                    {
+                                        var temp = artists.FirstOrDefault(a => a.DeezerId == trackArtist.DeezerId);
+                                        trackAsObject.Artist = temp;
+                                        trackAlbum.Artist = temp;
+                                    }
 
-                                    trackAlbum.Artist = trackArtist;
-                                    await _appDbContext.Albums.AddAsync(trackAlbum);
-                                    trackAsObject.Album = trackAlbum;
+                                    if (albumDeezerId.Add(trackAlbum.DeezerId))
+                                    {
+                                        albums.Add(trackAlbum);
+                                        trackAsObject.Album = trackAlbum;
+                                    }
+                                    else 
+                                    {
+                                        trackAsObject.Album = albums.FirstOrDefault(a => a.DeezerId == trackAlbum.DeezerId);
+                                    }
 
                                     trackAsObject.Genre = genre;
                                     await _appDbContext.Tracks.AddAsync(trackAsObject);
@@ -73,6 +96,8 @@ namespace RidePal.Data.Seeder
 
                     }
                 }
+                await _appDbContext.Artists.AddRangeAsync(artists);
+                await _appDbContext.Albums.AddRangeAsync(albums);
 
                 await _appDbContext.SaveChangesAsync();
             }
