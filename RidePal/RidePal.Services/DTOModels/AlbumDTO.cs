@@ -1,5 +1,6 @@
 ﻿using RidePal.Models;
 using System;
+using System.Collections.Generic;
 
 namespace RidePal.Services.DTOModels
 {
@@ -10,8 +11,8 @@ namespace RidePal.Services.DTOModels
         public string Title { get; set; }
         public string Picture { get; set; }
         public string Tracklist { get; set; }
-        public virtual Artist Artist { get; set; }
+        public ArtistDTO Artist { get; set; }
         public Guid? ArtistId { get; set; }
-
+        public IReadOnlyCollection<TrackDTO> Tracks { get; set; } = new List<TrackDTO>();
     }
 }

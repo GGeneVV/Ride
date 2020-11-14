@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -6,20 +7,18 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using RidePal.Data;
+using RidePal.Data.Seeder;
 using RidePal.Models;
 using RidePal.Services;
 using RidePal.Services.Contracts;
 using RidePal.Services.DTOMappers;
+using RidePal.Services.Helpers;
 using RidePal.Services.Wrappers;
 using RidePal.Services.Wrappers.Contracts;
 using RidePal.Web.VMMappers;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using RidePal.Services.Helpers;
 using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using RidePal.Data.Seeder;
 
 namespace RidePal.Web
 {
@@ -147,9 +146,9 @@ namespace RidePal.Web
 
 
             // TODO: Toggle seeder
-            using var servicescope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
-            var context = servicescope.ServiceProvider.GetRequiredService<AppDbContext>();
-            await context.SeedDbAsync();
+            //using var servicescope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+            //var context = servicescope.ServiceProvider.GetRequiredService<AppDbContext>();
+            //await context.SeedDbAsync();
 
         }
     }

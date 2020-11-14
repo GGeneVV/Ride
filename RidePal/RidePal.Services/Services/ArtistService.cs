@@ -6,6 +6,7 @@ using RidePal.Services.DTOModels;
 using RidePal.Services.Extensions;
 using RidePal.Services.Pagination;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -22,7 +23,7 @@ namespace RidePal.Services
             _mapper = mapper;
         }
 
-        public PaginatedList<ArtistDTO> GetAllArtistsAsync(
+        public PaginatedList<ArtistDTO> GetAllArtists(
             int? pageNumber = 1,
             string sortOrder = "",
             string currentFilter = "",
@@ -89,6 +90,20 @@ namespace RidePal.Services
             var artistDTO = _mapper.Map<ArtistDTO>(artist);
 
             return artistDTO;
+        }
+
+        public async Task<IReadOnlyCollection<ArtistDTO>> GetTopArtistsAsync(int count = 5)
+        {
+            var artists = await _appDbContext.Artists
+                .Include(x => x.Albums)
+                .Include(x => x.Tracks)
+                .Where(x => x.IsDeleted == false)
+                .OrderByDescending(x => x.Tracks.Count)
+                .Take(count)
+                .Select(a => _mapper.Map<ArtistDTO>(a))
+                .ToListAsync();
+
+            return artists;
         }
     }
 }

@@ -14,13 +14,17 @@ namespace RidePal.Web.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IGenreService _genreService;
         private readonly IPlaylistService _playlistService;
+        private readonly ITrackService _trackService;
+        private readonly IArtistService _artistService;
         private readonly IMapper _mapper;
 
-        public HomeController(ILogger<HomeController> logger, IGenreService genreService, IPlaylistService playlistService, IMapper mapper)
+        public HomeController(ILogger<HomeController> logger, IGenreService genreService, IPlaylistService playlistService, ITrackService trackService, IArtistService artistService, IMapper mapper)
         {
             _logger = logger;
             _genreService = genreService;
             _playlistService = playlistService;
+            _trackService = trackService;
+            _artistService = artistService;
             _mapper = mapper;
 
         }
@@ -32,7 +36,14 @@ namespace RidePal.Web.Controllers
 
             var genres = _genreService.GetAllGenresAsync();
             var genreConfigs = genres.Select(g => _mapper.Map<GenreConfigVM>(g)).ToList();
+            var popularTracks = await _trackService.GetPopularTracksAsync(5);
+            var popularTracksVM = popularTracks.Select(t => _mapper.Map<TrackVM>(t)).ToList();
 
+            var topTracks = await _trackService.GetTopTracksAsync(5);
+            var topTracksVM = topTracks.Select(t => _mapper.Map<TrackVM>(t)).ToList();
+
+            var topArists = await _artistService.GetTopArtistsAsync(5);
+            var topArtistsVM = topArists.Select(t => _mapper.Map<ArtistVM>(t)).ToList();
 
             var playlistConfig = new PlaylistConfigVM()
             {
@@ -44,7 +55,11 @@ namespace RidePal.Web.Controllers
 
             var model = new HomeIndexVM()
             {
-                PlaylistConfig = playlistConfig
+                PlaylistConfig = playlistConfig,
+                PopularTracks = popularTracksVM,
+                TopTracks = topTracksVM,
+                TopArtists = topArtistsVM,
+
             };
 
 

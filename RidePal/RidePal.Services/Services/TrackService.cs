@@ -6,6 +6,7 @@ using RidePal.Services.DTOModels;
 using RidePal.Services.Extensions;
 using RidePal.Services.Pagination;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -22,7 +23,7 @@ namespace RidePal.Services
             _mapper = mapper;
         }
 
-        public PaginatedList<TrackDTO> GetAllTracksAsync(
+        public PaginatedList<TrackDTO> GetAllTracks(
             int? pageNumber = 1,
             string sortOrder = "",
             string currentFilter = "",
@@ -41,34 +42,35 @@ namespace RidePal.Services
             currentFilter = searchString;
 
             var tracks = _appDbContext.Tracks
+                .Include(t => t.Album)
+                .Include(t => t.Artist)
+                .Include(t => t.Genre)
                 .Include(t => t.TrackPlaylists)
                 .Where(t => t.IsDeleted == false)
                 .WhereIf(!String.IsNullOrEmpty(searchString), s => s.Title.Contains(searchString))
                 .Select(t => _mapper.Map<TrackDTO>(t));
 
-            //t => _mapper.Map<TrackDTO>(t, t => _mapper.Map<TrackPlaylistDTO>(t))
-
-            switch (sortOrder)
+            switch (sortOrder.ToLower())
             {
-                case "tracks_desc":
+                case "rank_desc":
                     tracks = tracks.OrderByDescending(b => b.Rank);
                     break;
-                case "Title":
+                case "title":
                     tracks = tracks.OrderBy(b => b.Title);
                     break;
-                case "Title_decs":
+                case "title_decs":
                     tracks = tracks.OrderByDescending(s => s.Title);
                     break;
-                case "Artist":
+                case "artist":
                     tracks = tracks.OrderBy(b => b.Artist);
                     break;
-                case "Artist_decs":
+                case "artist_decs":
                     tracks = tracks.OrderByDescending(s => s.Artist);
                     break;
-                case "Duration":
+                case "duration":
                     tracks = tracks.OrderBy(b => b.Duration);
                     break;
-                case "Duration_decs":
+                case "duration_decs":
                     tracks = tracks.OrderByDescending(s => s.Duration);
                     break;
                 default:
@@ -89,7 +91,10 @@ namespace RidePal.Services
                 throw new ArgumentNullException();
 
             var track = await _appDbContext.Tracks
-                .Include(x => x.TrackPlaylists)
+                .Include(t => t.Album)
+                .Include(t => t.Artist)
+                .Include(t => t.Genre)
+                .Include(t => t.TrackPlaylists)
                 .Where(x => x.IsDeleted == false)
                 .Where(x => x.Id == id)
                 .FirstOrDefaultAsync();
@@ -100,6 +105,38 @@ namespace RidePal.Services
             var trackDTO = _mapper.Map<TrackDTO>(track);
 
             return trackDTO;
+        }
+
+        public async Task<IReadOnlyCollection<TrackDTO>> GetPopularTracksAsync(int count = 5)
+        {
+            var tracks = await _appDbContext.Tracks
+                .Include(t => t.Album)
+                .Include(t => t.Artist)
+                .Include(t => t.Genre)
+                .Include(t => t.TrackPlaylists)
+                .Where(t => t.IsDeleted == false)
+                .OrderByDescending(t => t.ReleaseDate)
+                .Take(count)
+                .Select(t => _mapper.Map<TrackDTO>(t))
+                .ToListAsync();
+
+            return tracks;
+        }
+
+        public async Task<IReadOnlyCollection<TrackDTO>> GetTopTracksAsync(int count = 5)
+        {
+            var tracks = await _appDbContext.Tracks
+                .Include(t => t.Album)
+                .Include(t => t.Artist)
+                .Include(t => t.Genre)
+                .Include(t => t.TrackPlaylists)
+                .Where(t => t.IsDeleted == false)
+                .OrderBy(t => t.Rank)
+                .Take(count)
+                .Select(t => _mapper.Map<TrackDTO>(t))
+                .ToListAsync();
+
+            return tracks;
         }
     }
 }

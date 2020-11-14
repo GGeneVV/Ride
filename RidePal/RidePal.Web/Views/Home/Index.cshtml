@@ -1,46 +1,143 @@
 ﻿@model HomeIndexVM
 @{
     ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/_MyLayout.cshtml";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
-<div>
-    <form id="form-generate" asp-controller="Playlists" asp-action="GeneratePlaylist" method="post">
-        <div class="form-group">
-            <label>Playlist Name</label>
-            <input asp-for="PlaylistConfig.Title" type="text" class="form-control" />
-        </div>
-        <div class="form-group">
-            <label>UseTopTracks</label>
-            <input asp-for="PlaylistConfig.UseTopTracks" type="checkbox" class="form-control" />
-        </div>
-        <div class="form-group">
-            <label>Allow Tracks From Same Artist</label>
-            <input asp-for="PlaylistConfig.AllowTracksFromSameArtist" type="checkbox" class="form-control" />
-        </div>
-        <div class="form-group">
-            <label>Is Advanced</label>
-            <input asp-for="PlaylistConfig.IsAdvanced" type="checkbox" class="form-control" />
-        </div>
-        <div class="form-group">
-            @for (var i = 0; i < Model.PlaylistConfig.GenreConfigs.Count; i++)
-            {
-                @*<label for="GenreName">  @Html.TextBoxFor(m => Model.PlaylistConfig.GenreConfigs[i].Name)</label>*@
-                @Html.DisplayFor(m => Model.PlaylistConfig.GenreConfigs[i].Name)
-                @Html.HiddenFor(m => Model.PlaylistConfig.GenreConfigs[i].Name)
-                @Html.TextBoxFor(m => Model.PlaylistConfig.GenreConfigs[i].Percentage)
-                @Html.CheckBoxFor(m => Model.PlaylistConfig.GenreConfigs[i].IsChecked)
+<div id="main" class="w-100">
+    <div class="main-container">
+        <aside class="nav-bar">
+            <div class="logo">
+                <div class="brand-img">
+                    <img src="~/images/sound-waves.svg" alt="">
+                </div>
+                <span>RidePal</span>
+            </div>
+            <a class="nav-link" href="#"><i class="fas fa-home"></i> Home</a>
+            <a class="nav-link" href="#"><i class="fas fa-search"></i> Search</a>
+            <a class="nav-link" href="#"><i class="fas fa-headphones-alt"></i> Your Playlists</a>
 
-            }
+        </aside>
+        <div class="top-bar">
+            <header>
+                <div class="navigation">
+                    <span><i class="fas fa-chevron-left"></i></span>
+                    <span class="disabled"><i class="fas fa-chevron-right"></i></span>
+                </div>
+                <div class="login-controller">
+                    <button class="signup">Sign up</button>
+                    <button class="login">log in</button>
+                </div>
+            </header>
         </div>
-        from<input id="from" type="text" name="from">
-        to<input id="to" type="text" name="to">
-        <input id="travelDur" name="travelDuration" />
-        @*<button type="button" onclick="Distance()">click me</button>*@
-        <button type="button" onclick="shuffle()">submit</button>
-    </form>
-    <div id="playlist-result"></div>
+        <main class="main-view">
+            <div class="main-view-container">
+                <div class="os-host">
+                    <div class="paralax-img img-1">
+                        <div class="px-5 py-4 h-100 d-flex flex-column justify-content-end" style="background: #80808052;">
+                            <span>Travel with music <i class="fas fa-route text-primary"></i></span>
+                            <h1>RidePal Travel</h1>
+                            <span>7,459 tracks <i class="fas fa-headphones-alt text-primary"></i></span>
+                        </div>
+                    </div>
+                    <div class="gradient-bg"></div>
+                    <div class="main-view-grid p-5">
+                        <div class="popular">
+                            <h2>Popular</h2>
+                            <!-- TRACK ROWS  5 TRACKS-->
+
+                            @for (int i = 0; i < Model.PopularTracks.Count; i++)
+                            {
+                                var track = Model.PopularTracks.ElementAt(i);
+                                var index = i + 1;
+                                <!-- TEMPLATE TRACK ROW -->
+                                <div class="tracklist-row">
+                                    <div class="index justify-content-center">@index</div>
+                                    <div class="title">@track.Title</div>
+                                    <div class="rank justify-content-center">@track.Rank</div>
+                                    <div class="duration justify-content-center">@track.Duration</div>
+                                </div>
+                                <!-- TEMPLATE TRACK ROW / END -->
+
+                            }
+                            
+                            <div class="see-more">
+                                <a href="#" class="s" style="padding: 16px;">See more</a>
+                            </div>
+                            <!-- TRACK ROWS / END -->
+                        </div>
+                        <div class="generate-playlist">
+                            <h2>Generate Playlist</h2>
+                            <div class="playlist-generator">
+                                <label class="label-from" for="from">From</label>
+                                <div class="from-dest">
+                                    <div id="get-location"><i class="fas fa-map-marker-alt"></i></div>
+                                    <input class="input-from" id="from" name="from" type="text">
+                                </div>
+                                <label for="to">to</label>
+                                <input id="to" name="to" type="text">
+                            </div>
+                            <div class="shuffle">
+                                <button>shuffle</button>
+                            </div>
+                        </div>
+                        <div class="top-tracks">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h2>Top Tracks</h2>
+                                <div class="see-more">
+                                    <a href="#" class="s" style="padding: 16px;">See more</a>
+                                </div>
+                            </div>
+                            <div class="grid-cards">
+                                <!-- TOP 5 TRACKS -->
+
+                                @for (int i = 0; i < Model.TopTracks.Count; i++)
+                                {
+                                    var track = Model.TopTracks.ElementAt(i);
+                                    <!-- TEMPLATE CARD -->
+                                    <div class="ridepal-card">
+                                        <div class="img d-flex justify-content-center align-items-center">
+                                            <img src="@track.Artist.Picture" alt="" />
+                                        </div>
+                                        <h4 class="title">@track.Title</h4>
+                                        <div class="artist">@track.Artist.Name</div>
+                                    </div>
+                                    <!-- TEMPLATE CARD / END -->
+                                }
+
+                                <!-- TOP TRACKS / END -->
+                            </div>
+                        </div>
+                        <div class="top-artists">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h2>Top Artists</h2>
+                                <div class="see-more">
+                                    <a href="#" class="s" style="padding: 16px;">See more</a>
+                                </div>
+                            </div>
+                            <div class="grid-cards">
+                                <!-- TOP 5 Artists -->
+                                @for (int i = 0; i < Model.TopArtists.Count; i++)
+                                {
+                                    var artist = Model.TopArtists.ElementAt(i);
+                                    <!-- TEMPLATE CARD -->
+                                    <div class="ridepal-card">
+                                        <div class="img d-flex justify-content-center align-items-center">
+                                            <img src="@artist.Picture" alt="" />
+                                        </div>
+                                        <h4 class="title">@artist.Name</h4>
+                                        <div class="artist">@artist.Tracks.Count</div>
+                                    </div>
+                                    <!-- TEMPLATE CARD / END -->
+                                }
+
+                                
+                                <!-- TOP TRACKS / END -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </main>
+    </div>
+
 </div>

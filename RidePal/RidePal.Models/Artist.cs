@@ -27,8 +27,8 @@ namespace RidePal.Models
         [JsonProperty("tracklist")]
         public string TrackListURL { get; set; }
 
-        public virtual ICollection<Track> Tracks { get; set; } = new List<Track>();
+        public ICollection<Track> Tracks { get; set; } = new List<Track>();
 
-        public virtual ICollection<Album> Albums { get; set; } = new List<Album>();
+        public ICollection<Album> Albums { get; set; } = new List<Album>();
     }
 }
