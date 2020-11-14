@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using RidePal.Data;
 using RidePal.Services.Contracts;
 using RidePal.Services.DTOModels;
 using RidePal.Services.Extensions;
 using RidePal.Services.Pagination;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RidePal.Services
 {
@@ -72,6 +75,21 @@ namespace RidePal.Services
 
             return PaginatedList<AlbumDTO>.Create(albums.AsQueryable(), pageNumber ?? 1, pageSize);
 
+        }
+
+        public async Task<IReadOnlyCollection<AlbumDTO>> GetTopAlbumsAsync(int count = 5)
+        {
+
+            var albums = await _appDbContext.Albums
+                .Include(x => x.Artist)
+                .Include(x => x.Tracks)
+                .Where(x => x.IsDeleted == false)
+                .OrderByDescending(x => x.Tracks.Count)
+                .Take(count)
+                .Select(a => _mapper.Map<AlbumDTO>(a))
+                .ToListAsync();
+
+            return albums;
         }
     }
 }

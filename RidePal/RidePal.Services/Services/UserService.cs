@@ -27,8 +27,8 @@ namespace RidePal.Services
         private readonly AppSettings _appSettings;
         private readonly IPasswordHasher<User> _passwordHasher;
 
-        public UserService(AppDbContext db, IMapper mapper, 
-            IUserManagerWrapper userManagerWrapper , IOptions<AppSettings> appSettings, IPasswordHasher<User> passwordHasher)
+        public UserService(AppDbContext db, IMapper mapper,
+            IUserManagerWrapper userManagerWrapper, IOptions<AppSettings> appSettings, IPasswordHasher<User> passwordHasher)
         {
             _db = db;
             _mapper = mapper;

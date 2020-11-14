@@ -41,19 +41,19 @@ namespace RidePal.Models
 
         [Required]
         [JsonProperty("album")]
-        public virtual Album Album { get; set; }
+        public Album Album { get; set; }
 
         public Guid? AlbumId { get; set; }
 
         [Required]
         [JsonProperty("artist")]
-        public virtual Artist Artist { get; set; }
+        public Artist Artist { get; set; }
         public Guid? ArtistId { get; set; }
 
-        public virtual Genre Genre { get; set; }
+        public Genre Genre { get; set; }
         public Guid? GenreId { get; set; }
 
-        public virtual ICollection<TrackPlaylist> TrackPlaylists { get; set; } = new List<TrackPlaylist>();
+        public ICollection<TrackPlaylist> TrackPlaylists { get; set; } = new List<TrackPlaylist>();
 
     }
 }

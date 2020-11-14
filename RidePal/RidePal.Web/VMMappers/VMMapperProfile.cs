@@ -35,7 +35,10 @@ namespace RidePal.Web.VMMappers
 
             CreateMap<GenreDTO, GenreVM>().ReverseMap();
 
-            CreateMap<TrackDTO, TrackVM>().ForMember(g => g.Genre, opt => opt.MapFrom(s => s.Genre)).ReverseMap();
+            //CreateMap<TrackDTO, TrackVM>()
+            //    .ForPath(d => d.Genre, m => m.MapFrom(g => g.Genre))
+            //    .ForPath(d => d.Artist, opt => opt.MapFrom(a => a.Artist))
+            //    .ReverseMap();
 
             CreateMap<UserDTO, UserVM>().ReverseMap();
         }

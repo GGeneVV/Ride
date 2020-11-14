@@ -23,7 +23,7 @@ namespace RidePal.Models
         [JsonProperty("picture")]
         public string Picture { get; set; }
 
-        public virtual ICollection<Track> Tracks { get; set; } = new List<Track>();
+        public ICollection<Track> Tracks { get; set; } = new List<Track>();
     }
 
 }
