@@ -1,0 +1,58 @@
+﻿@model List<GenreVM>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_MyLayout.cshtml";
+}
+<div id="search" class="w-100 position-relative h-100">
+    <div class="main-container">
+        <aside class="nav-bar">
+            <div class="logo">
+                <div class="brand-img">
+                    <img src="images/sound-waves.svg" alt="">
+                </div>
+                <span>RidePal</span>
+            </div>
+            <a class="nav-link" asp-controller="Home" asp-action="Index"><i class="fas fa-home"></i> Home</a>
+            <a class="nav-link" asp-controller="Search" asp-action="Index"><i class="fas fa-search"></i> Search</a>
+            <a class="nav-link" href="#"><i class="fas fa-headphones-alt"></i> Your Playlists</a>
+
+        </aside>
+        <div class="top-bar">
+            <header>
+                <div class="navigation d-inline-flex align-items-center">
+                    <span><i class="fas fa-chevron-left"></i></span>
+                    <span class="disabled"><i class="fas fa-chevron-right"></i></span>
+                    <div class="search-input">
+                        <input type="text" placeholder="Search here...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                </div>
+                <div class="login-controller">
+                    <button class="signup">Sign up</button>
+                    <button class="login">log in</button>
+                </div>
+            </header>
+        </div>
+        <main class="main-view">
+            <div class="main-view-container">
+                <div class="os-host">
+                    <h2 class="p-5">Browse All</h2>
+                    <div class="search-view-grid px-5">
+                        @for (int i = 0; i < Model.Count; i++)
+                        {
+                            <!-- GENRE CARD TEMPLATE -->
+                            <div class="genre-card">
+                                <div class="bg-img" style="background-image:url(@Model[i].Picture)"></div>
+                                <h4>@Model[i].Name</h4>
+                                <img src="@Model[i].Picture" alt="@Model[i].Name">
+                            </div>
+                            <!-- GENRE CARD TEMPLATE END -->
+                        }
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+</div>

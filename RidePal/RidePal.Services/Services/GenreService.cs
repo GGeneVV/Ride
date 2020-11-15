@@ -30,7 +30,7 @@ namespace RidePal.Services
             return genreDTO;
         }
 
-        public PaginatedList<GenreDTO> GetAllGenresAsync(
+        public PaginatedList<GenreDTO> GetAllGenres(
             int? pageNumber = 1,
             string sortOrder = "",
             string currentFilter = "",
@@ -44,7 +44,6 @@ namespace RidePal.Services
             {
                 searchString = currentFilter;
             }
-
 
             currentFilter = searchString;
 

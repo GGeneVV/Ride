@@ -319,22 +319,22 @@ namespace RidePal.Data.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { new Guid("75f89290-09e3-4879-b347-c8736ae77a22"), "2014455f-576b-4117-9521-f3174cebdbf7", "Admin", "ADMIN" });
+                values: new object[] { new Guid("f5097e03-0470-4339-8360-21fcfb9a414f"), "4a13416e-165f-4831-aa06-491037c6bb08", "Admin", "ADMIN" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { new Guid("9550bab8-853c-47ac-bd2c-c802ea7e44ff"), "c92af94a-f348-44b5-bd13-b7404d452f97", "User", "USER" });
+                values: new object[] { new Guid("e831dbf3-40ce-4c8d-b6d4-3e200b97ad57"), "e337563d-f6c5-4f96-a229-50d4d58fc531", "User", "USER" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "CreatedOn", "Email", "EmailConfirmed", "FirstName", "Image", "IsAdmin", "IsBanned", "IsDeleted", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { new Guid("90f94d62-945e-44cd-ad80-c90e579ab7e6"), 0, "f5f0c01a-0f88-4b00-9b35-4725dc6f7c2c", new DateTime(2020, 11, 14, 14, 14, 39, 741, DateTimeKind.Utc).AddTicks(8924), "gigenev@gmail.com", true, "Gencho", "~/images/Profile.jpg", true, false, false, "Genev", false, null, "GIGENEV@GMAIL.COM", "GIGENEV@ADMIN.COM", "AQAAAAEAACcQAAAAEEW4xgFlvQOAdeL8HaHJZ61igNX4Z+0CKRUXNStt1laPXKMMGd79Q6zi/zVQbqhrkA==", null, false, "26b2a301-0ce1-44de-a90f-f4fc0645a904", false, "gigenev@gmail.com" });
+                values: new object[] { new Guid("f77128e3-1216-4fe6-80c6-4ae67a5549b7"), 0, "61df8245-14a5-44f6-b042-702830d0c6c6", new DateTime(2020, 11, 15, 14, 28, 43, 995, DateTimeKind.Utc).AddTicks(9629), "gigenev@gmail.com", true, "Gencho", "~/images/Profile.jpg", true, false, false, "Genev", false, null, "GIGENEV@GMAIL.COM", "GIGENEV@ADMIN.COM", "AQAAAAEAACcQAAAAEFj0R0Si78NbWUFnlekihmbFBkjWtHzIA2A3BiScLGo8TBvxebeOew6n/WraGgC8/Q==", null, false, "0aefe0e5-4fae-474f-b817-46d2b721fc1b", false, "gigenev@gmail.com" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
                 columns: new[] { "UserId", "RoleId" },
-                values: new object[] { new Guid("90f94d62-945e-44cd-ad80-c90e579ab7e6"), new Guid("75f89290-09e3-4879-b347-c8736ae77a22") });
+                values: new object[] { new Guid("f77128e3-1216-4fe6-80c6-4ae67a5549b7"), new Guid("f5097e03-0470-4339-8360-21fcfb9a414f") });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Albums_ArtistId",

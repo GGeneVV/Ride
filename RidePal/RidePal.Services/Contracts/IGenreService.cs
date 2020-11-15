@@ -8,7 +8,7 @@ namespace RidePal.Services.Contracts
     {
         GenreDTO GetGenreByIdAsync(Guid genreId);
 
-        PaginatedList<GenreDTO> GetAllGenresAsync(int? pageNumber = 1,
+        PaginatedList<GenreDTO> GetAllGenres(int? pageNumber = 1,
             string sortOrder = "",
             string currentFilter = "",
             string searchString = "");

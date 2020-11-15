@@ -123,18 +123,25 @@ namespace RidePal.Services
             return tracks;
         }
 
-        public async Task<IReadOnlyCollection<TrackDTO>> GetTopTracksAsync(int count = 5)
+        public IReadOnlyCollection<TrackDTO> GetTopTracks(int count = 5, string searchString = "")
         {
-            var tracks = await _appDbContext.Tracks
+            IReadOnlyCollection<TrackDTO> tracks = new List<TrackDTO>();
+            var query = _appDbContext.Tracks
                 .Include(t => t.Album)
                 .Include(t => t.Artist)
                 .Include(t => t.Genre)
                 .Include(t => t.TrackPlaylists)
-                .Where(t => t.IsDeleted == false)
-                .OrderBy(t => t.Rank)
+                .Where(t => t.IsDeleted == false);
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                query = query.Where(x => x.Title.ToLower().Contains(searchString.ToLower()));
+            }
+            tracks = query
+                .OrderByDescending(x => x.Rank)
                 .Take(count)
-                .Select(t => _mapper.Map<TrackDTO>(t))
-                .ToListAsync();
+                .Select(a => _mapper.Map<TrackDTO>(a))
+                .ToList();
 
             return tracks;
         }
