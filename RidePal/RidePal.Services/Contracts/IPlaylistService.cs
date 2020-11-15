@@ -12,7 +12,7 @@ namespace RidePal.Services.Contracts
         Task<IReadOnlyCollection<TrackDTO>> RandomTracksByGenreConfig(PlaylistConfigDTO playlistConfigDTO, string genreName);
         Task<PlaylistDTO> GeneratePlaylist(int travelDuration, PlaylistConfigDTO playlistConfigDTO);
         PaginatedList<PlaylistDTO> GetUserPlaylists(
-            UserDTO userDTO,
+            Guid? userDTO,
             int? pageNumber = 1,
             string sortOrder = "",
             string currentFilter = "",

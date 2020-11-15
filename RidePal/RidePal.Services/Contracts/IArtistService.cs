@@ -15,6 +15,6 @@ namespace RidePal.Services.Contracts
             string currentFilter = "",
             string searchString = "");
 
-        Task<IReadOnlyCollection<ArtistDTO>> GetTopArtistsAsync(int count = 5);
+        IReadOnlyCollection<ArtistDTO> GetTopArtists(int count = 5, string searchString = "");
     }
 }

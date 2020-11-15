@@ -1,0 +1,144 @@
+﻿@model BrowseAllVM
+
+@{
+    ViewData["Title"] = "Browse All";
+    Layout = "~/Views/Shared/_MyLayout.cshtml";
+}
+
+<div id="search" class="w-100">
+    <div class="main-container">
+        <aside class="nav-bar">
+            <div class="logo">
+                <div class="brand-img">
+                    <img src="~images/sound-waves.svg" alt="">
+                </div>
+                <span>RidePal</span>
+            </div>
+            <a class="nav-link" asp-controller="Home" asp-action="Index"><i class="fas fa-home"></i> Home</a>
+            <a class="nav-link" asp-controller="Search" asp-action="Index"><i class="fas fa-search"></i> Search</a>
+            <a class="nav-link" href="#"><i class="fas fa-headphones-alt"></i> Your Playlists</a>
+
+        </aside>
+        <div class="top-bar">
+            <header>
+                <div class="navigation d-inline-flex align-items-center">
+                    <span><i class="fas fa-chevron-left"></i></span>
+                    <span class="disabled"><i class="fas fa-chevron-right"></i></span>
+                    <div class="search-input">
+                        <input type="text" placeholder="Search here...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                </div>
+                <div class="login-controller">
+                    <button class="signup">Sign up</button>
+                    <button class="login">log in</button>
+                </div>
+            </header>
+        </div>
+        <main class="main-view">
+            <div class="main-view-container">
+                <div class="os-host">
+                    <div class="search-all-view-grid p-5">
+                        <div class="top-result">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h2>Top result</h2>
+                            </div>
+                            @{ 
+                                var topResult = Model.Tracks.FirstOrDefault();
+                            }
+                            <div class="ridepal-card">
+                                <img src="@topResult.Artist.Picture" alt="">
+                                <span class="title">@topResult.Title</span>
+                                <span>@topResult.Artist.Name</span>
+                            </div>
+                        </div>
+
+                        <div class="songs">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h2>Songs</h2>
+                                <div class="see-more">
+                                    <a href="#" class="s" style="padding: 16px;">See more</a>
+                                </div>
+                            </div>
+                            @for (int i = 1; i < Model.Tracks.Count; i++)
+                            {
+                                var track = Model.Tracks.ElementAt(i);
+                                <div class="tracklist-row">
+                                    <div class="index justify-content-center img">
+                                        <img src="@track.Artist.Picture" alt="">
+                                    </div>
+                                    <div class="title">@track.Title</div>
+                                    <div class="rank justify-content-center">@track.Rank</div>
+                                    <div class="duration justify-content-center">@track.Duration</div>
+                                </div>
+                            }
+
+                        </div>
+
+
+                        <div class="artists">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h2>Artists</h2>
+                                <div class="see-more">
+                                    <a href="#" class="s" style="padding: 16px;">See more</a>
+                                </div>
+                            </div>
+                            <div class="grid-cards">
+                                <!-- TOP Artists -->
+                                @for (int i = 0; i < Model.Artists.Count; i++)
+                                {
+                                    var artist = Model.Artists.ElementAt(i);
+                                    <!-- TEMPLATE CARD -->
+                                    <div class="ridepal-card">
+                                        <div class="img d-flex justify-content-center align-items-center">
+                                            <img src="@artist.Picture" alt="" class="img-round" />
+                                        </div>
+                                        <h4 class="title">@artist.Name</h4>
+                                        @*<div class="artist">@artist.Tracks.Count</div>*@
+                                    </div>
+                                    <!-- TEMPLATE CARD / END -->
+                                }
+                                <!-- TOP Artists / END -->
+                            </div>
+                        </div>
+
+
+
+                        <div class="albums">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h2>Albums</h2>
+                                <div class="see-more">
+                                    <a href="#" class="s" style="padding: 16px;">See more</a>
+                                </div>
+                            </div>
+                            <div class="grid-cards">
+                                <!-- TOP TRACKS -->
+                                @for (int i = 0; i < Model.Albums.Count; i++)
+                                {
+                                    var album = Model.Albums.ElementAt(i);
+                                    <!-- TEMPLATE CARD -->
+                                    <div class="ridepal-card">
+                                        <div class="img d-flex justify-content-center align-items-center">
+                                            <img src="@album.Picture" alt="" />
+                                        </div>
+                                        <h4 class="title">@album.Title</h4>
+                                        <div class="artist">@album.Artist.Name</div>
+                                    </div>
+                                    <!-- TEMPLATE CARD / END -->
+                                }
+                                <!-- TOP TRACKS / END -->
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

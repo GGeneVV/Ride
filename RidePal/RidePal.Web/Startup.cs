@@ -146,9 +146,12 @@ namespace RidePal.Web
 
 
             // TODO: Toggle seeder
-            //using var servicescope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
-            //var context = servicescope.ServiceProvider.GetRequiredService<AppDbContext>();
-            //await context.SeedDbAsync();
+            using var servicescope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+            var context = servicescope.ServiceProvider.GetRequiredService<AppDbContext>();
+            if (await context.Tracks.CountAsync() <= 0 )
+            {
+                await context.SeedDbAsync();
+            }
 
         }
     }

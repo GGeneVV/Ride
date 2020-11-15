@@ -13,8 +13,8 @@
                 </div>
                 <span>RidePal</span>
             </div>
-            <a class="nav-link" href="#"><i class="fas fa-home"></i> Home</a>
-            <a class="nav-link" href="#"><i class="fas fa-search"></i> Search</a>
+            <a class="nav-link" asp-controller="Home" asp-action="Index"><i class="fas fa-home"></i> Home</a>
+            <a class="nav-link" asp-controller="Search" asp-action="Index"><i class="fas fa-search"></i> Search</a>
             <a class="nav-link" href="#"><i class="fas fa-headphones-alt"></i> Your Playlists</a>
 
         </aside>
@@ -122,8 +122,8 @@
                                     var artist = Model.TopArtists.ElementAt(i);
                                     <!-- TEMPLATE CARD -->
                                     <div class="ridepal-card">
-                                        <div class="img d-flex justify-content-center align-items-center">
-                                            <img src="@artist.Picture" alt="" />
+                                        <div class="d-flex justify-content-center align-items-center">
+                                            <img src="@artist.Picture" alt="" class="img-round"/>
                                         </div>
                                         <h4 class="title">@artist.Name</h4>
                                         <div class="artist">@artist.Tracks.Count</div>

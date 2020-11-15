@@ -1,6 +1,8 @@
 ﻿using RidePal.Services.DTOModels;
 using RidePal.Services.Pagination;
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace RidePal.Services.Contracts
 {
@@ -13,6 +15,8 @@ namespace RidePal.Services.Contracts
             string sortOrder = "",
             string currentFilter = "",
             string searchString = "");
+
+        IReadOnlyCollection<AlbumDTO> GetTopAlbums(int count = 5, string searchString = "");
 
     }
 }
