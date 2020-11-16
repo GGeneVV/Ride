@@ -19,7 +19,7 @@ namespace RidePal.Models
         [JsonProperty("title")]
         public string Title { get; set; }
 
-        [JsonProperty("picture")]
+        [JsonProperty("cover")]
         public string Picture { get; set; }
 
         [Required]

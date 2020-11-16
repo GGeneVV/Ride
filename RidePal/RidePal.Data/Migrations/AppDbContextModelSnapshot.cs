@@ -103,8 +103,8 @@ namespace RidePal.Data.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = new Guid("90f94d62-945e-44cd-ad80-c90e579ab7e6"),
-                            RoleId = new Guid("75f89290-09e3-4879-b347-c8736ae77a22")
+                            UserId = new Guid("f77128e3-1216-4fe6-80c6-4ae67a5549b7"),
+                            RoleId = new Guid("f5097e03-0470-4339-8360-21fcfb9a414f")
                         });
                 });
 
@@ -307,15 +307,15 @@ namespace RidePal.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("75f89290-09e3-4879-b347-c8736ae77a22"),
-                            ConcurrencyStamp = "2014455f-576b-4117-9521-f3174cebdbf7",
+                            Id = new Guid("f5097e03-0470-4339-8360-21fcfb9a414f"),
+                            ConcurrencyStamp = "4a13416e-165f-4831-aa06-491037c6bb08",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = new Guid("9550bab8-853c-47ac-bd2c-c802ea7e44ff"),
-                            ConcurrencyStamp = "c92af94a-f348-44b5-bd13-b7404d452f97",
+                            Id = new Guid("e831dbf3-40ce-4c8d-b6d4-3e200b97ad57"),
+                            ConcurrencyStamp = "e337563d-f6c5-4f96-a229-50d4d58fc531",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -496,10 +496,10 @@ namespace RidePal.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("90f94d62-945e-44cd-ad80-c90e579ab7e6"),
+                            Id = new Guid("f77128e3-1216-4fe6-80c6-4ae67a5549b7"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f5f0c01a-0f88-4b00-9b35-4725dc6f7c2c",
-                            CreatedOn = new DateTime(2020, 11, 14, 14, 14, 39, 741, DateTimeKind.Utc).AddTicks(8924),
+                            ConcurrencyStamp = "61df8245-14a5-44f6-b042-702830d0c6c6",
+                            CreatedOn = new DateTime(2020, 11, 15, 14, 28, 43, 995, DateTimeKind.Utc).AddTicks(9629),
                             Email = "gigenev@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "Gencho",
@@ -511,9 +511,9 @@ namespace RidePal.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "GIGENEV@GMAIL.COM",
                             NormalizedUserName = "GIGENEV@ADMIN.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEEW4xgFlvQOAdeL8HaHJZ61igNX4Z+0CKRUXNStt1laPXKMMGd79Q6zi/zVQbqhrkA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEFj0R0Si78NbWUFnlekihmbFBkjWtHzIA2A3BiScLGo8TBvxebeOew6n/WraGgC8/Q==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "26b2a301-0ce1-44de-a90f-f4fc0645a904",
+                            SecurityStamp = "0aefe0e5-4fae-474f-b817-46d2b721fc1b",
                             TwoFactorEnabled = false,
                             UserName = "gigenev@gmail.com"
                         });

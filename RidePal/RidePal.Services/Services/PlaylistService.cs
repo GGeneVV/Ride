@@ -134,13 +134,13 @@ namespace RidePal.Services
         }
 
         public PaginatedList<PlaylistDTO> GetUserPlaylists(
-            UserDTO user,
+            Guid? userId,
             int? pageNumber = 1,
             string sortOrder = "",
             string currentFilter = "",
             string searchString = "")
         {
-            if (user == null) { throw new ArgumentNullException(); }
+            if (userId == null) { throw new ArgumentNullException(); }
             if (searchString != null)
             {
                 pageNumber = 1;
@@ -149,14 +149,13 @@ namespace RidePal.Services
             {
                 searchString = currentFilter;
             }
-
-            var id = _userManagerWrapper.FindIdByNameAsync(user.UserName);
+            //var id = _userManagerWrapper.FindIdByNameAsync(user.UserName);
 
             currentFilter = searchString;
 
             var playlists = _appDbContext.Playlists
                 .Where(p => p.IsDeleted == false)
-                .Where(p => p.UserId == id && p.IsDeleted == false)
+                .Where(p => p.UserId == userId && p.IsDeleted == false)
                 .WhereIf(!String.IsNullOrEmpty(searchString), s => s.Title.Contains(searchString))
                 .Select(p => _mapper.Map<PlaylistDTO>(p));
 

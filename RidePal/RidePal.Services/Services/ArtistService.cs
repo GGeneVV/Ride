@@ -92,16 +92,24 @@ namespace RidePal.Services
             return artistDTO;
         }
 
-        public async Task<IReadOnlyCollection<ArtistDTO>> GetTopArtistsAsync(int count = 5)
+        public IReadOnlyCollection<ArtistDTO> GetTopArtists(int count = 5, string searchString = "")
         {
-            var artists = await _appDbContext.Artists
+            IReadOnlyCollection<ArtistDTO> artists = new List<ArtistDTO>();
+            var query = _appDbContext.Artists
                 .Include(x => x.Albums)
                 .Include(x => x.Tracks)
-                .Where(x => x.IsDeleted == false)
+                .Where(x => x.IsDeleted == false);
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                query = query.Where(x => x.Name.ToLower().Contains(searchString.ToLower()));
+            }
+            artists = query
                 .OrderByDescending(x => x.Tracks.Count)
                 .Take(count)
                 .Select(a => _mapper.Map<ArtistDTO>(a))
-                .ToListAsync();
+                .ToList();
+
 
             return artists;
         }

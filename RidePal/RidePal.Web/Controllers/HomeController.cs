@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using RidePal.Models;
 using RidePal.Services.Contracts;
+using RidePal.Services.Wrappers.Contracts;
 using RidePal.Web.Models;
 using System.Diagnostics;
 using System.Linq;
@@ -33,16 +36,15 @@ namespace RidePal.Web.Controllers
         public async Task<IActionResult> Index([Bind("Title,UseTopTracks,AllowTracksFromSameArtist,IsAdvanced")] PlaylistConfigVM playlistConfigVM,
             [Bind("IsChecked,Percentage")] GenreConfigVM genreVM)
         {
-
-            var genres = _genreService.GetAllGenresAsync();
+            var genres = _genreService.GetAllGenres(searchString: "Pop");
             var genreConfigs = genres.Select(g => _mapper.Map<GenreConfigVM>(g)).ToList();
             var popularTracks = await _trackService.GetPopularTracksAsync(5);
             var popularTracksVM = popularTracks.Select(t => _mapper.Map<TrackVM>(t)).ToList();
 
-            var topTracks = await _trackService.GetTopTracksAsync(5);
+            var topTracks = _trackService.GetTopTracks(5);
             var topTracksVM = topTracks.Select(t => _mapper.Map<TrackVM>(t)).ToList();
 
-            var topArists = await _artistService.GetTopArtistsAsync(5);
+            var topArists = _artistService.GetTopArtists(5);
             var topArtistsVM = topArists.Select(t => _mapper.Map<ArtistVM>(t)).ToList();
 
             var playlistConfig = new PlaylistConfigVM()

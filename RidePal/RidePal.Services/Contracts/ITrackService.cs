@@ -16,6 +16,6 @@ namespace RidePal.Services.Contracts
             string searchString = "");
 
         Task<IReadOnlyCollection<TrackDTO>> GetPopularTracksAsync(int count = 5);
-        Task<IReadOnlyCollection<TrackDTO>> GetTopTracksAsync(int count = 5);
+        IReadOnlyCollection<TrackDTO> GetTopTracks(int count = 5, string searchString = "");
     }
 }
