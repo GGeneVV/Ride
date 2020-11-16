@@ -37,18 +37,20 @@ namespace RidePal.Services
             {
                 searchString = currentFilter;
             }
-
+            int pageSize = 10;
 
             currentFilter = searchString;
 
             var tracks = _appDbContext.Tracks
+
                 .Include(t => t.Album)
                 .Include(t => t.Artist)
                 .Include(t => t.Genre)
                 .Include(t => t.TrackPlaylists)
                 .Where(t => t.IsDeleted == false)
                 .WhereIf(!String.IsNullOrEmpty(searchString), s => s.Title.Contains(searchString))
-                .Select(t => _mapper.Map<TrackDTO>(t));
+                .Select(t => _mapper.Map<TrackDTO>(t)).Take(pageSize);
+            
 
             switch (sortOrder.ToLower())
             {
@@ -78,7 +80,7 @@ namespace RidePal.Services
                     break;
             }
 
-            int pageSize = 10;
+            
 
 
             return PaginatedList<TrackDTO>.Create(tracks.AsQueryable(), pageNumber ?? 1, pageSize);

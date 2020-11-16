@@ -39,7 +39,7 @@ namespace RidePal.Web
             PlaylistDTO playlist;
             try
             {
-                playlist = await _playlistService.GetPlaylist(id);
+                playlist = _playlistService.GetPlaylist(id);
             }
             catch (Exception)
             {

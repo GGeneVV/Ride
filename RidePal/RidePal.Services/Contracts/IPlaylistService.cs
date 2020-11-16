@@ -12,18 +12,20 @@ namespace RidePal.Services.Contracts
         Task<IReadOnlyCollection<TrackDTO>> RandomTracksByGenreConfig(PlaylistConfigDTO playlistConfigDTO, string genreName);
         Task<PlaylistDTO> GeneratePlaylist(int travelDuration, PlaylistConfigDTO playlistConfigDTO);
         PaginatedList<PlaylistDTO> GetUserPlaylists(
-            Guid? userDTO,
+            Guid? userId,
             int? pageNumber = 1,
             string sortOrder = "",
             string currentFilter = "",
             string searchString = "");
-        Task<PlaylistDTO> GetPlaylist(Guid? id);
+        PlaylistDTO GetPlaylist(Guid? id);
         PaginatedList<PlaylistDTO> GetAllPlaylists(int? pageNumber = 1,
             string sortOrder = "",
             string currentFilter = "",
             string searchString = "");
         Task DeletePlaylist(Guid? id);
         Task<PlaylistDTO> EditPlaylist(Guid? id, PlaylistDTO updatedPlaylist);
+
+        bool PlaylistExists(Guid? id);
 
     }
 }
