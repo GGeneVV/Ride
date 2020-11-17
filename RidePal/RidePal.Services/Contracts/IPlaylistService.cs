@@ -24,6 +24,7 @@ namespace RidePal.Services.Contracts
             string searchString = "");
         Task DeletePlaylist(Guid? id);
         Task<PlaylistDTO> EditPlaylist(Guid? id, PlaylistDTO updatedPlaylist);
+        Task<PlaylistDTO> SavePlaylist(PlaylistDTO playlistDTO);
 
     }
 }

@@ -44,6 +44,7 @@ namespace RidePal.Services
             var artists = _appDbContext.Artists
                 .Include(artist => artist.Albums)
                 .Include(artist => artist.Tracks)
+                .AsNoTracking()
                 .Where(g => g.IsDeleted == false)
                 .WhereIf(!String.IsNullOrEmpty(searchString), s => s.Name.Contains(searchString))
                 .Select(g => _mapper.Map<ArtistDTO>(g));
@@ -98,6 +99,7 @@ namespace RidePal.Services
             var query = _appDbContext.Artists
                 .Include(x => x.Albums)
                 .Include(x => x.Tracks)
+                .AsNoTracking()
                 .Where(x => x.IsDeleted == false);
 
             if (!string.IsNullOrEmpty(searchString))

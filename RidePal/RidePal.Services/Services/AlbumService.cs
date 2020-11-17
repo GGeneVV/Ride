@@ -25,7 +25,10 @@ namespace RidePal.Services
 
         public AlbumDTO GetAlbumByIdAsync(Guid albumId)
         {
-            var album = _appDbContext.Albums.Where(a => a.Id == albumId).FirstOrDefault(a => a.IsDeleted == false);
+            var album = _appDbContext.Albums
+                .AsNoTracking()
+                .Where(a => a.Id == albumId)
+                .FirstOrDefault(a => a.IsDeleted == false);
 
             var albumDTO = _mapper.Map<AlbumDTO>(album);
 
@@ -51,6 +54,7 @@ namespace RidePal.Services
             currentFilter = searchString;
 
             var albums = _appDbContext.Albums
+                .AsNoTracking()
                 .Where(a => a.IsDeleted == false)
                 .WhereIf(!String.IsNullOrEmpty(searchString), a => a.Title.Contains(searchString))
                 .Select(a => _mapper.Map<AlbumDTO>(a));
@@ -83,6 +87,7 @@ namespace RidePal.Services
             var query = _appDbContext.Albums
                 .Include(x => x.Artist)
                 .Include(x => x.Tracks)
+                .AsNoTracking()
                 .Where(x => x.IsDeleted == false);
 
             if (!string.IsNullOrEmpty(searchString))

@@ -36,7 +36,7 @@ namespace RidePal.Web.Controllers
         public async Task<IActionResult> Index([Bind("Title,UseTopTracks,AllowTracksFromSameArtist,IsAdvanced")] PlaylistConfigVM playlistConfigVM,
             [Bind("IsChecked,Percentage")] GenreConfigVM genreVM)
         {
-            var genres = _genreService.GetAllGenres(searchString: "Pop");
+            var genres = _genreService.GetAllGenres();
             var genreConfigs = genres.Select(g => _mapper.Map<GenreConfigVM>(g)).ToList();
             var popularTracks = await _trackService.GetPopularTracksAsync(5);
             var popularTracksVM = popularTracks.Select(t => _mapper.Map<TrackVM>(t)).ToList();

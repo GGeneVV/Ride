@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using RidePal.Data;
 using RidePal.Services.Contracts;
 using RidePal.Services.DTOModels;
@@ -23,7 +24,10 @@ namespace RidePal.Services
 
         public GenreDTO GetGenreByIdAsync(Guid genreId)
         {
-            var genre = _appDbContext.Genres.Where(g => g.Id == genreId).FirstOrDefault(g => g.IsDeleted == false);
+            var genre = _appDbContext.Genres
+                .AsNoTracking()
+                .Where(g => g.Id == genreId)
+                .FirstOrDefault(g => g.IsDeleted == false);
 
             var genreDTO = _mapper.Map<GenreDTO>(genre);
 
@@ -49,6 +53,7 @@ namespace RidePal.Services
 
             var genres = _appDbContext.Genres
                 .Where(g => g.IsDeleted == false)
+                .AsNoTracking()
                 .WhereIf(!String.IsNullOrEmpty(searchString), s => s.Name.Contains(searchString))
                 .Select(g => _mapper.Map<GenreDTO>(g));
 
