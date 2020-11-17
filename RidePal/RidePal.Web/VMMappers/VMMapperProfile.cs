@@ -28,6 +28,7 @@ namespace RidePal.Web.VMMappers
             CreateMap<AlbumDTO, AlbumVM>().ReverseMap();
 
             CreateMap<ArtistDTO, ArtistVM>().ReverseMap();
+            CreateMap<PlaylistDTO, EditPlaylistVM>().ReverseMap();
 
             CreateMap<GenreDTO, GenreConfigVM>().ReverseMap();
             CreateMap<PlaylistGenreConfigDTO, GenreConfigVM>().ReverseMap();

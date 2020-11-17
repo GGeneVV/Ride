@@ -95,7 +95,7 @@ namespace RidePal.Data.Seeder
                                         albums.Add(trackAlbum);
                                         track.Album = trackAlbum;
                                     }
-                                    else 
+                                    else
                                     {
                                         track.Album = albums.FirstOrDefault(a => a.DeezerId == trackAlbum.DeezerId);
                                     }
