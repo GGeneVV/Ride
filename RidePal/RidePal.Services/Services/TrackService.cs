@@ -47,6 +47,7 @@ namespace RidePal.Services
                 .Include(t => t.Artist)
                 .Include(t => t.Genre)
                 .Include(t => t.TrackPlaylists)
+                .AsNoTracking()
                 .Where(t => t.IsDeleted == false)
                 .WhereIf(!String.IsNullOrEmpty(searchString), s => s.Title.Contains(searchString))
                 .Select(t => _mapper.Map<TrackDTO>(t)).Take(pageSize);
@@ -116,6 +117,7 @@ namespace RidePal.Services
                 .Include(t => t.Artist)
                 .Include(t => t.Genre)
                 .Include(t => t.TrackPlaylists)
+                .AsNoTracking()
                 .Where(t => t.IsDeleted == false)
                 .OrderByDescending(t => t.ReleaseDate)
                 .Take(count)
@@ -133,6 +135,7 @@ namespace RidePal.Services
                 .Include(t => t.Artist)
                 .Include(t => t.Genre)
                 .Include(t => t.TrackPlaylists)
+                //.AsNoTracking()
                 .Where(t => t.IsDeleted == false);
 
             if (!string.IsNullOrEmpty(searchString))

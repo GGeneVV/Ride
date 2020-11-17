@@ -103,8 +103,8 @@ namespace RidePal.Data.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = new Guid("55075023-3090-4113-8eac-0144fe314c64"),
-                            RoleId = new Guid("77cdcd34-15ce-4b22-a9eb-ac27d3a2cc4b")
+                            UserId = new Guid("458e0d56-a7c3-4527-9500-48286e5c8e32"),
+                            RoleId = new Guid("36cb2442-0a8a-407d-975a-91d243c5eafd")
                         });
                 });
 
@@ -236,7 +236,8 @@ namespace RidePal.Data.Migrations
 
             modelBuilder.Entity("RidePal.Models.Playlist", b =>
                 {
-                    b.Property<Guid?>("UserId")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("CreatedOn")
@@ -247,9 +248,6 @@ namespace RidePal.Data.Migrations
 
                     b.Property<bool>("Enabled")
                         .HasColumnType("bit");
-
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsArtistRepeated")
                         .HasColumnType("bit");
@@ -272,7 +270,12 @@ namespace RidePal.Data.Migrations
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("UserId");
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Playlists");
                 });
@@ -307,15 +310,15 @@ namespace RidePal.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("77cdcd34-15ce-4b22-a9eb-ac27d3a2cc4b"),
-                            ConcurrencyStamp = "9d97ca4c-58f8-4da5-adf4-3a46e7c9e8cc",
+                            Id = new Guid("36cb2442-0a8a-407d-975a-91d243c5eafd"),
+                            ConcurrencyStamp = "e7f5a2a0-a422-4c99-a497-99d251dceb47",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = new Guid("53ac1130-75c7-4b39-93c5-b6dd2ac30da4"),
-                            ConcurrencyStamp = "5e13dbd9-b7c9-43a5-bc64-0c4eee7baae3",
+                            Id = new Guid("7d6175c3-cba6-435f-a4f8-16a15a91892d"),
+                            ConcurrencyStamp = "9446a206-5bad-4622-8862-ac66320a7faf",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -496,10 +499,10 @@ namespace RidePal.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("55075023-3090-4113-8eac-0144fe314c64"),
+                            Id = new Guid("458e0d56-a7c3-4527-9500-48286e5c8e32"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "ea4cefd5-2bc6-4f92-854e-0d210dd0d5e6",
-                            CreatedOn = new DateTime(2020, 11, 16, 11, 35, 34, 790, DateTimeKind.Utc).AddTicks(8465),
+                            ConcurrencyStamp = "1236e507-0103-4895-a66a-0829fc78d57a",
+                            CreatedOn = new DateTime(2020, 11, 17, 12, 31, 33, 121, DateTimeKind.Utc).AddTicks(7058),
                             Email = "gigenev@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "Gencho",
@@ -511,9 +514,9 @@ namespace RidePal.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "GIGENEV@GMAIL.COM",
                             NormalizedUserName = "GIGENEV@ADMIN.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEODv2sTSlYa2B1abi82m3klRXyHAu3EWxjtmacp+aPGL0DZoL0qFQ9A2te3+zi4Txg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEJ1cHmXU0wq3cUj0IDdqsTW2Gw6szTgA5lXbxa/FQRNC1ZmvU8qzZitQnML431m1Qg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "ee29cb57-d69f-4de6-ad27-ae83043ada12",
+                            SecurityStamp = "2f6a76d7-aca6-48b8-bd14-bd3b749e4ed4",
                             TwoFactorEnabled = false,
                             UserName = "gigenev@gmail.com"
                         });
@@ -583,9 +586,7 @@ namespace RidePal.Data.Migrations
                 {
                     b.HasOne("RidePal.Models.User", "User")
                         .WithMany("Playlists")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("RidePal.Models.Track", b =>

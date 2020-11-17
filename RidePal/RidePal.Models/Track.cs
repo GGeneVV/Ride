@@ -32,6 +32,7 @@ namespace RidePal.Models
         [JsonProperty("rank")]
         public int Rank { get; set; }
 
+        [Required]
         [JsonProperty("release_date")]
         public DateTime ReleaseDate { get; set; }
 
