@@ -5,6 +5,7 @@ using RidePal.Models.DataSource;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RidePal.Data.Seeder
@@ -34,7 +35,7 @@ namespace RidePal.Data.Seeder
                     var genre = result.Genres[i];
                     await _appDbContext.Genres.AddAsync(genre);
 
-
+                    Thread.Sleep(300);
                     using (var responseSecond = await client.GetAsync($"https://api.deezer.com/search/playlist?q={genre.Name}&limit=50"))
                     {
                         var responseSecondAsString = await responseSecond.Content.ReadAsStringAsync();
@@ -43,27 +44,39 @@ namespace RidePal.Data.Seeder
 
                         var counter = 0;
 
+
                         for (int t = 0; t < playlistTracks.Count(); t++)
                         {
-                            if (counter >= 1500) { break; }
+                            if (counter >= 1500) {
+                                break; 
+                            }
 
                             var tracklistURL = playlistTracks[t]["tracklist"].ToString();
+
 
                             using (var responseThird = await client.GetAsync($"{tracklistURL}&limit=100"))
                             {
                                 var responseThirdAsString = await responseThird.Content.ReadAsStringAsync();
 
                                 var tracks = JObject.Parse(responseThirdAsString)["data"]; //tracks as json
-
+                                if (tracks == null)
+                                {
+                                    continue;
+                                }
 
                                 for (int j = 0; j < tracks.Count(); j++)
                                 {
-                                    if (counter >= 1500) { break; }
+                                    if (counter >= 1500) { 
+                                        break;
+                                    }
 
+                                    if (tracks[j]["artist"] == null || tracks[j]["album"] == null || tracks[j] == null)
+                                    {
+                                        continue;
+                                    }
                                     var track = JsonConvert.DeserializeObject<Track>(tracks[j].ToString());
                                     var trackArtist = JsonConvert.DeserializeObject<Artist>(tracks[j]["artist"].ToString());
                                     var trackAlbum = JsonConvert.DeserializeObject<Album>(tracks[j]["album"].ToString());
-
                                     if (artistDeezerId.Add(trackArtist.DeezerId))
                                     {
                                         artists.Add(trackArtist);
@@ -94,9 +107,9 @@ namespace RidePal.Data.Seeder
                                         trackHashset.Add(track);
                                         counter++;
                                     }
-
                                     //await _appDbContext.SaveChangesAsync();
                                 }
+                                //Thread.Sleep(500);
                             }
 
                         }

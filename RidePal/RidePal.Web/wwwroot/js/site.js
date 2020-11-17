@@ -9,8 +9,11 @@
         $('#travelDur').val(duration);
         $.post('https://localhost:5001/Playlists/GeneratePlaylist', $('#form-generate').serialize()).done(function (data) {
             $('#playlist-result').html(data);
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            if (jqXHR.status == "401" || jqXHR.status == 401) {
+                window.location = 'https://localhost:5001/Account/Login';
+            }
         });
-        //$('#form-generate').submit();
     });
 }
 

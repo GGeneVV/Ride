@@ -223,22 +223,22 @@ namespace RidePal.Data.Migrations
                 name: "Playlists",
                 columns: table => new
                 {
-                    UserId = table.Column<Guid>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false),
                     CreatedOn = table.Column<DateTime>(nullable: true),
                     ModifiedOn = table.Column<DateTime>(nullable: true),
                     IsDeleted = table.Column<bool>(nullable: false),
-                    Id = table.Column<Guid>(nullable: false),
                     Title = table.Column<string>(nullable: true),
                     Picture = table.Column<string>(nullable: true),
                     Duration = table.Column<int>(nullable: false),
                     Rank = table.Column<int>(nullable: false),
                     Enabled = table.Column<bool>(nullable: false),
                     IsArtistRepeated = table.Column<bool>(nullable: false),
-                    IsTopTracksEnabled = table.Column<bool>(nullable: false)
+                    IsTopTracksEnabled = table.Column<bool>(nullable: false),
+                    UserId = table.Column<Guid>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Playlists", x => x.UserId);
+                    table.PrimaryKey("PK_Playlists", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Playlists_AspNetUsers_UserId",
                         column: x => x.UserId,
@@ -306,7 +306,7 @@ namespace RidePal.Data.Migrations
                         name: "FK_TrackPlaylists_Playlists_PlaylistId",
                         column: x => x.PlaylistId,
                         principalTable: "Playlists",
-                        principalColumn: "UserId",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_TrackPlaylists_Tracks_TrackId",
@@ -319,22 +319,22 @@ namespace RidePal.Data.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { new Guid("f5097e03-0470-4339-8360-21fcfb9a414f"), "4a13416e-165f-4831-aa06-491037c6bb08", "Admin", "ADMIN" });
+                values: new object[] { new Guid("36cb2442-0a8a-407d-975a-91d243c5eafd"), "e7f5a2a0-a422-4c99-a497-99d251dceb47", "Admin", "ADMIN" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { new Guid("e831dbf3-40ce-4c8d-b6d4-3e200b97ad57"), "e337563d-f6c5-4f96-a229-50d4d58fc531", "User", "USER" });
+                values: new object[] { new Guid("7d6175c3-cba6-435f-a4f8-16a15a91892d"), "9446a206-5bad-4622-8862-ac66320a7faf", "User", "USER" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "CreatedOn", "Email", "EmailConfirmed", "FirstName", "Image", "IsAdmin", "IsBanned", "IsDeleted", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { new Guid("f77128e3-1216-4fe6-80c6-4ae67a5549b7"), 0, "61df8245-14a5-44f6-b042-702830d0c6c6", new DateTime(2020, 11, 15, 14, 28, 43, 995, DateTimeKind.Utc).AddTicks(9629), "gigenev@gmail.com", true, "Gencho", "~/images/Profile.jpg", true, false, false, "Genev", false, null, "GIGENEV@GMAIL.COM", "GIGENEV@ADMIN.COM", "AQAAAAEAACcQAAAAEFj0R0Si78NbWUFnlekihmbFBkjWtHzIA2A3BiScLGo8TBvxebeOew6n/WraGgC8/Q==", null, false, "0aefe0e5-4fae-474f-b817-46d2b721fc1b", false, "gigenev@gmail.com" });
+                values: new object[] { new Guid("458e0d56-a7c3-4527-9500-48286e5c8e32"), 0, "1236e507-0103-4895-a66a-0829fc78d57a", new DateTime(2020, 11, 17, 12, 31, 33, 121, DateTimeKind.Utc).AddTicks(7058), "gigenev@gmail.com", true, "Gencho", "~/images/Profile.jpg", true, false, false, "Genev", false, null, "GIGENEV@GMAIL.COM", "GIGENEV@ADMIN.COM", "AQAAAAEAACcQAAAAEJ1cHmXU0wq3cUj0IDdqsTW2Gw6szTgA5lXbxa/FQRNC1ZmvU8qzZitQnML431m1Qg==", null, false, "2f6a76d7-aca6-48b8-bd14-bd3b749e4ed4", false, "gigenev@gmail.com" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
                 columns: new[] { "UserId", "RoleId" },
-                values: new object[] { new Guid("f77128e3-1216-4fe6-80c6-4ae67a5549b7"), new Guid("f5097e03-0470-4339-8360-21fcfb9a414f") });
+                values: new object[] { new Guid("458e0d56-a7c3-4527-9500-48286e5c8e32"), new Guid("36cb2442-0a8a-407d-975a-91d243c5eafd") });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Albums_ArtistId",
@@ -379,6 +379,11 @@ namespace RidePal.Data.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Playlists_UserId",
+                table: "Playlists",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TrackPlaylists_PlaylistId",

@@ -7,7 +7,7 @@ namespace RidePal.Models
 {
     public class Playlist : Entity
     {
-        [Required]
+        [Key]
         public Guid Id { get; set; }
         public string Title { get; set; }
         public string Picture { get; set; }

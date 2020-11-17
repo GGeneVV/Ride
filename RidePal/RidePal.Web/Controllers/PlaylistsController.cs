@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -86,6 +87,7 @@ namespace RidePal.Web.Controllers
         // GET: Playlists/Create
 
 
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> GeneratePlaylist(int travelDuration, PlaylistConfigVM playlistConfig)
@@ -114,6 +116,18 @@ namespace RidePal.Web.Controllers
 
             ViewData["UserId"] = new SelectList(_userService.GetAllUsersAsync(), "Id", "Id", playlist.UserId);
             return View(playlist);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SavePlaylist(PlaylistVM playlistVM)
+        {
+            if (playlistVM == null)
+            {
+                return NotFound();
+            }
+            var playlistDTO = _mapper.Map<PlaylistDTO>(playlistVM);
+            await _playlistService.SavePlaylist(playlistDTO);
+            return RedirectToAction("Index", "Home");
         }
 
         // POST: Playlists/Edit/5

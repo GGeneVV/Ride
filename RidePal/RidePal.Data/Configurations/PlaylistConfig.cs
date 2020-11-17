@@ -9,7 +9,7 @@ namespace RidePal.Data.Configurations
         public void Configure(EntityTypeBuilder<Playlist> playlist)
         {
             playlist
-                .HasKey(trackUser => trackUser.UserId);
+                .HasKey(track => track.Id);
 
             playlist
                 .HasOne(playlist => playlist.User)

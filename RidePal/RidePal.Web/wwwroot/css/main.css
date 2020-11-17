@@ -483,11 +483,6 @@ h2 {
         flex-flow: column;
     }
 
-        .search-all-view-grid .top-result h2 {
-            padding-top: 16px;
-            padding-bottom: 16px;
-        }
-
         .search-all-view-grid .top-result .ridepal-card {
             -webkit-box-flex: 1;
             -ms-flex: 1;
