@@ -2,7 +2,6 @@
 using RidePal.Services.Pagination;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace RidePal.Services.Contracts
 {

@@ -149,7 +149,6 @@ namespace RidePal.Services
             {
                 searchString = currentFilter;
             }
-            //var id = _userManagerWrapper.FindIdByNameAsync(user.UserName);
 
             currentFilter = searchString;
 
@@ -161,8 +160,8 @@ namespace RidePal.Services
 
             switch (sortOrder)
             {
-                case "tracks_desc":
-                    playlists = playlists.OrderByDescending(b => b.Rank);
+                case "rank_desc":
+                    playlists = playlists.OrderBy(b => b.Rank);
                     break;
                 case "Duration":
                     playlists = playlists.OrderBy(b => b.Duration);
@@ -171,7 +170,7 @@ namespace RidePal.Services
                     playlists = playlists.OrderByDescending(s => s.Duration);
                     break;
                 default:
-                    playlists = playlists.OrderBy(s => s.Rank);
+                    playlists = playlists.OrderByDescending(s => s.Rank);
                     break;
             }
 
@@ -183,11 +182,11 @@ namespace RidePal.Services
             return PaginatedList<PlaylistDTO>.Create(playlists.AsQueryable(), pageNumber ?? 1, pageSize);
         }
 
-        public async Task<PlaylistDTO> GetPlaylist(Guid? id)
+        public PlaylistDTO GetPlaylist(Guid? id)
         {
             if (id == null) { throw new ArgumentNullException(); }
 
-            var playlist = await _appDbContext.Playlists
+            var playlist = _appDbContext.Playlists
                 .Where(p => p.IsDeleted == false)
                 .FirstOrDefaultAsync(p => p.Id == id);
 
@@ -222,7 +221,7 @@ namespace RidePal.Services
 
             switch (sortOrder)
             {
-                case "tracks_desc":
+                case "rank_desc":
                     playlists = playlists.OrderByDescending(b => b.Rank);
                     break;
                 case "Duration":
@@ -272,6 +271,12 @@ namespace RidePal.Services
             playlist.Title = updatedPlaylist.Title;
             await _appDbContext.SaveChangesAsync();
             return _mapper.Map<PlaylistDTO>(playlist);
+        }
+        public bool PlaylistExists(Guid? id)
+        {
+            var result = _appDbContext.Playlists.Any(p => p.Id == id);
+
+            return result;
         }
     }
 }

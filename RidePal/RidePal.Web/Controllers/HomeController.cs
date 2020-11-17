@@ -1,10 +1,7 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using RidePal.Models;
 using RidePal.Services.Contracts;
-using RidePal.Services.Wrappers.Contracts;
 using RidePal.Web.Models;
 using System.Diagnostics;
 using System.Linq;
