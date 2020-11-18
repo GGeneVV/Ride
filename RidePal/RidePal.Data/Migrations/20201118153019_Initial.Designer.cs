@@ -10,7 +10,7 @@ using RidePal.Data;
 namespace RidePal.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20201117123134_Initial")]
+    [Migration("20201118153019_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -105,8 +105,8 @@ namespace RidePal.Data.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = new Guid("458e0d56-a7c3-4527-9500-48286e5c8e32"),
-                            RoleId = new Guid("36cb2442-0a8a-407d-975a-91d243c5eafd")
+                            UserId = new Guid("a9c5141f-3a3b-4be6-9fe7-b45c915498fb"),
+                            RoleId = new Guid("cedc2cea-0be8-4ca0-8717-2cfdd0b24753")
                         });
                 });
 
@@ -312,15 +312,15 @@ namespace RidePal.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("36cb2442-0a8a-407d-975a-91d243c5eafd"),
-                            ConcurrencyStamp = "e7f5a2a0-a422-4c99-a497-99d251dceb47",
+                            Id = new Guid("cedc2cea-0be8-4ca0-8717-2cfdd0b24753"),
+                            ConcurrencyStamp = "e4a71703-f36f-4b8b-b9c3-0eeaeebc60b2",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = new Guid("7d6175c3-cba6-435f-a4f8-16a15a91892d"),
-                            ConcurrencyStamp = "9446a206-5bad-4622-8862-ac66320a7faf",
+                            Id = new Guid("329719ea-f51b-44be-92d7-d30be25d5bb5"),
+                            ConcurrencyStamp = "028c093c-4bcb-4ac1-9df3-71e555535c54",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -501,10 +501,10 @@ namespace RidePal.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("458e0d56-a7c3-4527-9500-48286e5c8e32"),
+                            Id = new Guid("a9c5141f-3a3b-4be6-9fe7-b45c915498fb"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "1236e507-0103-4895-a66a-0829fc78d57a",
-                            CreatedOn = new DateTime(2020, 11, 17, 12, 31, 33, 121, DateTimeKind.Utc).AddTicks(7058),
+                            ConcurrencyStamp = "3d1473cd-7481-498c-b50b-38769ad7162c",
+                            CreatedOn = new DateTime(2020, 11, 18, 15, 30, 18, 910, DateTimeKind.Utc).AddTicks(5685),
                             Email = "gigenev@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "Gencho",
@@ -516,9 +516,9 @@ namespace RidePal.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "GIGENEV@GMAIL.COM",
                             NormalizedUserName = "GIGENEV@ADMIN.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEJ1cHmXU0wq3cUj0IDdqsTW2Gw6szTgA5lXbxa/FQRNC1ZmvU8qzZitQnML431m1Qg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAELfRBdk3bfY6aLtS74CAZ+Ll8xRNJEOpBq0n2KSx8uce1y0rqbPqKpk23t6wL8xuGQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "2f6a76d7-aca6-48b8-bd14-bd3b749e4ed4",
+                            SecurityStamp = "474d62cd-e772-4830-9e38-a33341309cd8",
                             TwoFactorEnabled = false,
                             UserName = "gigenev@gmail.com"
                         });

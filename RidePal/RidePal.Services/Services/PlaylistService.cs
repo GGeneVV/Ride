@@ -163,6 +163,7 @@ namespace RidePal.Services
             currentFilter = searchString;
 
             var playlists = _appDbContext.Playlists
+                .Include(x => x.TrackPlaylists)
                 .Where(p => p.UserId == userId && p.IsDeleted == false)
                 .WhereIf(!String.IsNullOrEmpty(searchString), s => s.Title.Contains(searchString))
                 .Select(p => _mapper.Map<PlaylistDTO>(p));
@@ -193,6 +194,7 @@ namespace RidePal.Services
             if (id == null) { throw new ArgumentNullException(); }
 
             var playlist =await _appDbContext.Playlists
+                .Include(x => x.TrackPlaylists)
                 .Where(p => p.IsDeleted == false && p.Id == id)
                 .FirstOrDefaultAsync();
             
@@ -221,6 +223,7 @@ namespace RidePal.Services
             currentFilter = searchString;
 
             var playlists = _appDbContext.Playlists
+                .Include(x => x.TrackPlaylists)
                 .Where(p => p.IsDeleted == false)
                 .WhereIf(!String.IsNullOrEmpty(searchString), s => s.Title.Contains(searchString))
                 .Select(p => _mapper.Map<PlaylistDTO>(p));

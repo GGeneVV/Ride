@@ -23,7 +23,7 @@ namespace RidePal.Services
             _mapper = mapper;
         }
 
-        public PaginatedList<TrackDTO> GetAllTracks(
+        public IQueryable<TrackDTO> GetAllTracks(
             int? pageNumber = 1,
             string sortOrder = "",
             string currentFilter = "",
@@ -81,9 +81,9 @@ namespace RidePal.Services
             }
 
 
-            var tracksList = PaginatedList<TrackDTO>.Create(tracks.AsQueryable(), pageNumber ?? 1, pageSize);
+            //var tracksList = PaginatedList<TrackDTO>.Create(tracks.AsQueryable(), pageNumber ?? 1, pageSize);
 
-            return tracksList;
+            return tracks.AsQueryable();
 
         }
 
@@ -112,12 +112,12 @@ namespace RidePal.Services
         public async Task<IReadOnlyCollection<TrackDTO>> GetPopularTracksAsync(int count = 5)
         {
             var tracks = await _appDbContext.Tracks
+                .Where(t => t.IsDeleted == false)
                 .Include(t => t.Album)
                 .Include(t => t.Artist)
                 .Include(t => t.Genre)
                 .Include(t => t.TrackPlaylists)
-                .AsNoTracking()
-                .Where(t => t.IsDeleted == false)
+                //.AsNoTracking()
                 .OrderByDescending(t => t.ReleaseDate)
                 .Take(count)
                 .Select(t => _mapper.Map<TrackDTO>(t))
@@ -134,8 +134,8 @@ namespace RidePal.Services
                 .Include(t => t.Artist)
                 .Include(t => t.Genre)
                 .Include(t => t.TrackPlaylists)
-                //.AsNoTracking()
                 .Where(t => t.IsDeleted == false);
+                //.AsNoTracking()
 
             if (!string.IsNullOrEmpty(searchString))
             {

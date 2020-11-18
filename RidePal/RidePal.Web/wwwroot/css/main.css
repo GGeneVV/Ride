@@ -372,6 +372,8 @@ body, input {
     .login:hover {
         -webkit-transform: scale(1.06);
         transform: scale(1.06);
+        text-decoration: none;
+        color: #181818 !important;
     }
 
 .signup {
@@ -397,6 +399,8 @@ body, input {
     .signup:hover {
         -webkit-transform: scale(1.06);
         transform: scale(1.06);
+        text-decoration: none;
+        color: #fff !important;
     }
 
 .navigation span {
@@ -1010,8 +1014,8 @@ h2 {
     display: -ms-grid;
     display: grid;
     grid-gap: 24px;
-    -ms-grid-columns: (minmax(180px, 1fr))[auto-fill];
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    -ms-grid-columns: (minmax(170px, 1fr))[auto-fit];
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
     -ms-grid-rows: 1fr;
     grid-template-rows: 1fr;
 }
@@ -1034,11 +1038,43 @@ h2 {
             background: #282828;
         }
 
+            .grid-cards .ridepal-card:hover .card-play-button {
+                top: 50%;
+                opacity: 1;
+                z-index: 3;
+            }
+
         .grid-cards .ridepal-card img, .grid-cards .ridepal-card .img {
             position: relative;
             margin-bottom: 16px;
-            min-height: 184px;
             border-radius: 4px;
+            width: -webkit-fill-available;
+            width: 100%;
+            height: auto;
+            max-height: 184px;
+            z-index: -1;
+        }
+
+        .grid-cards .ridepal-card h4.title {
+            font-size: 1.5em;
+        }
+
+        .grid-cards .ridepal-card .card-play-button {
+            position: absolute;
+            opacity: 0;
+            right: 16px;
+            top: 53.33%;
+            padding: 16px;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            color: #fff !important;
+            -webkit-box-shadow: 0 0 15px -5px #121212;
+            box-shadow: 0 0 15px -5px #121212;
+            -webkit-transition: all .5s ease;
+            transition: all .5s ease;
+            text-decoration: none;
         }
 
 .logo {
