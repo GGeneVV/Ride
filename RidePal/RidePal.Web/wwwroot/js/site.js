@@ -17,3 +17,25 @@
     });
 }
 
+$(".os-host").on("scroll", function () {
+    console.log($(this).scrollTop());
+    if ($(this).scrollTop() > 100) {
+        $("#main .top-bar").addClass("sticky-scroll");
+    }
+    else {
+        $("#main .top-bar").removeClass("sticky-scroll");
+    }
+});
+
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+    } else {
+        // x.innerHTML = "Geolocation is not supported by this browser.";
+    }
+}
+
+function showPosition(position) {
+    $('#from').val(position.coords.latitude + ',' + position.coords.longitude);
+}
+

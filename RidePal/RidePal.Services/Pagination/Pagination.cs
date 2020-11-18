@@ -10,7 +10,6 @@ namespace RidePal.Services.Pagination
         public int PageIndex { get; private set; }
         public int TotalPages { get; private set; }
 
-        public static List<T> SomeItems { get;private set; } = new List<T>();
         public PaginatedList()
         {
         }
@@ -41,8 +40,8 @@ namespace RidePal.Services.Pagination
         public static PaginatedList<T> Create(IQueryable<T> source, int pageIndex, int pageSize)
         {
             var count = source.Count();
-            SomeItems = source.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
-            return new PaginatedList<T>(SomeItems, count, pageIndex, pageSize);
+            var items = source.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
+            return new PaginatedList<T>(items, count, pageIndex, pageSize);
         }
     }
 }

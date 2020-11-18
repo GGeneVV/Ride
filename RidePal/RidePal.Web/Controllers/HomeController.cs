@@ -38,10 +38,10 @@ namespace RidePal.Web.Controllers
             var popularTracks = await _trackService.GetPopularTracksAsync(5);
             var popularTracksVM = popularTracks.Select(t => _mapper.Map<TrackVM>(t)).ToList();
 
-            var topTracks = _trackService.GetTopTracks(5);
+            var topTracks = _trackService.GetTopTracks(6);
             var topTracksVM = topTracks.Select(t => _mapper.Map<TrackVM>(t)).ToList();
 
-            var topArists = _artistService.GetTopArtists(5);
+            var topArists = _artistService.GetTopArtists(6);
             var topArtistsVM = topArists.Select(t => _mapper.Map<ArtistVM>(t)).ToList();
 
             var playlistConfig = new PlaylistConfigVM()
