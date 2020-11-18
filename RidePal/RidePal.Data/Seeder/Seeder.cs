@@ -5,7 +5,6 @@ using RidePal.Models.DataSource;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace RidePal.Data.Seeder
@@ -35,7 +34,7 @@ namespace RidePal.Data.Seeder
                     var genre = result.Genres[i];
                     await _appDbContext.Genres.AddAsync(genre);
 
-                    Thread.Sleep(300);
+                    //Thread.Sleep(300);
                     using (var responseSecond = await client.GetAsync($"https://api.deezer.com/search/playlist?q={genre.Name}&limit=50"))
                     {
                         var responseSecondAsString = await responseSecond.Content.ReadAsStringAsync();

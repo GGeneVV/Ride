@@ -2,6 +2,7 @@
 using RidePal.Services.Pagination;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace RidePal.Services.Contracts
@@ -9,7 +10,7 @@ namespace RidePal.Services.Contracts
     public interface ITrackService
     {
         Task<TrackDTO> GetTrackAsync(Guid id);
-        PaginatedList<TrackDTO> GetAllTracks(
+        IQueryable<TrackDTO> GetAllTracks(
             int? pageNumber = 1,
             string sortOrder = "",
             string currentFilter = "",

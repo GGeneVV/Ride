@@ -39,13 +39,11 @@ namespace RidePal.Web.Controllers
         {
             var tracks = _trackService.GetTopTracks(5, searchString: searchString);
             var tracksVM = tracks.Select(x => _mapper.Map<TrackVM>(x)).ToList();
-            //var genres = _genreService.GetAllGenres(searchString: searchString);
-            //var genresVM = genres.Select(x => _mapper.Map<GenreVM>(x)).ToList();
 
-            var artists = _artistService.GetTopArtists(5, searchString: searchString);
+            var artists = _artistService.GetTopArtists(6, searchString: searchString);
             var artistsVM = artists.Select(x => _mapper.Map<ArtistVM>(x)).ToList();
 
-            var albums = _albumService.GetTopAlbums(5, searchString: searchString);
+            var albums = _albumService.GetTopAlbums(6, searchString: searchString);
             var albumsVM = albums.Select(x => _mapper.Map<AlbumVM>(x)).ToList();
 
             var model = new BrowseAllVM()
