@@ -1,8 +1,8 @@
-﻿@model PaginatedList<TrackVM>
+﻿@model IEnumerable<TrackVM>
 
 @{
     ViewData["Title"] = "Index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_MyLayout.cshtml";
 }
 
 <h1>Track List</h1>
@@ -56,20 +56,23 @@
 </table>
 
 @{
-    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
-    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+    var prevDisabled = !(bool)ViewData["HasPrev"] ? "disabled" : "";
+    var nextDisabled = !(bool)ViewData["HasNext"] ? "disabled" : "";
+    var prevPage = (int)ViewData["PageNumber"] - 1;
+    var nextPage = (int)ViewData["PageNumber"] + 1;
 }
+
 
 <a asp-action="Index"
    asp-route-sortOrder="@ViewData["CurrentSort"]"
-   asp-route-pageNumber="@(Model.PageIndex - 1)"
+   asp-route-pageNumber="@prevPage"
    asp-route-currentFilter="@ViewData["CurrentFilter"]"
    class="btn btn-default @prevDisabled">
     Previous
 </a>
 <a asp-action="Index"
    asp-route-sortOrder="@ViewData["CurrentSort"]"
-   asp-route-pageNumber="@(Model.PageIndex + 1)"
+   asp-route-pageNumber="@nextPage"
    asp-route-currentFilter="@ViewData["CurrentFilter"]"
    class="btn btn-default @nextDisabled">
     Next

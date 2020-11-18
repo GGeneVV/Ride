@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace RidePal.Web
 {
 
-    [Route("api/[controller]")]
+    [Route("api/Playlists")]
     [ApiController]
     public class PlaylistsAPIController : ControllerBase
     {
@@ -34,12 +34,12 @@ namespace RidePal.Web
 
         // GET: api/Playlists/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<PlaylistDTO>> GetPlaylist(Guid? id)
+        public async Task<ActionResult<PlaylistDTO>> GetPlaylist(Guid id)
         {
             PlaylistDTO playlist;
             try
             {
-                playlist = _playlistService.GetPlaylist(id);
+                playlist = await _playlistService.GetPlaylist(id);
             }
             catch (Exception)
             {
@@ -53,7 +53,7 @@ namespace RidePal.Web
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPlaylist(Guid? id, EditPlaylistVM updatedPlaylist)
+        public async Task<IActionResult> PutPlaylist(Guid id, EditPlaylistVM updatedPlaylist)
         {
             PlaylistDTO playlist;
             try
@@ -75,12 +75,12 @@ namespace RidePal.Web
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<PlaylistDTO>> PostPlaylist(int travelDuration, PlaylistConfigDTO playlistConfigDTO)
+        public async Task<ActionResult<PlaylistDTO>> PostPlaylist(int travelDuration, PlaylistConfigDTO playlistConfigDTO,Guid userId)
         {
             PlaylistDTO playlistDTO;
             try
             {
-                playlistDTO = await _playlistService.GeneratePlaylist(travelDuration, playlistConfigDTO);
+                playlistDTO = await _playlistService.GeneratePlaylist(travelDuration, playlistConfigDTO,userId);
             }
             catch (Exception)
             {
@@ -92,7 +92,7 @@ namespace RidePal.Web
 
         // DELETE: api/Playlists/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeletePlaylist(Guid? id)
+        public async Task<ActionResult> DeletePlaylist(Guid id)
         {
             try
             {

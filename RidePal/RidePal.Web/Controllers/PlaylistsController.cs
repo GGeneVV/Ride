@@ -1,16 +1,19 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
+using RidePal.Models;
 using RidePal.Services.Contracts;
 using RidePal.Services.DTOModels;
 using RidePal.Services.DTOModels.Configurations;
 using RidePal.Services.Pagination;
+using RidePal.Services.Wrappers.Contracts;
 using RidePal.Web.Models;
 using RidePal.Web.Models.EditVM;
 using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace RidePal.Web.Controllers
@@ -21,13 +24,16 @@ namespace RidePal.Web.Controllers
         private readonly IPlaylistService _playlistService;
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
+        private readonly IUserManagerWrapper _userManagerWrapper;
 
-        public PlaylistsController(IPlaylistService playlistService, IMapper mapper, IUserService userService)
+        public PlaylistsController(IPlaylistService playlistService, IMapper mapper, IUserService userService,
+            IUserManagerWrapper userManagerWrapper)
         {
 
             _playlistService = playlistService;
             _mapper = mapper;
             _userService = userService;
+            _userManagerWrapper = userManagerWrapper;
         }
 
         // GET: Playlists
@@ -49,13 +55,15 @@ namespace RidePal.Web.Controllers
             return View(PaginatedList<PlaylistVM>.Create(playlists.AsQueryable(), pageNumber ?? 1, pageSize));
         }
         [HttpGet]
-        public IActionResult MyPlaylists(Guid UserId,
+        public IActionResult MyPlaylists(
             int? pageNumber = 1,
             string sortOrder = "",
             string currentFilter = "",
             string searchString = "")
         {
-            var playlistst = _playlistService.GetUserPlaylists(UserId, pageNumber, sortOrder, currentFilter, searchString)
+            var userId = Guid.Parse(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            var playlistst = _playlistService.GetUserPlaylists(userId, pageNumber, sortOrder, currentFilter, searchString)
                 .Select(p => _mapper.Map<PlaylistVM>(p));
 
             int pageSize = 5;
@@ -67,7 +75,7 @@ namespace RidePal.Web.Controllers
         }
 
         // GET: Playlists/Details/5
-        public IActionResult Details(Guid? id)
+        public IActionResult Details(Guid id)
         {
             if (id == null)
             {
@@ -92,29 +100,32 @@ namespace RidePal.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> GeneratePlaylist(int travelDuration, PlaylistConfigVM playlistConfig)
         {
+            
+            var user = await _userManagerWrapper.GetUserAsync(User);
+            
             var dto = _mapper.Map<PlaylistConfigDTO>(playlistConfig);
-            var playlistDTO = await _playlistService.GeneratePlaylist(travelDuration, dto);
+            var playlistDTO = await _playlistService.GeneratePlaylist(travelDuration, dto, user.Id);
             var playlistVM = _mapper.Map<PlaylistVM>(playlistDTO);
 
             return PartialView("_PlaylistPartial", playlistVM);
         }
 
         // GET: Playlists/Edit/5
-        public IActionResult Edit(Guid? id)
+        public async  Task<IActionResult> Edit(Guid id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var playlist = _playlistService.GetPlaylist(id);
+            var playlist =await _playlistService.GetPlaylist(id);
 
             if (playlist == null)
             {
                 return NotFound();
             }
 
-            ViewData["UserId"] = new SelectList(_userService.GetAllUsersAsync(), "Id", "Id", playlist.UserId);
+           
             return View(playlist);
         }
 
@@ -135,7 +146,7 @@ namespace RidePal.Web.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid? id,
+        public async Task<IActionResult> Edit(Guid id,
             [Bind("Id,Title")] EditPlaylistVM newPlaylist,
             [Bind("Id,UserId")] PlaylistVM playlist)
         {
@@ -144,22 +155,15 @@ namespace RidePal.Web.Controllers
             {
                 await _playlistService.EditPlaylist(id, _mapper.Map<PlaylistDTO>(newPlaylist));
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception)
             {
-                if (!PlaylistExists(playlist.UserId))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound();
             }
             return View(playlist);
         }
 
         // GET: Playlists/Delete/5
-        public IActionResult Delete(Guid? id)
+        public IActionResult Delete(Guid id)
         {
             if (id == null)
             {
@@ -179,16 +183,11 @@ namespace RidePal.Web.Controllers
         // POST: Playlists/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(Guid? id)
+        public IActionResult DeleteConfirmed(Guid id)
         {
             var playlist = _playlistService.DeletePlaylist(id);
 
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool PlaylistExists(Guid? id)
-        {
-            return _playlistService.PlaylistExists(id);
         }
     }
 }

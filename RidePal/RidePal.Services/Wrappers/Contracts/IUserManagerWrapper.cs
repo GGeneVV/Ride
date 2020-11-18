@@ -2,6 +2,7 @@
 using RidePal.Models;
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace RidePal.Services.Wrappers.Contracts
@@ -20,5 +21,7 @@ namespace RidePal.Services.Wrappers.Contracts
         Task<IList<string>> GetAllRoles(string userName);
 
         Task<string> GetRole(string userName);
+
+        Task<User> GetUserAsync(ClaimsPrincipal claimsPrincipal);
     }
 }

@@ -85,12 +85,13 @@ namespace RidePal.Services
 
             return userToken.Value;
         }
-        public Guid GetUserIdByNameAsync(string name)
+        public bool ValidateUserById(Guid UserId)
         {
             try
             {
-                var id = _userManagerWrapper.FindIdByNameAsync(name);
-                return id;
+                var userExist = _db.Users.Any(u => u.Id == UserId);
+
+                return userExist;
             }
             catch (Exception)
             {
