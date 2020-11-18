@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using RidePal.Services.DTOModels;
 using RidePal.Services.DTOModels.Configurations;
+using RidePal.Services.Pagination;
 using RidePal.Web.Models;
 using RidePal.Web.Models.EditVM;
 
@@ -20,7 +21,7 @@ namespace RidePal.Web.VMMappers
                 .ForMember(g => g.UseTopTracks, opt => opt.MapFrom(s => s.UseTopTracks))
                 .ForMember(g => g.GenreConfigs, opt => opt.MapFrom(s => s.GenreConfigs))
                 .ReverseMap();
-
+            CreateMap<PaginatedList<TrackVM>, PaginatedList<TrackDTO>>().ReverseMap();
             CreateMap<TrackDTO, TrackVM>().ReverseMap();
 
             CreateMap<TrackPlaylistDTO, TrackPlaylistVM>().ReverseMap();

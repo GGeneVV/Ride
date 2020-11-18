@@ -36,7 +36,11 @@ namespace RidePal.Web.Controllers
             var tracks = _trackService.GetAllTracks(pageNumber, sortOrder, currentFilter, searchString);
             var tracksVM = tracks.Select(t => _mapper.Map<TrackVM>(t));
 
-            return View(PaginatedList<TrackVM>.Create(tracksVM.AsQueryable(), pageNumber ?? 1, pageSize));
+            ViewData["HasPrev"] = tracks.HasPreviousPage;
+            ViewData["HasNext"] = tracks.HasNextPage;
+            ViewData["PageNumber"] = tracks.PageIndex;
+
+            return View(tracksVM);
         }
 
         // GET: Tracks/Details/5

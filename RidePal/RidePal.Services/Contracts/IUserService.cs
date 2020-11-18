@@ -7,7 +7,7 @@ namespace RidePal.Services.Contracts
     public interface IUserService
     {
         public string Authenticate(string username, string password);
-        public Guid GetUserIdByNameAsync(string name);
+        public bool ValidateUserById(Guid userId);
         public PaginatedList<UserDTO> GetAllUsersAsync(int? pageNumber = 1,
             string sortOrder = "",
             string currentFilter = "",

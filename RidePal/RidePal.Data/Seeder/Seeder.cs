@@ -47,8 +47,9 @@ namespace RidePal.Data.Seeder
 
                         for (int t = 0; t < playlistTracks.Count(); t++)
                         {
-                            if (counter >= 1500) {
-                                break; 
+                            if (counter >= 1500)
+                            {
+                                break;
                             }
 
                             var tracklistURL = playlistTracks[t]["tracklist"].ToString();
@@ -66,7 +67,8 @@ namespace RidePal.Data.Seeder
 
                                 for (int j = 0; j < tracks.Count(); j++)
                                 {
-                                    if (counter >= 1500) { 
+                                    if (counter >= 1500)
+                                    {
                                         break;
                                     }
 

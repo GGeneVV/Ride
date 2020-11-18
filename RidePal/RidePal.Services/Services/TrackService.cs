@@ -29,20 +29,19 @@ namespace RidePal.Services
             string currentFilter = "",
             string searchString = "")
         {
-            if (searchString != null)
-            {
-                pageNumber = 1;
-            }
-            else
-            {
-                searchString = currentFilter;
-            }
+            //if (searchString != null)
+            //{
+            //    pageNumber = 1;
+            //}
+            //else
+            //{
+            //    searchString = currentFilter;
+            //}
             int pageSize = 10;
 
             currentFilter = searchString;
 
             var tracks = _appDbContext.Tracks
-
                 .Include(t => t.Album)
                 .Include(t => t.Artist)
                 .Include(t => t.Genre)
@@ -50,8 +49,8 @@ namespace RidePal.Services
                 .AsNoTracking()
                 .Where(t => t.IsDeleted == false)
                 .WhereIf(!String.IsNullOrEmpty(searchString), s => s.Title.Contains(searchString))
-                .Select(t => _mapper.Map<TrackDTO>(t)).Take(pageSize);
-            
+                .Select(t => _mapper.Map<TrackDTO>(t));
+
 
             switch (sortOrder.ToLower())
             {
@@ -73,7 +72,7 @@ namespace RidePal.Services
                 case "duration":
                     tracks = tracks.OrderBy(b => b.Duration);
                     break;
-                case "duration_decs":
+                case "duration_desc":
                     tracks = tracks.OrderByDescending(s => s.Duration);
                     break;
                 default:
@@ -81,10 +80,10 @@ namespace RidePal.Services
                     break;
             }
 
-            
 
+            var tracksList = PaginatedList<TrackDTO>.Create(tracks.AsQueryable(), pageNumber ?? 1, pageSize);
 
-            return PaginatedList<TrackDTO>.Create(tracks.AsQueryable(), pageNumber ?? 1, pageSize);
+            return tracksList;
 
         }
 
