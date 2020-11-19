@@ -224,6 +224,14 @@ namespace RidePal.Services
 
             var playlists = _appDbContext.Playlists
                 .Include(x => x.TrackPlaylists)
+                    .ThenInclude(t=>t.Track)
+                        .ThenInclude(a=>a.Artist)
+                .Include(x => x.TrackPlaylists)
+                    .ThenInclude(t => t.Track)
+                        .ThenInclude(a => a.Album)
+                .Include(x => x.TrackPlaylists)
+                    .ThenInclude(t => t.Track)
+                        .ThenInclude(a => a.Genre)
                 .Where(p => p.IsDeleted == false)
                 .WhereIf(!String.IsNullOrEmpty(searchString), s => s.Title.Contains(searchString))
                 .Select(p => _mapper.Map<PlaylistDTO>(p));
@@ -261,34 +269,30 @@ namespace RidePal.Services
             if (playlist == null) { throw new ArgumentNullException(); }
 
             playlist.IsDeleted = true;
+            _appDbContext.Playlists.Update(playlist);
             await _appDbContext.SaveChangesAsync();
         }
 
-        public async Task<PlaylistDTO> EditPlaylist(Guid id, PlaylistDTO updatedPlaylist)
+        public async Task<PlaylistDTO> EditPlaylist(EditPlaylistDTO editPlaylistDTO)
         {
-            if (id == null || updatedPlaylist == null) { throw new ArgumentNullException(); }
+            if (editPlaylistDTO.Id == null) { throw new ArgumentNullException(); }
 
             var playlist = await _appDbContext.Playlists
-                .Where(p => p.IsDeleted == false)
-                .FirstOrDefaultAsync(p => p.Id == id);
+                .Include(t=>t.TrackPlaylists)
+                    .ThenInclude(t=>t.Track)
+                .Where(p=>p.IsDeleted==false || editPlaylistDTO.Revive==true)
+                .FirstOrDefaultAsync(p => p.Id == editPlaylistDTO.Id);
 
             if (playlist == null) { throw new ArgumentNullException(); }
-
-            playlist.Title = updatedPlaylist.Title;
+            if (editPlaylistDTO.Revive==true)
+            {
+                playlist.IsDeleted = false;
+            }
+            playlist.Title = editPlaylistDTO.Title;
+            _appDbContext.Update(playlist);
             await _appDbContext.SaveChangesAsync();
             return _mapper.Map<PlaylistDTO>(playlist);
         }
 
-        public async Task<PlaylistDTO> SavePlaylist(PlaylistDTO playlistDTO)
-        {
-            if (playlistDTO == null) { throw new ArgumentNullException(); }
-
-            var playlist = _mapper.Map<Playlist>(playlistDTO);
-            var trackPlaylist = playlist.TrackPlaylists;
-            await _appDbContext.TrackPlaylists.AddRangeAsync(trackPlaylist);
-            await _appDbContext.SaveChangesAsync();
-
-            return _mapper.Map<PlaylistDTO>(playlist);
-        }
     }
 }

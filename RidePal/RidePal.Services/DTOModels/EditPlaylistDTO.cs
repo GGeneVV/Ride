@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
-namespace RidePal.Web.Models.EditVM
+namespace RidePal.Services.DTOModels
 {
-    public class EditPlaylistVM
+    public class EditPlaylistDTO
     {
         public Guid Id { get; set; }
         public string Title { get; set; }
