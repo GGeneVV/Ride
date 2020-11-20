@@ -1,5 +1,4 @@
-﻿using RidePal.Models;
-using RidePal.Services.DTOModels;
+﻿using RidePal.Services.DTOModels;
 using RidePal.Services.DTOModels.Configurations;
 using RidePal.Services.Pagination;
 using System;
@@ -11,7 +10,7 @@ namespace RidePal.Services.Contracts
     public interface IPlaylistService
     {
         Task<IReadOnlyCollection<TrackDTO>> RandomTracksByGenreConfig(PlaylistConfigDTO playlistConfigDTO, string genreName);
-        Task<PlaylistDTO> GeneratePlaylist(string from, string to, PlaylistConfigDTO playlistConfigDTO,Guid userId);
+        Task<PlaylistDTO> GeneratePlaylist(string from, string to, PlaylistConfigDTO playlistConfigDTO, Guid userId);
         PaginatedList<PlaylistDTO> GetUserPlaylists(
             Guid userId,
             int? pageNumber = 1,

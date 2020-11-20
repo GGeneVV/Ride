@@ -1,18 +1,18 @@
-﻿using Newtonsoft.Json;
-using AutoMapper;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RidePal.Services.Contracts;
 using RidePal.Services.DTOModels;
 using RidePal.Services.DTOModels.Configurations;
+using RidePal.Web.Models;
 using RidePal.Web.Models.EditVM;
 using System;
 using System.Threading.Tasks;
-using RidePal.Web.Models;
 
 namespace RidePal.Web
 {
-
-    [Route("api/Playlists")]
+    [Authorize(AuthenticationSchemes = "Identity.Application," + JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     public class PlaylistsAPIController : ControllerBase
     {
@@ -27,16 +27,25 @@ namespace RidePal.Web
 
         // GET: api/Playlists
         [HttpGet]
-        public IActionResult GetAllPlaylists()
+        [Route("api/Playlists")]
+        public IActionResult GetAllPlaylists(
+            int? pageNumber,
+            string sortOrder,
+            string currentFilter,
+            string searchString)
         {
-            var playlists = _playlistService.GetAllPlaylists();
+            var playlists = _playlistService.GetAllPlaylists(pageNumber,
+            sortOrder,
+             currentFilter,
+             searchString);
 
             return Ok(playlists);
 
         }
 
         // GET: api/Playlists/5
-        [HttpGet("{id}")]
+        [HttpGet]
+        [Route("api/Playlists/{id}")]
         public async Task<ActionResult<PlaylistDTO>> GetPlaylist(Guid id)
         {
             PlaylistDTO playlist;
@@ -55,7 +64,8 @@ namespace RidePal.Web
         // PUT: api/Playlists/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("{id}")]
+        [HttpPut]
+        [Route("api/Playlists/{id}")]
         public async Task<IActionResult> PutPlaylist([Bind("Id,UserId,Revive")] EditPlaylistVM editPlaylistVM)
         {
             PlaylistDTO playlist;
@@ -78,6 +88,7 @@ namespace RidePal.Web
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
+        [Route("api/Playlists")]
         public async Task<ActionResult<PlaylistDTO>> PostPlaylist(
             [Bind("From,To,Title,UseTopTracks,AllowTracksFromSameArtist,IsAdvanced,IsArtistRepeated," +
             "IsTopTracksEnabled,UserId,GenreConfigs,Name,IsChecked,Percentage")
@@ -100,7 +111,8 @@ namespace RidePal.Web
         }
 
         // DELETE: api/Playlists/5
-        [HttpDelete("{id}")]
+        [HttpDelete]
+        [Route("api/Playlists/{id}")]
         public async Task<ActionResult> DeletePlaylist(Guid id)
         {
             try
