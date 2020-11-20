@@ -79,7 +79,7 @@ namespace RidePal.Web
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         public async Task<ActionResult<PlaylistDTO>> PostPlaylist(
-            [Bind("TravelDuration,Title,UseTopTracks,AllowTracksFromSameArtist,IsAdvanced,IsArtistRepeated," +
+            [Bind("From,To,Title,UseTopTracks,AllowTracksFromSameArtist,IsAdvanced,IsArtistRepeated," +
             "IsTopTracksEnabled,UserId,GenreConfigs,Name,IsChecked,Percentage")
             ]GeneratePlaylistAPIVM generatePlaylistAPIVM)
         {
@@ -88,7 +88,7 @@ namespace RidePal.Web
             {
                 var config = _mapper.Map<PlaylistConfigDTO>(generatePlaylistAPIVM);
                 playlistDTO = await _playlistService
-                    .GeneratePlaylist(generatePlaylistAPIVM.TravelDuration, config, generatePlaylistAPIVM.userId);
+                    .GeneratePlaylist(generatePlaylistAPIVM.From, generatePlaylistAPIVM.To, config, generatePlaylistAPIVM.userId);
 
             }
             catch (Exception)
