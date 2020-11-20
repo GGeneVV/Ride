@@ -1,4 +1,4 @@
-﻿
+﻿using Newtonsoft.Json;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using RidePal.Services.Contracts;
@@ -7,6 +7,7 @@ using RidePal.Services.DTOModels.Configurations;
 using RidePal.Web.Models.EditVM;
 using System;
 using System.Threading.Tasks;
+using RidePal.Web.Models;
 
 namespace RidePal.Web
 {
@@ -29,7 +30,9 @@ namespace RidePal.Web
         public IActionResult GetAllPlaylists()
         {
             var playlists = _playlistService.GetAllPlaylists();
+
             return Ok(playlists);
+
         }
 
         // GET: api/Playlists/5
@@ -53,41 +56,47 @@ namespace RidePal.Web
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPlaylist(Guid id, EditPlaylistVM updatedPlaylist)
+        public async Task<IActionResult> PutPlaylist([Bind("Id,UserId,Revive")] EditPlaylistVM editPlaylistVM)
         {
             PlaylistDTO playlist;
             try
             {
-                if (updatedPlaylist == null) { throw new ArgumentNullException(); }
+                if (string.IsNullOrEmpty(editPlaylistVM.Title)) { throw new ArgumentNullException(); }
 
-                var updatedDTO = _mapper.Map<PlaylistDTO>(updatedPlaylist);
-                playlist = await _playlistService.EditPlaylist(id, updatedDTO);
+                var editPlaylistDTO = _mapper.Map<EditPlaylistDTO>(editPlaylistVM);
+                playlist = await _playlistService.EditPlaylist(editPlaylistDTO);
+                return Ok(playlist);
             }
             catch (Exception)
             {
                 return NotFound();
             }
 
-            return NoContent();
         }
 
         // POST: api/Playlists
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<PlaylistDTO>> PostPlaylist(int travelDuration, PlaylistConfigDTO playlistConfigDTO,Guid userId)
+        public async Task<ActionResult<PlaylistDTO>> PostPlaylist(
+            [Bind("TravelDuration,Title,UseTopTracks,AllowTracksFromSameArtist,IsAdvanced,IsArtistRepeated," +
+            "IsTopTracksEnabled,UserId,GenreConfigs,Name,IsChecked,Percentage")
+            ]GeneratePlaylistAPIVM generatePlaylistAPIVM)
         {
             PlaylistDTO playlistDTO;
             try
             {
-                playlistDTO = await _playlistService.GeneratePlaylist(travelDuration, playlistConfigDTO,userId);
+                var config = _mapper.Map<PlaylistConfigDTO>(generatePlaylistAPIVM);
+                playlistDTO = await _playlistService
+                    .GeneratePlaylist(generatePlaylistAPIVM.TravelDuration, config, generatePlaylistAPIVM.userId);
+
             }
             catch (Exception)
             {
                 return BadRequest();
             }
 
-            return Created("PostPlaylist", playlistDTO);
+            return Ok(playlistDTO);
         }
 
         // DELETE: api/Playlists/5

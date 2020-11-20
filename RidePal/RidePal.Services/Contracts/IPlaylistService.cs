@@ -24,8 +24,7 @@ namespace RidePal.Services.Contracts
             string currentFilter = "",
             string searchString = "");
         Task DeletePlaylist(Guid id);
-        Task<PlaylistDTO> EditPlaylist(Guid id,PlaylistDTO updatedPlaylist);
-        Task<PlaylistDTO> SavePlaylist(PlaylistDTO playlistDTO);
+        Task<PlaylistDTO> EditPlaylist(EditPlaylistDTO editPlaylistDTO);
 
         Task<int> GetTravelDurationAsync(string from, string to);
 

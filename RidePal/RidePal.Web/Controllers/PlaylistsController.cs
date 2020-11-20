@@ -128,34 +128,22 @@ namespace RidePal.Web.Controllers
         }
 
         // GET: Playlists/Edit/5
-        public async  Task<IActionResult> Edit(Guid id)
+        public async Task<IActionResult> Edit(Guid id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var playlist =await _playlistService.GetPlaylist(id);
+            var playlist = await _playlistService.GetPlaylist(id);
 
             if (playlist == null)
             {
                 return NotFound();
             }
 
-           
-            return View(playlist);
-        }
 
-        [HttpPost]
-        public async Task<IActionResult> SavePlaylist(PlaylistVM playlistVM)
-        {
-            if (playlistVM == null)
-            {
-                return NotFound();
-            }
-            var playlistDTO = _mapper.Map<PlaylistDTO>(playlistVM);
-            await _playlistService.SavePlaylist(playlistDTO);
-            return RedirectToAction("Index", "Home");
+            return View(playlist);
         }
 
         // POST: Playlists/Edit/5
@@ -163,20 +151,20 @@ namespace RidePal.Web.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id,
-            [Bind("Id,Title")] EditPlaylistVM newPlaylist,
-            [Bind("Id,UserId")] PlaylistVM playlist)
+        public async Task<IActionResult> Edit(
+            [Bind("Id,UserId,Revive")] EditPlaylistVM editPlaylistVM)
         {
 
             try
             {
-                await _playlistService.EditPlaylist(id, _mapper.Map<PlaylistDTO>(newPlaylist));
+                var editPlaylistDTO = _mapper.Map<EditPlaylistDTO>(editPlaylistVM);
+                var playlist = await _playlistService.EditPlaylist(editPlaylistDTO);
+                return View(playlist);
             }
             catch (Exception)
             {
                 return NotFound();
             }
-            return View(playlist);
         }
 
         // GET: Playlists/Delete/5
