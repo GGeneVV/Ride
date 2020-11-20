@@ -4,7 +4,6 @@ using RidePal.Data;
 using RidePal.Services.Contracts;
 using RidePal.Services.DTOModels;
 using RidePal.Services.Extensions;
-using RidePal.Services.Pagination;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -135,7 +134,7 @@ namespace RidePal.Services
                 .Include(t => t.Genre)
                 .Include(t => t.TrackPlaylists)
                 .Where(t => t.IsDeleted == false);
-                //.AsNoTracking()
+            //.AsNoTracking()
 
             if (!string.IsNullOrEmpty(searchString))
             {

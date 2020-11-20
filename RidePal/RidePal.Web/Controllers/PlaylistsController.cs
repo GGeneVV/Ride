@@ -1,9 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using RidePal.Models;
 using RidePal.Services.Contracts;
 using RidePal.Services.DTOModels;
 using RidePal.Services.DTOModels.Configurations;
@@ -18,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace RidePal.Web.Controllers
 {
-    [Route("[controller]/[action]")]
+
     public class PlaylistsController : Controller
     {
 
