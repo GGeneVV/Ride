@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 
 namespace RidePal.Web.Controllers
 {
+    [Route("[controller]/[action]")]
     public class PlaylistsController : Controller
     {
 
@@ -98,16 +99,32 @@ namespace RidePal.Web.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> GeneratePlaylist(int travelDuration, PlaylistConfigVM playlistConfig)
+        public async Task<IActionResult> GeneratePlaylist(string from, string to, PlaylistConfigVM playlistConfig)
         {
-            
-            var user = await _userManagerWrapper.GetUserAsync(User);
-            
-            var dto = _mapper.Map<PlaylistConfigDTO>(playlistConfig);
-            var playlistDTO = await _playlistService.GeneratePlaylist(travelDuration, dto, user.Id);
-            var playlistVM = _mapper.Map<PlaylistVM>(playlistDTO);
 
-            return PartialView("_PlaylistPartial", playlistVM);
+            var user = await _userManagerWrapper.GetUserAsync(User);
+
+            var dto = _mapper.Map<PlaylistConfigDTO>(playlistConfig);
+            var playlistDTO = await _playlistService.GeneratePlaylist(from, to, dto, user.Id);
+            var playlistId = playlistDTO.Id;
+
+            return RedirectToAction("NowListening", new { id = playlistId });
+
+        }
+
+        public async Task<IActionResult> NowListening(Guid id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var playlist = await _playlistService.GetPlaylist(id);
+            if (playlist == null)
+            {
+                return NotFound();
+            }
+            var playlistVM = _mapper.Map<PlaylistVM>(playlist);
+            return View(playlistVM);
         }
 
         // GET: Playlists/Edit/5
