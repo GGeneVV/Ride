@@ -44,7 +44,7 @@
         <!-- TRACK ROWS / END -->
     </div>
     <div class="generate-playlist">
-        <form id="form-generate" method="post">
+        <form id="form-generate" asp-action="GeneratePlaylist" asp-controller="Playlists" method="post">
             @Html.TextBoxFor(m => m.PlaylistConfig.Title);
             @for (var i = 0; i < Model.PlaylistConfig.GenreConfigs.Count; i++)
             {

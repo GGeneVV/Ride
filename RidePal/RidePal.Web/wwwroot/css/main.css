@@ -596,8 +596,8 @@ h2 {
     right: 0;
     left: 0;
     z-index: -1;
-    -webkit-filter: blur(15px);
-    filter: blur(15px);
+    -webkit-filter: blur(15px) opacity(0.5);
+    filter: blur(15px) opacity(0.5);
 }
 
 .current-song {
@@ -643,8 +643,8 @@ h2 {
     -ms-grid-column: 2;
     grid-area: song-list;
     background: transparent;
-    -webkit-backdrop-filter: blur(25px);
-    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: brightness(0.65) blur(25px);
+    backdrop-filter: brightness(0.65) blur(25px);
     overflow: auto;
     display: -webkit-box;
     display: -ms-flexbox;
@@ -655,6 +655,28 @@ h2 {
     flex-flow: column;
     border-radius: 4px;
 }
+
+    .song-list .tracklist-row {
+        padding-left: 0;
+        padding-right: 0;
+        min-height: unset;
+        -ms-grid-columns: minmax(110px, 1fr) 4fr 2fr minmax(110px, 1fr);
+        grid-template-columns: minmax(110px, 1fr) 4fr 2fr minmax(110px, 1fr);
+    }
+
+        .song-list .tracklist-row div {
+            padding: 5px;
+        }
+
+            .song-list .tracklist-row div img {
+                border-radius: 4px;
+                width: 100%;
+                height: 100%;
+            }
+
+        .song-list .tracklist-row .title {
+            color: #fff;
+        }
 
 .playlist-controls {
     -ms-grid-row: 2;
@@ -804,9 +826,39 @@ h2 {
     transition: all .3s ease;
 }
 
+    .tracklist-row .play-button-active {
+        position: absolute;
+        padding: 0;
+        top: 5px;
+        bottom: 5px;
+        left: 5px;
+        right: 5px;
+        text-align: center;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
+        justify-content: center;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+        border-radius: 4px;
+        color: #fff;
+        /* padding: 5px; */
+        background: rgba(78, 78, 78, 0.6);
+        opacity: 0;
+        -webkit-transition: all .3s ease;
+        transition: all .3s ease;
+    }
+
     .tracklist-row:hover {
         background: rgba(255, 255, 255, 0.2);
     }
+
+        .tracklist-row:hover .play-button-active {
+            opacity: 1;
+        }
 
     .tracklist-row div {
         display: -webkit-box;
@@ -821,6 +873,10 @@ h2 {
     .tracklist-row.active {
         background: rgba(255, 255, 255, 0.2);
     }
+
+        .tracklist-row.active .play-button-active {
+            opacity: 1;
+        }
 
 .generate-playlist {
     -ms-grid-row: 1;
@@ -1148,4 +1204,23 @@ h2 {
 .img-round {
     border-radius: 50% !important;
 }
+
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: rgba(179, 179, 179, 0.35);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.65);
+    }
 /*# sourceMappingURL=main.css.map */

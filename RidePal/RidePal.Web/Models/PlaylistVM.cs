@@ -17,6 +17,6 @@ namespace RidePal.Web.Models
         public Guid? UserId { get; set; }
         public UserVM User { get; set; }
 
-        public ICollection<TrackPlaylistVM> TrackPlaylists { get; set; } = new List<TrackPlaylistVM>();
+        public ICollection<TrackPlaylistVM> TrackPlaylists { get; set; }
     }
 }
