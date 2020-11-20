@@ -7,7 +7,8 @@ namespace RidePal.Web.Models
 {
     public class GeneratePlaylistAPIVM
     {
-        public int TravelDuration { get; set; }
+        public string From { get; set; }
+        public string To { get; set; }
         public string Title { get; set; }
         public bool UseTopTracks { get; set; }
         public bool AllowTracksFromSameArtist { get; set; }
