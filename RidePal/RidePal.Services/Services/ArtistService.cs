@@ -79,10 +79,10 @@ namespace RidePal.Services
                 throw new ArgumentNullException();
 
             var artist = await _appDbContext.Artists
-                .Include(x => x.Albums)
-                .Include(x => x.Tracks)
                 .Where(x => x.IsDeleted == false)
                 .Where(x => x.Id == id)
+                .Include(x => x.Albums)
+                .Include(x => x.Tracks)
                 .FirstOrDefaultAsync();
 
             if (artist == null)
@@ -97,8 +97,6 @@ namespace RidePal.Services
         {
             IReadOnlyCollection<ArtistDTO> artists = new List<ArtistDTO>();
             var query = _appDbContext.Artists
-                .Include(x => x.Albums)
-                .Include(x => x.Tracks)
                 .AsNoTracking()
                 .Where(x => x.IsDeleted == false);
 
@@ -109,6 +107,8 @@ namespace RidePal.Services
             artists = query
                 .OrderByDescending(x => x.Tracks.Count)
                 .Take(count)
+                .Include(x => x.Albums)
+                .Include(x => x.Tracks)
                 .Select(a => _mapper.Map<ArtistDTO>(a))
                 .ToList();
 

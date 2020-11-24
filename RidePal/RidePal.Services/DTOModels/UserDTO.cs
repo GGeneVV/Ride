@@ -13,7 +13,7 @@ namespace RidePal.Services.DTOModels
         public string Image { get; set; }
 
         public string Token { get; set; }
-        public ICollection<PlaylistDTO> Playlists { get; set; } = new List<PlaylistDTO>();
+        public ICollection<PlaylistDTO> Playlists { get; set; }// = new List<PlaylistDTO>();
 
     }
 }

@@ -12,6 +12,6 @@ namespace RidePal.Services.DTOModels
         public string Tracklist { get; set; }
         public ArtistDTO Artist { get; set; }
         public Guid? ArtistId { get; set; }
-        public IReadOnlyCollection<TrackDTO> Tracks { get; set; } = new List<TrackDTO>();
+        public IReadOnlyCollection<TrackDTO> Tracks { get; set; }// = new List<TrackDTO>();
     }
 }

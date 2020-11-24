@@ -2,6 +2,7 @@
 @{
     ViewData["Title"] = "Home Page";
     ViewData["PageId"] = "main";
+    ViewData["HasHiddenAudio"] = true;
     Layout = "~/Views/Shared/_MyLayout.cshtml";
 }
 
@@ -23,16 +24,17 @@
 
 
         <!-- TRACK ROWS  5 TRACKS-->
-        @for (int i = 0; i < Model.PopularTracks.Count; i++)
+        @for (int i = 0; i < Model.PopularTracks.Count(); i++)
         {
             var track = Model.PopularTracks.ElementAt(i);
             var index = i + 1;
+            var time = track.Duration / 60 + ":" + track.Duration % 60;
             <!-- TEMPLATE TRACK ROW -->
-            <div class="tracklist-row">
+            <div data-id="@track.Id" onclick="playSongByPreview('@track.Preview', '@track.Id')" class="tracklist-row">
                 <div class="index justify-content-center">@index</div>
                 <div class="title">@track.Title</div>
                 <div class="rank justify-content-center">@track.Rank</div>
-                <div class="duration justify-content-center">@track.Duration</div>
+                <div class="duration justify-content-center">@time</div>
             </div>
             <!-- TEMPLATE TRACK ROW / END -->
 
@@ -79,12 +81,12 @@
         <div class="grid-cards">
             <!-- TOP 5 TRACKS -->
 
-            @for (int i = 0; i < Model.TopTracks.Count; i++)
+            @for (int i = 0; i < Model.TopTracks.Count(); i++)
             {
                 var track = Model.TopTracks.ElementAt(i);
                 <!-- TEMPLATE CARD -->
-                <div class="ridepal-card">
-                    <a class="card-play-button bg-success">
+                <div data-id="@track.Id" class="ridepal-card">
+                    <a onclick="playSongByPreview('@track.Preview', '@track.Id')" class="card-play-button bg-success">
                         <span><i class="fas fa-play"></i></span>
                     </a>
                     <div class="img d-flex justify-content-center align-items-center">
@@ -108,7 +110,7 @@
         </div>
         <div class="grid-cards">
             <!-- TOP 5 Artists -->
-            @for (int i = 0; i < Model.TopArtists.Count; i++)
+            @for (int i = 0; i < Model.TopArtists.Count(); i++)
             {
                 var artist = Model.TopArtists.ElementAt(i);
                 <!-- TEMPLATE CARD -->
@@ -117,7 +119,6 @@
                         <img src="@artist.Picture" alt="" class="img-round" />
                     </div>
                     <h4 class="title">@artist.Name</h4>
-                    @*<div class="artist text-muted">@artist.Tracks.Count</div>*@
                 </div>
                 <!-- TEMPLATE CARD / END -->
             }

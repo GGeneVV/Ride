@@ -15,12 +15,10 @@ namespace RidePal.Services.Contracts
             Guid userId,
             int? pageNumber = 1,
             string sortOrder = "",
-            string currentFilter = "",
             string searchString = "");
         Task<PlaylistDTO> GetPlaylist(Guid id);
         PaginatedList<PlaylistDTO> GetAllPlaylists(int? pageNumber = 1,
             string sortOrder = "",
-            string currentFilter = "",
             string searchString = "");
         Task DeletePlaylist(Guid id);
         Task<PlaylistDTO> EditPlaylist(EditPlaylistDTO editPlaylistDTO);

@@ -186,28 +186,23 @@ namespace RidePal.Services
             Guid userId,
             int? pageNumber = 1,
             string sortOrder = "",
-            string currentFilter = "",
             string searchString = "")
         {
             if (userId == null)
             {
                 return null;
             }
-            if (searchString != null)
-            {
-                pageNumber = 1;
-            }
-            else
-            {
-                searchString = currentFilter;
-            }
 
-            currentFilter = searchString;
-
-            var playlists = _appDbContext.Playlists
+            var query = _appDbContext.Playlists
+                .Where(p => p.UserId == userId && p.IsDeleted == false);
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                query = query
+                .Where(s => s.Title.Contains(searchString));
+            }
+            var playlists = query
                 .Include(x => x.TrackPlaylists)
-                .Where(p => p.UserId == userId && p.IsDeleted == false)
-                .WhereIf(!String.IsNullOrEmpty(searchString), s => s.Title.Contains(searchString))
+                .WhereIf(!string.IsNullOrEmpty(searchString), s => s.Title.Contains(searchString))
                 .Select(p => _mapper.Map<PlaylistDTO>(p));
 
             switch (sortOrder)
@@ -239,6 +234,7 @@ namespace RidePal.Services
             }
 
             var playlist = await _appDbContext.Playlists
+                .Where(p => p.IsDeleted == false && p.Id == id)
                 .Include(t => t.TrackPlaylists)
                     .ThenInclude(t => t.Track)
                         .ThenInclude(t => t.Artist)
@@ -248,7 +244,6 @@ namespace RidePal.Services
                 .Include(t => t.TrackPlaylists)
                     .ThenInclude(t => t.Track)
                         .ThenInclude(t => t.Genre)
-                .Where(p => p.IsDeleted == false && p.Id == id)
                 .FirstOrDefaultAsync();
 
             if (playlist == null)
@@ -264,21 +259,16 @@ namespace RidePal.Services
         public PaginatedList<PlaylistDTO> GetAllPlaylists(
             int? pageNumber = 1,
             string sortOrder = "",
-            string currentFilter = "",
             string searchString = "")
         {
-            if (searchString != null)
-            {
-                pageNumber = 1;
-            }
-            else
-            {
-                searchString = currentFilter;
-            }
 
-            currentFilter = searchString;
-
-            var playlists = _appDbContext.Playlists
+            var query = _appDbContext.Playlists
+                .Where(p => p.IsDeleted == false);
+                if (!string.IsNullOrEmpty(searchString))
+                {
+                    query = query.Where(s => s.Title.Contains(searchString));
+                }
+                var playlists = query
                 .Include(x => x.TrackPlaylists)
                     .ThenInclude(t => t.Track)
                         .ThenInclude(a => a.Artist)
@@ -288,8 +278,6 @@ namespace RidePal.Services
                 .Include(x => x.TrackPlaylists)
                     .ThenInclude(t => t.Track)
                         .ThenInclude(a => a.Genre)
-                .Where(p => p.IsDeleted == false)
-                .WhereIf(!String.IsNullOrEmpty(searchString), s => s.Title.Contains(searchString))
                 .Select(p => _mapper.Map<PlaylistDTO>(p));
 
             switch (sortOrder)

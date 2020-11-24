@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using RidePal.Data;
 using RidePal.Services.Contracts;
+using RidePal.Services.DTOMappers;
 using RidePal.Services.DTOModels;
 using RidePal.Services.Extensions;
 using System;
@@ -23,66 +25,82 @@ namespace RidePal.Services
         }
 
         public IQueryable<TrackDTO> GetAllTracks(
-            int? pageNumber = 1,
             string sortOrder = "",
-            string currentFilter = "",
-            string searchString = "")
+            string searchString = "",
+            string genreString = "")
         {
-            //if (searchString != null)
-            //{
-            //    pageNumber = 1;
-            //}
-            //else
-            //{
-            //    searchString = currentFilter;
-            //}
-            int pageSize = 10;
+            sortOrder = sortOrder ?? "";
+            searchString = searchString ?? "";
+            genreString = genreString ?? "";
 
-            currentFilter = searchString;
-
-            var tracks = _appDbContext.Tracks
-                .Include(t => t.Album)
-                .Include(t => t.Artist)
-                .Include(t => t.Genre)
-                .Include(t => t.TrackPlaylists)
+            var query = _appDbContext.Tracks
                 .AsNoTracking()
-                .Where(t => t.IsDeleted == false)
-                .WhereIf(!String.IsNullOrEmpty(searchString), s => s.Title.Contains(searchString))
-                .Select(t => _mapper.Map<TrackDTO>(t));
+                .Where(t => t.IsDeleted == false);
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                query = query.Where(s => s.Title.Contains(searchString));
+            }
+            if (!string.IsNullOrEmpty(genreString))
+            {
+                query = query.Where(s => s.Genre.Name.Equals(genreString));
+            }
 
 
             switch (sortOrder.ToLower())
             {
                 case "rank_desc":
-                    tracks = tracks.OrderByDescending(b => b.Rank);
+                    query = query.OrderByDescending(b => b.Rank);
                     break;
                 case "title":
-                    tracks = tracks.OrderBy(b => b.Title);
+                    query = query.OrderBy(b => b.Title);
                     break;
-                case "title_decs":
-                    tracks = tracks.OrderByDescending(s => s.Title);
+                case "title_desc":
+                    query = query.OrderByDescending(s => s.Title);
                     break;
                 case "artist":
-                    tracks = tracks.OrderBy(b => b.Artist);
+                    query = query.OrderBy(b => b.Artist.Name);
                     break;
                 case "artist_decs":
-                    tracks = tracks.OrderByDescending(s => s.Artist);
+                    query = query.OrderByDescending(s => s.Artist.Name);
                     break;
                 case "duration":
-                    tracks = tracks.OrderBy(b => b.Duration);
+                    query = query.OrderBy(b => b.Duration);
                     break;
                 case "duration_desc":
-                    tracks = tracks.OrderByDescending(s => s.Duration);
+                    query = query.OrderByDescending(s => s.Duration);
+                    break;
+                case "release":
+                    query = query.OrderBy(b => b.ReleaseDate);
+                    break;
+                case "release_desc":
+                    query = query.OrderByDescending(s => s.ReleaseDate);
                     break;
                 default:
-                    tracks = tracks.OrderBy(s => s.Rank);
+                    query = query.OrderBy(s => s.Rank);
                     break;
             }
 
 
-            //var tracksList = PaginatedList<TrackDTO>.Create(tracks.AsQueryable(), pageNumber ?? 1, pageSize);
-
-            return tracks.AsQueryable();
+            //Projection Loading
+            var tracks = query.Select(track => new TrackDTO()
+            {
+                Id = track.Id,
+                DeezerId = track.DeezerId,
+                Title = track.Title,
+                SongURL = track.SongURL,
+                Duration = track.Duration,
+                Rank = track.Rank,
+                ReleaseDate = track.ReleaseDate,
+                Preview = track.Preview,
+                Album = _mapper.Map<AlbumDTO>(track.Album),
+                AlbumId = track.AlbumId,
+                Artist = _mapper.Map<ArtistDTO>(track.Artist),
+                ArtistId = track.ArtistId,
+                Genre = _mapper.Map<GenreDTO>(track.Genre),
+                GenreId = track.GenreId,
+            });
+            return tracks;
 
         }
 
@@ -92,12 +110,12 @@ namespace RidePal.Services
                 throw new ArgumentNullException();
 
             var track = await _appDbContext.Tracks
+                .Where(x => x.IsDeleted == false)
+                .Where(x => x.Id == id)
                 .Include(t => t.Album)
                 .Include(t => t.Artist)
                 .Include(t => t.Genre)
                 .Include(t => t.TrackPlaylists)
-                .Where(x => x.IsDeleted == false)
-                .Where(x => x.Id == id)
                 .FirstOrDefaultAsync();
 
             if (track == null)
@@ -108,43 +126,67 @@ namespace RidePal.Services
             return trackDTO;
         }
 
-        public async Task<IReadOnlyCollection<TrackDTO>> GetPopularTracksAsync(int count = 5)
+        public IQueryable<TrackDTO> GetPopularTracks(int count = 5)
         {
-            var tracks = await _appDbContext.Tracks
+            var tracks = _appDbContext.Tracks
+                .AsNoTracking()
                 .Where(t => t.IsDeleted == false)
-                .Include(t => t.Album)
-                .Include(t => t.Artist)
-                .Include(t => t.Genre)
-                .Include(t => t.TrackPlaylists)
-                //.AsNoTracking()
                 .OrderByDescending(t => t.ReleaseDate)
                 .Take(count)
-                .Select(t => _mapper.Map<TrackDTO>(t))
-                .ToListAsync();
+                //Projection Loading
+                .Select(track => new TrackDTO()
+                {
+                    Id = track.Id,
+                    DeezerId = track.DeezerId,
+                    Title = track.Title,
+                    SongURL = track.SongURL,
+                    Duration = track.Duration,
+                    Rank = track.Rank,
+                    ReleaseDate = track.ReleaseDate,
+                    Preview = track.Preview,
+                    Album = _mapper.Map<AlbumDTO>(track.Album),
+                    AlbumId = track.AlbumId,
+                    Artist = _mapper.Map<ArtistDTO>(track.Artist),
+                    ArtistId = track.ArtistId,
+                    Genre = _mapper.Map<GenreDTO>(track.Genre),
+                    GenreId = track.GenreId,
+                });
 
             return tracks;
         }
 
-        public IReadOnlyCollection<TrackDTO> GetTopTracks(int count = 5, string searchString = "")
+        public IQueryable<TrackDTO> GetTopTracks(int count = 5, string searchString = "")
         {
-            IReadOnlyCollection<TrackDTO> tracks = new List<TrackDTO>();
             var query = _appDbContext.Tracks
-                .Include(t => t.Album)
-                .Include(t => t.Artist)
-                .Include(t => t.Genre)
-                .Include(t => t.TrackPlaylists)
+                .AsNoTracking()
                 .Where(t => t.IsDeleted == false);
-            //.AsNoTracking()
+                
 
             if (!string.IsNullOrEmpty(searchString))
             {
                 query = query.Where(x => x.Title.ToLower().Contains(searchString.ToLower()));
             }
-            tracks = query
+            var tracks = query
                 .OrderByDescending(x => x.Rank)
                 .Take(count)
-                .Select(a => _mapper.Map<TrackDTO>(a))
-                .ToList();
+                //Projection Loading
+                .Select(track => new TrackDTO()
+                {
+                    Id = track.Id,
+                    DeezerId = track.DeezerId,
+                    Title = track.Title,
+                    SongURL = track.SongURL,
+                    Duration = track.Duration,
+                    Rank = track.Rank,
+                    ReleaseDate = track.ReleaseDate,
+                    Preview = track.Preview,
+                    Album = _mapper.Map<AlbumDTO>(track.Album),
+                    AlbumId = track.AlbumId,
+                    Artist = _mapper.Map<ArtistDTO>(track.Artist),
+                    ArtistId = track.ArtistId,
+                    Genre = _mapper.Map<GenreDTO>(track.Genre),
+                    GenreId = track.GenreId,
+                });
 
             return tracks;
         }

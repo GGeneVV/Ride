@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using PagedList;
 using RidePal.Services.Contracts;
 using RidePal.Services.Pagination;
 using RidePal.Web.Models;
@@ -22,18 +23,14 @@ namespace RidePal.Web.Controllers
         // GET: Albums
         public IActionResult Index(int? pageNumber = 1,
             string sortOrder = "",
-            string currentFilter = "",
             string searchString = "")
         {
-            var albumsVM = _albumService.GetAllAlbumsAsync(pageNumber, sortOrder, currentFilter, searchString)
-                .Select(g => _mapper.Map<AlbumVM>(g));
+            pageNumber = pageNumber ?? 1;
+            var albumsVM = _albumService.GetAllAlbums(pageNumber, sortOrder, searchString)
+                .Select(g => _mapper.Map<AlbumVM>(g))
+                .ToPagedList((int)pageNumber, 24);
 
-            ViewData["CurrentSort"] = sortOrder;
-            ViewData["TitleSortParm"] = String.IsNullOrEmpty(sortOrder) ? "title_desc" : "";
-            ViewData["NameOfArtistSortParm"] = sortOrder == "NameOfArtist" ? "NameOfArtist_desc" : "NameOfArtist";
-
-            int pageSize = 10;
-            return View(PaginatedList<AlbumVM>.Create(albumsVM.AsQueryable(), pageNumber ?? 1, pageSize));
+            return View(albumsVM);
         }
         // GET: Albums/Details/5
         public IActionResult Details(Guid id)
