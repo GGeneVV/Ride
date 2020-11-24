@@ -4,7 +4,6 @@ using RidePal.Data;
 using RidePal.Services.Contracts;
 using RidePal.Services.DTOModels;
 using RidePal.Services.Extensions;
-using RidePal.Services.Pagination;
 using System;
 using System.Linq;
 
@@ -34,7 +33,7 @@ namespace RidePal.Services
             return genreDTO;
         }
 
-        public PaginatedList<GenreDTO> GetAllGenres(
+        public IQueryable<GenreDTO> GetAllGenres(
             int? pageNumber = 1,
             string sortOrder = "",
             string currentFilter = "",
@@ -75,11 +74,7 @@ namespace RidePal.Services
                     break;
             }
 
-            int pageSize = 10;
-
-            return PaginatedList<GenreDTO>.Create(genres.AsQueryable(), pageNumber ?? 1, pageSize);
-
-
+            return genres.AsQueryable();
         }
     }
 }

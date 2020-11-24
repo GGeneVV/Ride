@@ -9,7 +9,6 @@ using RidePal.Services.Contracts;
 using RidePal.Services.DTOModels;
 using RidePal.Services.Extensions;
 using RidePal.Services.Helpers;
-using RidePal.Services.Pagination;
 using RidePal.Services.Wrappers.Contracts;
 using System;
 using System.IdentityModel.Tokens.Jwt;
@@ -100,7 +99,7 @@ namespace RidePal.Services
             }
         }
 
-        public PaginatedList<UserDTO> GetAllUsersAsync(int? pageNumber = 1,
+        public IQueryable<UserDTO> GetAllUsersAsync(int? pageNumber = 1,
             string sortOrder = "",
             string currentFilter = "",
             string searchString = "")
@@ -141,7 +140,7 @@ namespace RidePal.Services
 
             int pageSize = 10;
 
-            return PaginatedList<UserDTO>.Create(users.AsQueryable(), pageNumber ?? 1, pageSize);
+            return users.AsQueryable();
         }
 
     }

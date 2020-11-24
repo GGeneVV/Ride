@@ -1,14 +1,14 @@
 ﻿using RidePal.Services.DTOModels;
-using RidePal.Services.Pagination;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RidePal.Services.Contracts
 {
     public interface IAlbumService
     {
-        AlbumDTO GetAlbumByIdAsync(Guid albumId);
+        Task<AlbumDTO> GetAlbumByIdAsync(Guid albumId);
 
         IQueryable<AlbumDTO> GetAllAlbums(
             int? pageNumber = 1,
