@@ -21,7 +21,5 @@ namespace RidePal.Models
         public User User { get; set; }
 
         public ICollection<TrackPlaylist> TrackPlaylists { get; set; } = new List<TrackPlaylist>();
-
-
     }
 }

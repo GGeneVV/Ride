@@ -16,33 +16,44 @@ namespace RidePal.Web.Controllers
         private readonly IPlaylistService _playlistService;
         private readonly ITrackService _trackService;
         private readonly IArtistService _artistService;
+        private readonly IAlbumService _albumService;
         private readonly IMapper _mapper;
 
-        public HomeController(ILogger<HomeController> logger, IGenreService genreService, IPlaylistService playlistService, ITrackService trackService, IArtistService artistService, IMapper mapper)
+        public HomeController(ILogger<HomeController> logger, IGenreService genreService, IPlaylistService playlistService, ITrackService trackService, IArtistService artistService, IAlbumService albumService, IMapper mapper)
         {
             _logger = logger;
             _genreService = genreService;
             _playlistService = playlistService;
             _trackService = trackService;
             _artistService = artistService;
+            _albumService = albumService;
             _mapper = mapper;
+
 
         }
 
 
-        public async Task<IActionResult> Index([Bind("Title,UseTopTracks,AllowTracksFromSameArtist,IsAdvanced")] PlaylistConfigVM playlistConfigVM,
+        public IActionResult Index([Bind("Title,UseTopTracks,AllowTracksFromSameArtist,IsAdvanced")] PlaylistConfigVM playlistConfigVM,
             [Bind("IsChecked,Percentage")] GenreConfigVM genreVM)
         {
             var genres = _genreService.GetAllGenres();
             var genreConfigs = genres.Select(g => _mapper.Map<GenreConfigVM>(g)).ToList();
-            var popularTracks = await _trackService.GetPopularTracksAsync(5);
-            var popularTracksVM = popularTracks.Select(t => _mapper.Map<TrackVM>(t)).ToList();
+            var popularTracksVM = _trackService.GetPopularTracks(5)
+                .Select(t => _mapper.Map<TrackVM>(t))
+                .AsEnumerable();
+                //.ToList();
 
-            var topTracks = _trackService.GetTopTracks(6);
-            var topTracksVM = topTracks.Select(t => _mapper.Map<TrackVM>(t)).ToList();
+            var topTracksVM = _trackService.GetTopTracks(6)
+                .Select(t => _mapper.Map<TrackVM>(t))
+                .AsEnumerable();
 
-            var topArists = _artistService.GetTopArtists(6);
-            var topArtistsVM = topArists.Select(t => _mapper.Map<ArtistVM>(t)).ToList();
+            var topArtistsVM = _artistService.GetTopArtists(6)
+                .Select(t => _mapper.Map<ArtistVM>(t))
+                .AsEnumerable();
+
+            var topAlbumsVM = _albumService.GetTopAlbums(6)
+                .Select(t => _mapper.Map<AlbumVM>(t))
+                .AsEnumerable();
 
             var playlistConfig = new PlaylistConfigVM()
             {
@@ -58,7 +69,7 @@ namespace RidePal.Web.Controllers
                 PopularTracks = popularTracksVM,
                 TopTracks = topTracksVM,
                 TopArtists = topArtistsVM,
-
+                TopAlbums = topAlbumsVM,
             };
 
 

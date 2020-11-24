@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using PagedList;
 using RidePal.Services.Contracts;
 using RidePal.Services.Pagination;
 using RidePal.Web.Models;
@@ -12,28 +13,39 @@ namespace RidePal.Web.Controllers
     {
         private readonly IGenreService _genreService;
         private readonly IMapper _mapper;
+        private readonly ITrackService _trackService;
 
-        public GenresController(IGenreService genreService, IMapper mapper)
+        public GenresController(IGenreService genreService, IMapper mapper, ITrackService trackService)
         {
             _genreService = genreService;
             _mapper = mapper;
+            _trackService = trackService;
         }
 
         // GET: Genres
-        public IActionResult Index(int? pageNumber = 1,
+        [HttpGet("[controller]/{genreName}")]
+        public IActionResult Index(int pageNumber = 1,
             string sortOrder = "",
-            string currentFilter = "",
-            string searchString = "")
+            string searchString = "",
+            string genreName = "")
         {
-            var genresVM = _genreService.GetAllGenres(pageNumber, sortOrder, currentFilter, searchString)
-                .Select(g => _mapper.Map<GenreVM>(g));
+            var tracks = _trackService.GetAllTracks(sortOrder, searchString, genreName);
 
-            ViewData["CurrentSort"] = sortOrder;
-            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "tracks_desc" : "";
-            ViewData["DurationSortParm"] = sortOrder == "Name" ? "name_desc" : "Name";
+            var tracksVM = tracks.Select(t => _mapper.Map<TrackVM>(t)).ToPagedList(pageNumber, 24);
+            ViewData["GenreName"] = genreName;
+            return View(tracksVM);
+            //int? pageNumber = 1,
+            //string sortOrder = "",
+            //string currentFilter = "",
+            //string searchString = ""
+            //var genresVM = _genreService.GetAllGenres(pageNumber, sortOrder, currentFilter, searchString)
+            //    .Select(g => _mapper.Map<GenreVM>(g));
 
-            int pageSize = 10;
-            return View(PaginatedList<GenreVM>.Create(genresVM.AsQueryable(), pageNumber ?? 1, pageSize));
+            //ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "tracks_desc" : "";
+            //ViewData["DurationSortParm"] = sortOrder == "Name" ? "name_desc" : "Name";
+
+            //int pageSize = 10;
+            //return View(PaginatedList<GenreVM>.Create(genresVM.AsQueryable(), pageNumber ?? 1, pageSize));
         }
 
         // GET: Genres/Details/5

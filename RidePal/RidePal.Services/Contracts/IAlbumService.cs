@@ -2,6 +2,7 @@
 using RidePal.Services.Pagination;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RidePal.Services.Contracts
 {
@@ -9,13 +10,12 @@ namespace RidePal.Services.Contracts
     {
         AlbumDTO GetAlbumByIdAsync(Guid albumId);
 
-        PaginatedList<AlbumDTO> GetAllAlbumsAsync(
+        IQueryable<AlbumDTO> GetAllAlbums(
             int? pageNumber = 1,
             string sortOrder = "",
-            string currentFilter = "",
             string searchString = "");
 
-        IReadOnlyCollection<AlbumDTO> GetTopAlbums(int count = 5, string searchString = "");
+        IQueryable<AlbumDTO> GetTopAlbums(int count = 5, string searchString = "");
 
     }
 }

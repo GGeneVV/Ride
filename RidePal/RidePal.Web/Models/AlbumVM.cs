@@ -11,6 +11,6 @@ namespace RidePal.Web.Models
         public string Tracklist { get; set; }
         public ArtistVM Artist { get; set; }
         public Guid? ArtistId { get; set; }
-        public IReadOnlyCollection<TrackVM> Tracks { get; set; } = new List<TrackVM>();
+        public IReadOnlyCollection<TrackVM> Tracks { get; set; }// = new List<TrackVM>();
     }
 }

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using AutoMapper;
+using RidePal.Models;
+using System;
 
 namespace RidePal.Services.DTOModels
 {

@@ -1,63 +1,114 @@
-﻿@model PaginatedList<TrackVM>
+﻿@using PagedList;
+
+@model IPagedList<TrackVM>
 
 @{
     ViewData["Title"] = "Index";
+    ViewData["PageId"] = "main";
+    ViewData["HasHiddenAudio"] = true;
     Layout = "~/Views/Shared/_MyLayout.cshtml";
 }
 
-<h1>Track List</h1>
 
-<p>
-    <a asp-action="Index">Playlist Tracks</a>
-</p>
-<form asp-action="Index" method="get">
-    <div class="form-inline my-2 my-lg-0">
-        <p>
-            Find by name: <input type="text" placeholder="Enter name" name="searchString" value="@ViewData["CurrentFilter"]" />
-            <input mr-sm-2" type="submit" value="Search" class="form-control mr-sm-2" /> |
-            <a asp-action="Index">Back to Full List</a>
-        </p>
+
+<div class="paralax-img img-1">
+    <div class="px-5 py-4 h-100 d-flex flex-column justify-content-end" style="background: #80808052;">
+        <span>Travel with music <i class="fas fa-route text-primary"></i></span>
+        <h1>Tracks</h1>
+        <span>7,459 tracks <i class="fas fa-headphones-alt text-primary"></i></span>
     </div>
-</form>
+</div>
+<div class="gradient-bg"></div>
+<div class="track-index-view-grid">
+    <div class="songs">
+        <!-- TRACK ROWS -->
+        <!-- TABLE HEADER -->
+        <div id="table-sticky-header" class="tracklist-row head">
+            <div class="index justify-content-center">#</div>
+            <div onclick="sortByTitle()" class="title">Title</div>
+            <div onclick="sortByArtist()" class="rank justify-content-center">Artist</div>
+            <div onclick="sortByDuration()" class="duration justify-content-center">Duration</div>
+        </div>
+        <!-- TABLE HEADER / END -->
+        @{
+            var hasNext = Model.HasNextPage ? "true" : "false";
+        }
+        <div id="table-results">
+            <input id="pageNumber" type="hidden" value="@Model.PageNumber" />
+            <input id="hasNext" type="hidden" value="@hasNext" />
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                var track = Model.ElementAt(i);
+                var time = track.Duration / 60 + ":" + track.Duration % 60;
+                <!-- TEMPLATE TRACK ROW -->
+                <div data-id="@track.Id" onclick="playSongByPreview('@track.Preview', '@track.Id')" class="tracklist-row">
+                    <div class="index justify-content-center">
+                        <img src="@track.Artist.Picture" alt="" />
+                    </div>
+                    <div class="title">@track.Title</div>
+                    <div class="rank justify-content-center">@track.Artist.Name</div>
+                    <div class="duration justify-content-center">@time</div>
+                </div>
+                <!-- TEMPLATE TRACK ROW / END -->
+            }
+        </div>
 
-<div class="tracklist-row">
-    <a asp-action="Index" asp-route-sortOrder="@ViewData["TitleSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Title</a>
-    <a asp-action="Index" asp-route-sortOrder="@ViewData["DurationSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Duration</a>
+
+        
+        <!-- TRACK ROWS / END -->
+    </div>
 </div>
 
-@for (int i = 0; i < Model.Count(); i++)
-{
-    var track = Model.ElementAt(i);
-    var index = i + 1;
-    <!-- TEMPLATE TRACK ROW -->
-    <div class="tracklist-row">
-        <div class="index justify-content-center">@index</div>
-        <div class="title">@track.Title</div>
-        <div class="rank justify-content-center">@track.Rank</div>
-        <div class="duration justify-content-center">@track.Duration</div>
-    </div>
-    <!-- TEMPLATE TRACK ROW / END -->
-}
+<script>
+    var sticky = $('#table-sticky-header')[0].offsetParent.offsetTop;
 
-@{
-    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
-    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
-    var prevPage = Model.PageIndex - 1;
-    var nextPage = Model.PageIndex + 1;
-}
+    $(".os-host").on("scroll", function () {
 
 
-<a asp-action="Index"
-   asp-route-sortOrder="@ViewData["CurrentSort"]"
-   asp-route-pageNumber="@prevPage"
-   asp-route-currentFilter="@ViewData["CurrentFilter"]"
-   class="btn btn-default @prevDisabled">
-    Previous
-</a>
-<a asp-action="Index"
-   asp-route-sortOrder="@ViewData["CurrentSort"]"
-   asp-route-pageNumber="@nextPage"
-   asp-route-currentFilter="@ViewData["CurrentFilter"]"
-   class="btn btn-default @nextDisabled">
-    Next
-</a>
+        if ($(this).scrollTop() > sticky - 60) {
+            $('#table-sticky-header').addClass("sticky");
+        }
+        else {
+            $('#table-sticky-header').removeClass("sticky");
+        }
+
+        if ($(this).scrollTop() > 100) {
+            $("#main .top-bar").addClass("sticky-scroll");
+        }
+        else {
+            $("#main .top-bar").removeClass("sticky-scroll");
+        }
+        var scrollTop = Math.ceil($(this)[0].scrollTop);
+
+        if (scrollTop == ($(this)[0].scrollHeight - $(this)[0].offsetHeight)) {
+            var pageNumber = parseInt($('#table-results #pageNumber').val());
+            var sortOrder = $.urlParam('sortOrder');
+            var searchString = $.urlParam('searchString');
+            var hasNext = $('#table-results #hasNext').val();
+            console.log("scrolled to bottom");
+
+            if (hasNext == 'true') {
+                pageNumber += 1;
+                var data = { pageNumber, sortOrder, searchString };
+                $.ajax({
+                    type: "GET",
+                    data: data,
+                    url: "https://localhost:5001/Tracks",
+                    beforeSend: function () {
+                        $(".loading").show();
+                    },
+                    success: function (data) {
+                        var response = $(data).find('#table-results')[0];
+                        var pageNumber = parseInt($(data).find('#table-results #pageNumber').val());
+                        $('#table-results #pageNumber').val(pageNumber);
+                        $('#table-results').append(response.innerHTML);
+                    },
+                    complete: function (data) {
+                        $(".loading").hide();
+                    },
+                });
+            }
+
+        }
+    });
+</script>

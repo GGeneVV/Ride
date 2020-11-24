@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using RidePal.Data;
+using RidePal.Models;
 using RidePal.Services.Contracts;
 using RidePal.Services.DTOModels;
 using RidePal.Services.Extensions;
@@ -34,58 +35,53 @@ namespace RidePal.Services
             return albumDTO;
         }
 
-        public PaginatedList<AlbumDTO> GetAllAlbumsAsync(
+        public IQueryable<AlbumDTO> GetAllAlbums(
              int? pageNumber = 1,
             string sortOrder = "",
-            string currentFilter = "",
             string searchString = "")
         {
-            if (searchString != null)
-            {
-                pageNumber = 1;
-            }
-            else
-            {
-                searchString = currentFilter;
-            }
-
-
-            currentFilter = searchString;
-
-            var albums = _appDbContext.Albums
+            var query = _appDbContext.Albums
                 .AsNoTracking()
-                .Where(a => a.IsDeleted == false)
-                .WhereIf(!String.IsNullOrEmpty(searchString), a => a.Title.Contains(searchString))
-                .Select(a => _mapper.Map<AlbumDTO>(a));
+                .Where(a => a.IsDeleted == false);
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                query = query.Where(a => a.Title.Contains(searchString));
+            }
 
             switch (sortOrder)
             {
                 case "title_desc":
-                    albums = albums.OrderByDescending(a => a.Title);
+                    query = query.OrderByDescending(a => a.Title);
                     break;
                 case "NameOfArtist":
-                    albums = albums.OrderBy(a => a.Artist.Name);
+                    query = query.OrderBy(a => a.Artist.Name);
                     break;
                 case "NameOfArtist_decs":
-                    albums = albums.OrderByDescending(a => a.Artist.Name);
+                    query = query.OrderByDescending(a => a.Artist.Name);
                     break;
                 default:
-                    albums = albums.OrderBy(a => a.Title);
+                    query = query.OrderBy(a => a.Title);
                     break;
             }
+            var albums = query.Select(a => new AlbumDTO()
+            {
+                Artist = _mapper.Map<ArtistDTO>(a.Artist),
+                ArtistId = a.ArtistId,
+                Id = a.Id,
+                Picture = a.Picture,
+                Title = a.Title,
+                Tracklist = a.Tracklist,
+                Tracks = a.Tracks.Select(x => _mapper.Map<TrackDTO>(x)).ToList()
+            });
 
-            int pageSize = 10;
-
-            return PaginatedList<AlbumDTO>.Create(albums.AsQueryable(), pageNumber ?? 1, pageSize);
+            return albums;
 
         }
 
-        public IReadOnlyCollection<AlbumDTO> GetTopAlbums(int count = 5, string searchString = "")
+        public IQueryable<AlbumDTO> GetTopAlbums(int count = 5, string searchString = "")
         {
-            IReadOnlyCollection<AlbumDTO> albums = new List<AlbumDTO>();
             var query = _appDbContext.Albums
-                .Include(x => x.Artist)
-                .Include(x => x.Tracks)
                 .AsNoTracking()
                 .Where(x => x.IsDeleted == false);
 
@@ -93,11 +89,18 @@ namespace RidePal.Services
             {
                 query = query.Where(x => x.Title.ToLower().Contains(searchString.ToLower()));
             }
-            albums = query
+            var albums = query
                 .OrderByDescending(x => x.Tracks.Count)
                 .Take(count)
-                .Select(a => _mapper.Map<AlbumDTO>(a))
-                .ToList();
+                .Select(a => new AlbumDTO(){
+                    Artist = _mapper.Map<ArtistDTO>(a.Artist),
+                    ArtistId = a.ArtistId,
+                    Id = a.Id,
+                    Picture = a.Picture,
+                    Title = a.Title,
+                    Tracklist = a.Tracklist,
+                    Tracks = a.Tracks.Select(x => _mapper.Map<TrackDTO>(x)).ToList()
+                });
 
             return albums;
         }

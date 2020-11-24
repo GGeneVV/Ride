@@ -15,11 +15,8 @@
     <link rel="stylesheet" href="~/css/main.css" />
     <link rel="stylesheet" href="~/fontawesome/css/all.css" />
 
-
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    @RenderSection("Scripts", required: false)
 </head>
 <body>
     <main role="main" class="w-100 overflow-auto">
@@ -69,15 +66,50 @@
                             @RenderBody()
                             <!-- MAIN CONTENT / END -->
                         </div>
+                        <div class="loading">
+                            <div class="d-flex justify-content-center align-items-center w-100 h-100">
+                                <img src="~/images/25.svg" alt="Loading...">
+                            </div>
+                        </div>
                     </div>
                 </main>
                 <!-- MAIN / END -->
             </div>
         </div>
     </main>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    @if (ViewData["HasHiddenAudio"] != null && (bool)ViewData["HasHiddenAudio"])
+    {
+        <script>
+            var song = new Audio();
+
+            function playSongByPreview(preview, id) {
+                if (preview && id) {
+                    $('[data-id]').each(function () {
+                        $(this).removeClass('active')
+                    });
+                    $(`[data-id=${id}]`).addClass('active');
+                    if (song.src == preview) {
+                        if (song.paused) {
+                            song.src = preview;
+                            song.play();
+                            $(`[data-id=${id}]`).addClass('active');
+                        }
+                        else {
+                            song.pause();
+                            $('[data-id]').each(function () {
+                                $(this).removeClass('active')
+                            });
+                        }
+                    }
+                    else {
+                        song.src = preview;
+                        song.play();
+                    }
+                }
+            }
+        </script>
+    }
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
 </body>
 

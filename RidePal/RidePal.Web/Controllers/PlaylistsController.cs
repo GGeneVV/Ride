@@ -50,7 +50,7 @@ namespace RidePal.Web.Controllers
             ViewData["DurationSortParm"] = sortOrder == "Duration" ? "duration_desc" : "Duration";
 
             var playlists = _playlistService
-                 .GetAllPlaylists(pageNumber, sortOrder, currentFilter, searchString)
+                 .GetAllPlaylists(pageNumber, sortOrder, searchString)
                  .Select(p => _mapper.Map<PlaylistVM>(p));
 
             return View(PaginatedList<PlaylistVM>.Create(playlists.AsQueryable(), pageNumber ?? 1, pageSize));
@@ -64,7 +64,7 @@ namespace RidePal.Web.Controllers
         {
             var userId = Guid.Parse(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
 
-            var playlistst = _playlistService.GetUserPlaylists(userId, pageNumber, sortOrder, currentFilter, searchString)
+            var playlistst = _playlistService.GetUserPlaylists(userId, pageNumber, sortOrder, searchString)
                 .Select(p => _mapper.Map<PlaylistVM>(p));
 
             int pageSize = 5;
