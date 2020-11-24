@@ -4,6 +4,7 @@
     ViewData["Title"] = "Browse All";
     ViewData["PageId"] = "search";
     ViewData["HasSearch"] = true;
+    ViewData["HasHiddenAudio"] = true;
     Layout = "~/Views/Shared/_MyLayout.cshtml";
 }
 
@@ -109,7 +110,6 @@
 
     </div>
 </div>
-               
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

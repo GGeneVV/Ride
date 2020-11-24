@@ -451,6 +451,76 @@ h2 {
     grid-template-areas: "popular generate-playlist" "top-tracks top-tracks" "top-playlists top-playlists" "top-artists top-artists" "top-genres top-genres";
 }
 
+.track-index-view-grid {
+    display: -ms-grid;
+    display: grid;
+    position: relative;
+    -ms-grid-rows: auto;
+    grid-template-rows: auto;
+    -ms-grid-columns: auto;
+    grid-template-columns: auto;
+    grid-template-areas: "songs";
+}
+
+    .track-index-view-grid .songs {
+        -ms-grid-row: 1;
+        -ms-grid-column: 2;
+        grid-area: songs;
+    }
+
+        .track-index-view-grid .songs h2 {
+            margin-bottom: 20px;
+        }
+
+        .track-index-view-grid .songs .tracklist-row {
+            padding-left: 0;
+            -ms-grid-columns: 60px 4fr 2fr minmax(110px, 1fr);
+            grid-template-columns: 60px 4fr 2fr minmax(110px, 1fr);
+        }
+
+            .track-index-view-grid .songs .tracklist-row div {
+                padding: 5px;
+            }
+
+                .track-index-view-grid .songs .tracklist-row div img {
+                    border-radius: 4px;
+                    width: 100%;
+                    height: 100%;
+                }
+
+            .track-index-view-grid .songs .tracklist-row .title {
+                color: #fff;
+            }
+
+            .track-index-view-grid .songs .tracklist-row.head {
+                min-height: 40px;
+                max-height: 40px;
+                background: #181818;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+                border-radius: 0;
+            }
+
+                .track-index-view-grid .songs .tracklist-row.head div:hover {
+                    cursor: pointer;
+                    color: #fff;
+                }
+
+                .track-index-view-grid .songs .tracklist-row.head div.active {
+                    color: #fff;
+                }
+
+                .track-index-view-grid .songs .tracklist-row.head.sticky {
+                    position: -webkit-sticky;
+                    position: sticky;
+                    top: 60px;
+                    width: 100%;
+                    z-index: 10;
+                }
+
+                .track-index-view-grid .songs .tracklist-row.head .title {
+                    color: unset;
+                }
+
 .search-view-grid {
     display: -ms-grid;
     display: grid;
@@ -461,6 +531,10 @@ h2 {
     grid-template-columns: repeat(5, 1fr);
     grid-gap: 20px;
 }
+
+    .search-view-grid a {
+        text-decoration: none;
+    }
 
 .search-all-view-grid {
     display: -ms-grid;
@@ -1100,6 +1174,16 @@ h2 {
                 z-index: 3;
             }
 
+        .grid-cards .ridepal-card.active {
+            background: #282828;
+        }
+
+            .grid-cards .ridepal-card.active .card-play-button {
+                top: 50%;
+                opacity: 1;
+                z-index: 3;
+            }
+
         .grid-cards .ridepal-card img, .grid-cards .ridepal-card .img {
             position: relative;
             margin-bottom: 16px;
@@ -1112,7 +1196,35 @@ h2 {
         }
 
         .grid-cards .ridepal-card h4.title {
-            font-size: 1.5em;
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 24px;
+            letter-spacing: normal;
+            text-transform: none;
+            color: #fff;
+        }
+
+        .grid-cards .ridepal-card .title {
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 24px;
+            letter-spacing: normal;
+            text-transform: none;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .grid-cards .ridepal-card .artist {
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 16px;
+            letter-spacing: normal;
+            text-transform: none;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .grid-cards .ridepal-card .card-play-button {
@@ -1223,4 +1335,23 @@ h2 {
     ::-webkit-scrollbar-thumb:hover {
         background: rgba(255, 255, 255, 0.65);
     }
+
+#table-results {
+    position: relative;
+}
+
+.loading {
+    display: none;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(24, 24, 24, 0.65);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    z-index: 5;
+    position: absolute;
+}
 /*# sourceMappingURL=main.css.map */

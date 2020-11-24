@@ -10,13 +10,12 @@ namespace RidePal.Services.Contracts
     {
         Task<AlbumDTO> GetAlbumByIdAsync(Guid albumId);
 
-        IQueryable<AlbumDTO> GetAllAlbumsAsync(
+        IQueryable<AlbumDTO> GetAllAlbums(
             int? pageNumber = 1,
             string sortOrder = "",
-            string currentFilter = "",
             string searchString = "");
 
-        IReadOnlyCollection<AlbumDTO> GetTopAlbums(int count = 5, string searchString = "");
+        IQueryable<AlbumDTO> GetTopAlbums(int count = 5, string searchString = "");
 
     }
 }

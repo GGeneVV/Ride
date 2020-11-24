@@ -17,6 +17,6 @@ namespace RidePal.Services.DTOModels
         public Guid? UserId { get; set; }
         public UserDTO User { get; set; }
 
-        public ICollection<TrackPlaylistDTO> TrackPlaylists { get; set; } = new List<TrackPlaylistDTO>();
+        public ICollection<TrackPlaylistDTO> TrackPlaylists { get; set; }// = new List<TrackPlaylistDTO>();
     }
 }

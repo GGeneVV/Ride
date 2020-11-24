@@ -47,6 +47,11 @@ namespace RidePal.Web.Controllers
             var albums = _albumService.GetTopAlbums(6, searchString: searchString);
             var albumsVM = albums.Select(x => _mapper.Map<AlbumVM>(x)).ToList();
 
+            if (albums.Count() == 0 && tracks.Count() == 0 && artists.Count == 0)
+            {
+                return NotFound();
+            }
+
             var model = new BrowseAllVM()
             {
                 Albums = albumsVM,
@@ -70,7 +75,7 @@ namespace RidePal.Web.Controllers
         [HttpGet("{searchString}/albums")]
         public IActionResult BrowseAlbums(string searchString)
         {
-            var albums = _albumService.GetAllAlbumsAsync(searchString: searchString);
+            var albums = _albumService.GetAllAlbums(searchString: searchString);
             var albumsVM = albums.Select(x => _mapper.Map<AlbumVM>(x)).ToList();
 
             return View(albumsVM);

@@ -10,6 +10,6 @@ namespace RidePal.Web.Models
         public string Name { get; set; }
         public string Picture { get; set; }
 
-        public ICollection<TrackVM> Tracks { get; set; } = new List<TrackVM>();
+        public ICollection<TrackVM> Tracks { get; set; }// = new List<TrackVM>();
     }
 }

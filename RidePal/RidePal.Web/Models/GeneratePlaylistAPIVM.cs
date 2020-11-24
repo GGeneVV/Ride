@@ -15,7 +15,7 @@ namespace RidePal.Web.Models
         public bool IsTopTracksEnabled { get; set; }
 
         //[BindProperty]
-        public IList<GenreConfigVM> GenreConfigs { get; set; } = new List<GenreConfigVM>();
+        public IList<GenreConfigVM> GenreConfigs { get; set; }// = new List<GenreConfigVM>();
         public Guid userId { get; set; }
     }
 }

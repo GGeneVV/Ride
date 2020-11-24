@@ -10,12 +10,12 @@ namespace RidePal.Services.Contracts
     {
         Task<TrackDTO> GetTrackAsync(Guid id);
         IQueryable<TrackDTO> GetAllTracks(
-            int? pageNumber = 1,
             string sortOrder = "",
-            string currentFilter = "",
-            string searchString = "");
+            string searchString = "",
+            string genreString = "");
 
-        Task<IReadOnlyCollection<TrackDTO>> GetPopularTracksAsync(int count = 5);
-        IReadOnlyCollection<TrackDTO> GetTopTracks(int count = 5, string searchString = "");
+
+        IQueryable<TrackDTO> GetPopularTracks(int count = 5);
+        IQueryable<TrackDTO> GetTopTracks(int count = 5, string searchString = "");
     }
 }
