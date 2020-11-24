@@ -1,5 +1,4 @@
 using AutoMapper;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -8,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using RidePal.Data;
 using RidePal.Data.Seeder;
 using RidePal.Models;
@@ -18,6 +18,7 @@ using RidePal.Services.Helpers;
 using RidePal.Services.Wrappers;
 using RidePal.Services.Wrappers.Contracts;
 using RidePal.Web.VMMappers;
+using System.Linq;
 using System.Text;
 
 namespace RidePal.Web
@@ -47,23 +48,17 @@ namespace RidePal.Web
             var appSettings = appSettingsSection.Get<AppSettings>();
             var key = Encoding.ASCII.GetBytes(appSettings.Secret);
 
-            services.AddAuthentication(config =>
-            {
-                config.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                config.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-                .AddJwtBearer(config =>
-                {
-                    config.RequireHttpsMetadata = false;
-                    config.SaveToken = true;
-                    config.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(key),
-                        ValidateIssuer = false,
-                        ValidateAudience = false
-                    };
-                });
+            services.AddAuthentication()
+               .AddJwtBearer(cfg =>
+               {
+                   cfg.TokenValidationParameters = new TokenValidationParameters()
+                   {
+                       ValidateIssuerSigningKey = true,
+                       IssuerSigningKey = new SymmetricSecurityKey(key),
+                       ValidateIssuer = false,
+                       ValidateAudience = false
+                   };
+               });
 
             services.AddIdentity<User, Role>(option =>
             {
@@ -77,6 +72,11 @@ namespace RidePal.Web
             .AddEntityFrameworkStores<AppDbContext>()
             .AddDefaultTokenProviders();
 
+            services.AddSwaggerGen((options) =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "RidePal API", Version = "v1" });
+                options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+            });
 
             services.ConfigureApplicationCookie(options =>
             {
@@ -129,6 +129,14 @@ namespace RidePal.Web
             app.UseHttpsRedirection();
 
             app.UseStaticFiles();
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Ridepal v1");
+            });
+
 
             app.UseRouting();
 

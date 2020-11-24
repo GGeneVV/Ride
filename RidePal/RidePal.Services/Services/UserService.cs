@@ -119,7 +119,7 @@ namespace RidePal.Services
 
             var users = _db.Users
                 .Where(t => t.IsDeleted == false)
-                .Include(p => _mapper.Map<PlaylistDTO>(p))
+                .Include(p => p.Playlists)
                 .WhereIf(!String.IsNullOrEmpty(searchString), s => s.UserName.Contains(searchString))
                 .Select(t => _mapper.Map<UserDTO>(t));
 

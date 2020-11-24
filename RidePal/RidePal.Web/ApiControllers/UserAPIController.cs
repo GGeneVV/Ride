@@ -1,13 +1,15 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RidePal.Services.Contracts;
 using RidePal.Services.LoginCredentialsModel;
 
 namespace RidePal.Web.ApiControllers
 {
-    [Authorize]
+
     [ApiController]
     [Route("api/users")]
+    [Authorize(AuthenticationSchemes = "Identity.Application," + JwtBearerDefaults.AuthenticationScheme)]
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -21,6 +23,7 @@ namespace RidePal.Web.ApiControllers
         public IActionResult Get()
         {
             var users = _userService.GetAllUsersAsync();
+
             return Ok(users);
         }
 

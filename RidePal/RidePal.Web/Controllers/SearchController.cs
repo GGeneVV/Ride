@@ -26,6 +26,7 @@ namespace RidePal.Web.Controllers
 
         // GET: Search
         //Browse all
+        [HttpGet("Search")]
         public IActionResult Index()
         {
             var genres = _genreService.GetAllGenres();
