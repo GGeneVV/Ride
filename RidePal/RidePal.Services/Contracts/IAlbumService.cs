@@ -1,15 +1,16 @@
 ﻿using RidePal.Services.DTOModels;
-using RidePal.Services.Pagination;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace RidePal.Services.Contracts
 {
     public interface IAlbumService
     {
-        AlbumDTO GetAlbumByIdAsync(Guid albumId);
+        Task<AlbumDTO> GetAlbumByIdAsync(Guid albumId);
 
-        PaginatedList<AlbumDTO> GetAllAlbumsAsync(
+        IQueryable<AlbumDTO> GetAllAlbumsAsync(
             int? pageNumber = 1,
             string sortOrder = "",
             string currentFilter = "",

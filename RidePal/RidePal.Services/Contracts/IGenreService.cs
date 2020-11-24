@@ -1,6 +1,6 @@
 ﻿using RidePal.Services.DTOModels;
-using RidePal.Services.Pagination;
 using System;
+using System.Linq;
 
 namespace RidePal.Services.Contracts
 {
@@ -8,7 +8,7 @@ namespace RidePal.Services.Contracts
     {
         GenreDTO GetGenreByIdAsync(Guid genreId);
 
-        PaginatedList<GenreDTO> GetAllGenres(int? pageNumber = 1,
+        IQueryable<GenreDTO> GetAllGenres(int? pageNumber = 1,
             string sortOrder = "",
             string currentFilter = "",
             string searchString = "");

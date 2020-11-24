@@ -7,7 +7,6 @@ using RidePal.Services.Contracts;
 using RidePal.Services.DTOModels;
 using RidePal.Services.DTOModels.Configurations;
 using RidePal.Services.Extensions;
-using RidePal.Services.Pagination;
 using RidePal.Services.Wrappers.Contracts;
 using System;
 using System.Collections.Generic;
@@ -182,7 +181,7 @@ namespace RidePal.Services
             return trackPlaylist;
         }
 
-        public PaginatedList<PlaylistDTO> GetUserPlaylists(
+        public IQueryable<PlaylistDTO> GetUserPlaylists(
             Guid userId,
             int? pageNumber = 1,
             string sortOrder = "",
@@ -226,9 +225,7 @@ namespace RidePal.Services
                     break;
             }
 
-            int pageSize = 10;
-
-            return PaginatedList<PlaylistDTO>.Create(playlists.AsQueryable(), pageNumber ?? 1, pageSize);
+            return playlists.AsQueryable();
         }
 
         public async Task<PlaylistDTO> GetPlaylist(Guid id)
@@ -261,7 +258,7 @@ namespace RidePal.Services
             return dto;
         }
 
-        public PaginatedList<PlaylistDTO> GetAllPlaylists(
+        public IQueryable<PlaylistDTO> GetAllPlaylists(
             int? pageNumber = 1,
             string sortOrder = "",
             string currentFilter = "",
@@ -308,10 +305,7 @@ namespace RidePal.Services
                     break;
             }
 
-            int pageSize = 10;
-
-            return PaginatedList<PlaylistDTO>.Create(playlists.AsQueryable(), pageNumber ?? 1, pageSize);
-
+            return playlists.AsQueryable();
         }
 
         public async Task DeletePlaylist(Guid id)

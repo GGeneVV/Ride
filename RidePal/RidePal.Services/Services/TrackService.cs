@@ -28,15 +28,6 @@ namespace RidePal.Services
             string currentFilter = "",
             string searchString = "")
         {
-            //if (searchString != null)
-            //{
-            //    pageNumber = 1;
-            //}
-            //else
-            //{
-            //    searchString = currentFilter;
-            //}
-            int pageSize = 10;
 
             currentFilter = searchString;
 
@@ -78,9 +69,6 @@ namespace RidePal.Services
                     tracks = tracks.OrderBy(s => s.Rank);
                     break;
             }
-
-
-            //var tracksList = PaginatedList<TrackDTO>.Create(tracks.AsQueryable(), pageNumber ?? 1, pageSize);
 
             return tracks.AsQueryable();
 

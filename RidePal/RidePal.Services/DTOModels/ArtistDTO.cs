@@ -9,6 +9,7 @@ namespace RidePal.Services.DTOModels
         public string Name { get; set; }
         public string Picture { get; set; }
 
+        public string TrackListURL { get; set; }
         public ICollection<TrackDTO> Tracks { get; set; } = new List<TrackDTO>();
         public ICollection<AlbumDTO> Albums { get; set; } = new List<AlbumDTO>();
     }

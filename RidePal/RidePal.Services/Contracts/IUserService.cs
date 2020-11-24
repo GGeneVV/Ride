@@ -1,6 +1,6 @@
 ﻿using RidePal.Services.DTOModels;
-using RidePal.Services.Pagination;
 using System;
+using System.Linq;
 
 namespace RidePal.Services.Contracts
 {
@@ -8,7 +8,7 @@ namespace RidePal.Services.Contracts
     {
         public string Authenticate(string username, string password);
         public bool ValidateUserById(Guid userId);
-        public PaginatedList<UserDTO> GetAllUsersAsync(int? pageNumber = 1,
+        public IQueryable<UserDTO> GetAllUsersAsync(int? pageNumber = 1,
             string sortOrder = "",
             string currentFilter = "",
             string searchString = "");

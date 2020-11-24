@@ -4,7 +4,6 @@ using RidePal.Data;
 using RidePal.Services.Contracts;
 using RidePal.Services.DTOModels;
 using RidePal.Services.Extensions;
-using RidePal.Services.Pagination;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +22,7 @@ namespace RidePal.Services
             _mapper = mapper;
         }
 
-        public PaginatedList<ArtistDTO> GetAllArtists(
+        public IQueryable<ArtistDTO> GetAllArtists(
             int? pageNumber = 1,
             string sortOrder = "",
             string currentFilter = "",
@@ -59,7 +58,7 @@ namespace RidePal.Services
                 case "Name":
                     artists = artists.OrderBy(b => b.Name);
                     break;
-                case "Name_decs":
+                case "Name_desc":
                     artists = artists.OrderByDescending(s => s.Name);
                     break;
                 default:
@@ -67,16 +66,17 @@ namespace RidePal.Services
                     break;
             }
 
-            int pageSize = 10;
 
-            return PaginatedList<ArtistDTO>.Create(artists.AsQueryable(), pageNumber ?? 1, pageSize);
-
+            return artists.AsQueryable();
         }
 
         public async Task<ArtistDTO> GetArtistAsync(Guid id)
         {
             if (id == null)
-                throw new ArgumentNullException();
+
+            {
+                return null;
+            }
 
             var artist = await _appDbContext.Artists
                 .Include(x => x.Albums)
@@ -86,7 +86,9 @@ namespace RidePal.Services
                 .FirstOrDefaultAsync();
 
             if (artist == null)
-                throw new ArgumentNullException();
+            {
+                return null;
+            }
 
             var artistDTO = _mapper.Map<ArtistDTO>(artist);
 

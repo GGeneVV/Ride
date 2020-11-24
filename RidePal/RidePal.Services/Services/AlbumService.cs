@@ -4,10 +4,10 @@ using RidePal.Data;
 using RidePal.Services.Contracts;
 using RidePal.Services.DTOModels;
 using RidePal.Services.Extensions;
-using RidePal.Services.Pagination;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RidePal.Services
 {
@@ -22,19 +22,28 @@ namespace RidePal.Services
             _mapper = mapper;
         }
 
-        public AlbumDTO GetAlbumByIdAsync(Guid albumId)
+        public async Task<AlbumDTO> GetAlbumByIdAsync(Guid albumId)
         {
-            var album = _appDbContext.Albums
+            if (albumId == null)
+
+            {
+                return null;
+            }
+
+            var album = await _appDbContext.Albums
                 .AsNoTracking()
                 .Where(a => a.Id == albumId)
-                .FirstOrDefault(a => a.IsDeleted == false);
-
+                .FirstOrDefaultAsync(a => a.IsDeleted == false);
+            if (album == null)
+            {
+                return null;
+            }
             var albumDTO = _mapper.Map<AlbumDTO>(album);
 
             return albumDTO;
         }
 
-        public PaginatedList<AlbumDTO> GetAllAlbumsAsync(
+        public IQueryable<AlbumDTO> GetAllAlbumsAsync(
              int? pageNumber = 1,
             string sortOrder = "",
             string currentFilter = "",
@@ -66,7 +75,7 @@ namespace RidePal.Services
                 case "NameOfArtist":
                     albums = albums.OrderBy(a => a.Artist.Name);
                     break;
-                case "NameOfArtist_decs":
+                case "NameOfArtist_desc":
                     albums = albums.OrderByDescending(a => a.Artist.Name);
                     break;
                 default:
@@ -74,10 +83,7 @@ namespace RidePal.Services
                     break;
             }
 
-            int pageSize = 10;
-
-            return PaginatedList<AlbumDTO>.Create(albums.AsQueryable(), pageNumber ?? 1, pageSize);
-
+            return albums.AsQueryable();
         }
 
         public IReadOnlyCollection<AlbumDTO> GetTopAlbums(int count = 5, string searchString = "")
